@@ -1,0 +1,165 @@
+重新easyModeFlag = true
+
+easy()
+{
+    while(重新easyModeFlag)
+    {
+        重新easyModeFlag = false
+        for(大格)
+        {
+            for(i : 1~9數字)
+            {
+                記錄小格的文青小物;
+                int 可以被放i的格子的數量 = 0;
+                bool 可能性只有一種 = false;
+                
+                for(九宮小格)
+                {
+                    if(其中一格 等於 i)
+                    {
+                        跳過這個 i
+                    }
+                }
+                
+                for(九宮小格)
+                {
+                    if(小格的可能性只有1種) // 小格的所有可能的size == 1
+                    {
+                        可能性只有一種 = true;
+                        記錄小格的文青小物 = 小格;
+                        break;
+                    }
+                }
+                
+                if(可能性只有一種)
+                {
+                    記錄小格的文青小物 = i
+                    記錄小格的文青小物.可能性.clear();
+                    
+                    // 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+                    
+                    重新easyModeFlag = true
+                    continue;
+                }
+                
+                for(九宮小格)
+                {
+                    if(小格 可以放 i ) // 直接看 小格.可能性 是否有 i
+                    {
+                        可以被放i的格子的數量 += 1;
+                        記錄小格的文青小物 = 小格;
+                    }
+                    if(可以被放i的格子的數量>1)
+                    {
+                        break;
+                    }
+                }
+                
+                // 只有這格 可以放 i, 就放 i
+                if(可以被放i的格子的數量 == 1)
+                {
+                    記錄小格的文青小物 = i
+                    記錄小格的文青小物.可能性.clear();
+                    
+                    // 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+                    
+                    重新easyModeFlag = true
+                }
+            }
+        }
+        for(直排)
+        {
+            for(i : 1~9數字)
+            {
+                int 可以被放i的格子的數量 = 0;
+                for(直排小格)
+                {
+                    if(小格 可以放 i ) // 直接看 小格.可能性 是否有 i
+                    {
+                        可以被放i的格子的數量 += 1;
+                        記錄小格的文青小物 = 小格;
+                    }
+                    if(可以被放i的格子的數量>1)
+                    {
+                        break;
+                    }
+                }
+                if(可以被放i的格子的數量 == 1)
+                {
+                    記錄小格的文青小物 = i
+                    記錄小格的文青小物.可能性.clear();
+                    
+                    // 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+                    
+                    重新easyModeFlag = true
+                }
+            }
+        }
+        
+        for(橫排)
+        {
+            for(i : 1~9數字)
+            {
+                int 可以被放i的格子的數量 = 0;
+                for(橫排小格)
+                {
+                    if(小格 可以放 i ) // 直接看 小格.可能性 是否有 i
+                    {
+                        可以被放i的格子的數量 += 1;
+                        記錄小格的文青小物 = 小格;
+                    }
+                    if(可以被放i的格子的數量>1)
+                    {
+                        break;
+                    }
+                }
+                
+                // 只有這格 可以放 i, 就放 i
+                if(可以被放i的格子的數量 == 1)
+                {
+                    記錄小格的文青小物 = i
+                    記錄小格的文青小物.可能性.clear();
+                    
+                    // 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+                    
+                    重新easyModeFlag = true
+                }
+            }
+        }
+    }
+}
+
+
+hard()
+{
+// 猜的
+// 猜之前要記錄舊表格的模樣 (包含現在是猜哪個格子, 所有格子的可能性)
+// 決定要從哪個格子開始猜
+
+}
+
+bool isFinish()
+{
+}
+
+
+解數獨()
+{
+    bool gameFinished = false;
+    bool isEasyMode = true;
+    列出所有可能性();
+    while(!gameFinished)
+    {
+        if(isEasyMode)
+            easy();
+            // 跑完之後呢
+            // 所有格子的可能性的size 都不會等於 1
+            isEasyMode = false;
+        //else
+        //    hard();            
+        //    isEasyMode = true;
+        //gameFinished = isFinish();
+        else
+            gameFinished = true;
+    }
+}
