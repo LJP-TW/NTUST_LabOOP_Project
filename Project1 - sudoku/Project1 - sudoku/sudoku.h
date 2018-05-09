@@ -20,8 +20,7 @@ public:
 	//void solve();
 
 	// 回傳數獨表
-	//char (&getTable(void))[9][9] { return table; };
-	char (*getTable())[9] { return table; };
+	char (&getTable(void))[9][9] { return table; };
 
 private:
 	// 數獨表
