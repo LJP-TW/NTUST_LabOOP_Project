@@ -14,7 +14,7 @@ public:
 	Sudoku();
 	
 	// Constructor : 從 filename 讀入數獨題目
-	//Sudoku(string filename);
+	Sudoku(string filename);
 
 	// 解數獨
 	//void solve();
