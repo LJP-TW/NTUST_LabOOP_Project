@@ -19,8 +19,8 @@ char a[N][N] = { 'n','n','n','n','n','n','n','n','n',
 int main()
 {
 	// Read sudoku
-	Sudoku s;
-	//Sudoku s(FILE_NAME);
+	//Sudoku s;
+	Sudoku s(FILE_NAME);
 
 	// Solve sudoku
 	//s.solve();
