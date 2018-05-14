@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "sudoku.h"
 
 Sudoku::Sudoku()
@@ -26,13 +27,13 @@ Sudoku::Sudoku(string filename)
 void Sudoku::easyMode()
 {
 	bool needRefresh = true;
-	vector<int>record[N][N];	//每一格可能的數字
-	possibleNumber(record);
+	possibleNumber();
 
 	while (needRefresh)
 	{
 		needRefresh = false;
 
+		// 九宮
 		for (int R = 0; R < 9; R += 3)	//大格row
 		{
 			for (int C = 0; C < 9; C += 3)	//大格col
@@ -88,10 +89,10 @@ void Sudoku::easyMode()
 
 					if (onlyOnePossible)
 					{
+						needRefresh = true;
 						table[tempR][tempC] = putInNumber + '0';
 						record[tempR][tempC].clear();
-						needRefresh = true;
-						// 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+						removeRecord(tempR, tempC, putInNumber);
 						continue;
 					}
 
@@ -118,20 +119,128 @@ void Sudoku::easyMode()
 
 					if (canPutNumber == 1)//如果可以被放n的只有這格
 					{
-						// 把跟記錄小格的文青小物同直排、橫排、九宮 裡的所有小格的 i 的可能性 remove
+						needRefresh = true;
 						table[tempR][tempC] = n + '0';
 						record[tempR][tempC].clear();
-						needRefresh = true;
+						removeRecord(tempR, tempC, n);
 					}
-
 				}
 			}
-
 		}
 
+		// 直排
+		for (int C = 0; C < 9; ++C)
+		{
+			for (int n = 1; n <= 9; ++n)
+			{
+				int possiblePosMount = 0;
+				int tempR = 0;
+				int tempC = 0;
+
+				for (int R = 0; R < 9; ++R)
+				{
+					auto it = find(record[R][C].begin(), record[R][C].end(), n);
+					if (it != record[R][C].end())
+					{
+						++possiblePosMount;
+						tempR = R;
+						tempC = C;
+					}
+
+					if (possiblePosMount > 1)
+					{
+						break;
+					}
+				}
+
+				if (possiblePosMount == 1)
+				{
+					needRefresh = true;
+					table[tempR][tempC] = n;
+					record[tempR][tempC].clear();
+					removeRecord(tempR, tempC, n);
+				}
+			}
+		}
+
+		// 橫排
+		for (int R = 0; R < 9; ++R)
+		{
+			for (int n = 1; n <= 9; ++n)
+			{
+				int possiblePosMount = 0;
+				int tempR = 0;
+				int tempC = 0;
+
+				for (int C = 0; C < 9; ++C)
+				{
+					auto it = find(record[R][C].begin(), record[R][C].end(), n);
+					if (it != record[R][C].end())
+					{
+						++possiblePosMount;
+						tempR = R;
+						tempC = C;
+					}
+
+					if (possiblePosMount > 1)
+					{
+						break;
+					}
+				}
+
+				if (possiblePosMount == 1)
+				{
+					needRefresh = true;
+					table[tempR][tempC] = n;
+					record[tempR][tempC].clear();
+					removeRecord(tempR, tempC, n);
+				}
+			}
+		}
 	}
 }
 
 void Sudoku::possibleNumber()
 {
+}
+
+void Sudoku::removeRecord(int y, int x, int number)
+{
+	// 3x3 Big Grid
+	int beginY = (y / 3) * 3;
+	int beginX = (x / 3) * 3;
+	for (int i = 0; i < 9; ++i)
+	{
+		int gridY = beginY + i / 3;
+		int gridX = beginX + i % 3;
+
+		if (gridY == y && gridX == x)
+		{
+			continue;
+		}
+
+		record[gridY][gridX].remove(number);
+	}
+
+	// Column
+	for (int i = 0; i < 9; ++i)
+	{
+		if (i == y)
+		{
+			continue;
+		}
+
+		record[i][x].remove(number);
+	}
+
+	// Row
+	for (int i = 0; i < 9; ++i)
+	{
+		if (i == x)
+		{
+			continue;
+		}
+
+		record[y][i].remove(number);
+	}
 }

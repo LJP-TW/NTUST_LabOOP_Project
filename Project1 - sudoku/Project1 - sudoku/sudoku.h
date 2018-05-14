@@ -24,8 +24,8 @@ public:
 	// 建立可能性 record
 	void possibleNumber();
 
-	// 消除同 九宮 直排 橫排 的特定可能性
-	//void removeRecord();
+	// 消除與(x, y)同 九宮 直排 橫排 的 number 可能性
+	void removeRecord(int y, int x, int number);
 
 	// easyMode : 100% 能填入才填入
 	void easyMode();
