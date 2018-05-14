@@ -5,11 +5,15 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <vector> // easymode
-#include <algorithm> // std::find
 #define N 9
 
 using namespace std;
+
+struct coordinate
+{
+	int x;
+	int y;
+};
 
 class Sudoku
 {
@@ -32,6 +36,9 @@ public:
 	// easyMode : 100% 能填入才填入
 	void easyMode();
 
+	// 暴力解
+	void solveBruteForce();
+
 	// 回傳數獨表
 	char(&getTable(void))[9][9]{ return table; };
 
@@ -41,6 +48,11 @@ private:
 	
 	// 可能性表
 	list<int> record[N][N];
+
+	// Helper Function
+	// solveBruteForce
+	bool isLegal(int y, int x, int number);
+	coordinate nextBlank(int y, int x);
 };
 
 #endif
