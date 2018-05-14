@@ -19,12 +19,20 @@ public:
 	// 解數獨
 	//void solve();
 
+	// 暴力解
+	void solveBruteForce();
+
 	// 回傳數獨表
 	char (&getTable(void))[9][9] { return table; };
 
 private:
 	// 數獨表
 	char table[N][N];
+
+	// Helper Function
+	// solveBruteForce
+	bool solveBruteForceHelper(int y, int x);
+	bool isLegal(int y, int x, int number);
 };
 
 #endif
