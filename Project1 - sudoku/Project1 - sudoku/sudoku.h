@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include <list>
 #include <string>
 #define N 9
 
@@ -22,7 +22,7 @@ public:
 	//void solve();
 
 	// 建立可能性 record
-	void possibleNumber(vector<int>(&record)[N][N]);
+	void possibleNumber();
 
 	// 消除同 九宮 直排 橫排 的特定可能性
 	//void removeRecord();
@@ -36,6 +36,9 @@ public:
 private:
 	// 數獨表
 	char table[N][N];
+	
+	// 可能性表
+	list<int> record[N][N];
 };
 
 #endif

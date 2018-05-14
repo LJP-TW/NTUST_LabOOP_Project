@@ -132,45 +132,6 @@ void Sudoku::easyMode()
 	}
 }
 
-void Sudoku::possibleNumber(vector<int>(&record)[N][N])
+void Sudoku::possibleNumber()
 {
-	bool isInRow = false;
-	bool isInCol = false;
-
-
-	for (int r = 0; r < 9; r++)	//判斷row
-	{
-		for (int i = 1; i < 10; i++)	//數字1-9
-		{
-			for (int c = 0; c < 9; c++)	//掃整個col看有沒有出現和i相同的數字
-			{
-				if (table[r][c] - '0' == i + '0')
-				{
-					isInRow = true;
-					break;
-				}
-				if (table[c][r] - '0' == i + '0')
-				{
-					isInCol = true;
-					break;
-				}
-			}
-			if (isInRow == false && isInCol == false)	//沒出現就把空格都塞i
-			{
-				for (int c = 0; c < 9; c++)
-				{
-					if (table[r][c] == 'n')
-					{
-						record[r][c].push_back(i);
-					}
-					if (table[c][r] == 'n')
-					{
-						record[c][r].push_back(i);
-					}
-				}
-			}
-
-		}
-	}
-
 }
