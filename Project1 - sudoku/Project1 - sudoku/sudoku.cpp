@@ -24,6 +24,13 @@ Sudoku::Sudoku(string filename)
 	}
 }
 
+void Sudoku::solve()
+{
+	// 先填入 100% 正確的數字後, 再行暴力破解
+	easyMode();
+	solveBruteForce();
+}
+
 void Sudoku::easyMode()
 {
 	bool needRefresh = true;

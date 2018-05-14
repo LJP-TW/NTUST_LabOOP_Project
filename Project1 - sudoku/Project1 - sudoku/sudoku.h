@@ -25,16 +25,7 @@ public:
 	Sudoku(string filename);
 
 	// 解數獨
-	//void solve();
-
-	// 建立可能性 record
-	void possibleNumber();
-
-	// 消除與(x, y)同 九宮 直排 橫排 的 number 可能性
-	void removeRecord(int y, int x, int number);
-
-	// easyMode : 100% 能填入才填入
-	void easyMode();
+	void solve();
 
 	// 暴力解
 	void solveBruteForce();
@@ -50,9 +41,20 @@ private:
 	list<int> record[N][N];
 
 	// Helper Function
-	// solveBruteForce
+	// solveBruteForce()
+	//   - isLegal() : 此 number 是否能填入 (x, y)
 	bool isLegal(int y, int x, int number);
+	//   - nextBlank() : 搜尋下一個待填處
 	coordinate nextBlank(int y, int x);
+
+	// solve()
+	//   - easyMode() : 100% 能填入才填入
+	void easyMode();
+	//       - possibleNumber() : 建立可能性 record
+	void possibleNumber();
+	//       - removeRecord() : 消除與(x, y)同 九宮 直排 橫排 的 number 可能性
+	void removeRecord(int y, int x, int number);
+
 };
 
 #endif
