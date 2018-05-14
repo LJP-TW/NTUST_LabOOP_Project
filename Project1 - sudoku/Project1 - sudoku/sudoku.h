@@ -5,6 +5,8 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <vector> // easymode
+#include <algorithm> // std::find
 #define N 9
 
 using namespace std;
