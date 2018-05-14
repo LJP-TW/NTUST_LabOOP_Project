@@ -1,5 +1,5 @@
-#include "sodoku.h"
-//test
+#include "sudoku.h"
+
 Sudoku::Sudoku()
 {
 	for (int y = 0; y < N; ++y)

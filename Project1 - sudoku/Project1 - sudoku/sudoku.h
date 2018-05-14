@@ -21,13 +21,13 @@ public:
 	// 解數獨
 	//void solve();
 
-	//
-	void possibleNumber(vector<int>(&record)[9][9]);
+	// 建立可能性 record
+	void possibleNumber(vector<int>(&record)[N][N]);
 
-	//
-	void removeRecord();
+	// 消除同 九宮 直排 橫排 的特定可能性
+	//void removeRecord();
 
-	//easyMode
+	// easyMode : 100% 能填入才填入
 	void easyMode();
 
 	// 回傳數獨表
