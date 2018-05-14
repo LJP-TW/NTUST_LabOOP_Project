@@ -3,9 +3,17 @@
 
 #include <fstream>
 #include <string>
+#include <stack>
 #define N 9
 
 using namespace std;
+
+struct coordinate
+{
+
+	int x;
+	int y;
+};
 
 class Sudoku
 {
@@ -31,8 +39,8 @@ private:
 
 	// Helper Function
 	// solveBruteForce
-	bool solveBruteForceHelper(int y, int x);
 	bool isLegal(int y, int x, int number);
+	coordinate nextBlank(int y, int x);
 };
 
 #endif

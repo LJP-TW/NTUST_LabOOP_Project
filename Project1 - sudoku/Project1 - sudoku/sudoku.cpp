@@ -1,5 +1,5 @@
 #include "sudoku.h"
-//test
+
 Sudoku::Sudoku()
 {
 	for (int y = 0; y < N; ++y)
@@ -25,50 +25,41 @@ Sudoku::Sudoku(string filename)
 
 void Sudoku::solveBruteForce()
 {
-	solveBruteForceHelper(0, 0);
-}
+	coordinate completedPos[128];
+	int idx = 0;
 
-bool Sudoku::solveBruteForceHelper(int y, int x)
-{
-	// If this grid already have a number
-	if (table[y][x] != 'n')
+	coordinate nowPos;
+
+	nowPos = nextBlank(0, -1);
+
+	// If still have next blank
+	while (nowPos.y != N)
 	{
-		// Go ahead to next coordinate
-		if (solveBruteForceHelper(y + (x + 1) / 9, (x + 1) % 9))
+		// set table[nowPos.y][nowPos.x] to '0' if it isn't number
+		if ('0' > table[nowPos.y][nowPos.x] || table[nowPos.y][nowPos.x] > '9')
 		{
-			return true;
+			table[nowPos.y][nowPos.x] = '0';
 		}
-	}
-	else
-	{
-		// Brute Force the number
-		for (int num = 1; num <= 9; ++num)
+		++table[nowPos.y][nowPos.x];
+
+		if (table[nowPos.y][nowPos.x] > '9')
 		{
-			if (isLegal(y, x, num))
+			table[nowPos.y][nowPos.x] = '0';
+
+			// Pop
+			nowPos = completedPos[--idx];
+		}
+		else
+		{
+			if (isLegal(nowPos.y, nowPos.x, table[nowPos.y][nowPos.x] - '0'))
 			{
-				// Give a legal number to (y, x)
-				table[y][x] = num + '0';
+				// Push
+				completedPos[idx++] = nowPos;
 
-				// If y = 8, x = 8, and value is legal, sudoku is solved.
-				if (y == 8 && x == 8)
-				{
-					return true;
-				}
-
-				// Go ahead to next coordinate
-				if (solveBruteForceHelper(y + (x + 1) / 9, (x + 1) % 9))
-				{
-					return true;
-				}
+				nowPos = nextBlank(nowPos.y, nowPos.x);
 			}
 		}
-
-		// If legal number for this grid doesn't exist
-		table[y][x] = 'n';
 	}
-
-
-	return false;
 }
 
 bool Sudoku::isLegal(int y, int x, int number)
@@ -78,7 +69,7 @@ bool Sudoku::isLegal(int y, int x, int number)
 	// 3x3 Big Grid
 	int beginY = (y / 3) * 3;
 	int beginX = (x / 3) * 3;
-	for (int i = 0; i < 9; ++i)
+	for (int i = 0; i < N; ++i)
 	{
 		int gridY = beginY + i / 3;
 		int gridX = beginX + i % 3;
@@ -90,7 +81,7 @@ bool Sudoku::isLegal(int y, int x, int number)
 	}
 
 	// Column
-	for (int i = 0; i < 9; ++i)
+	for (int i = 0; i < N; ++i)
 	{
 		if (i != y && table[i][x] == number)
 		{
@@ -99,7 +90,7 @@ bool Sudoku::isLegal(int y, int x, int number)
 	}
 
 	// Row
-	for (int i = 0; i < 9; ++i)
+	for (int i = 0; i < N; ++i)
 	{
 		if (i != x && table[y][i] == number)
 		{
@@ -108,4 +99,30 @@ bool Sudoku::isLegal(int y, int x, int number)
 	}
 
 	return true;
+}
+
+coordinate Sudoku::nextBlank(int y, int x)
+{
+	coordinate c;
+	c.x = x;
+	c.y = y;
+
+	while (true)
+	{
+		++c.x;
+		c.y += (c.x / N);
+		c.x %= N;
+
+		if (c.y == N)
+		{
+			break;
+		}
+
+		if ('1' > table[c.y][c.x] || table[c.y][c.x] > '9')
+		{
+			break;
+		}
+	}
+
+	return c;
 }
