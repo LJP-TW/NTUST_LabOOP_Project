@@ -48,7 +48,7 @@ void Sudoku::easyMode()
 				for (int n = 1; n <= 9; n++)	//¼Æ¦r1-9
 				{
 					int canPutNumber = 0;
-					bool onlyOnePossible = true;
+					bool onlyOnePossible = false;
 					int putInNumber = 0;
 					int tempR = 0;
 					int tempC = 0;
@@ -161,7 +161,7 @@ void Sudoku::easyMode()
 				if (canPutNumber == 1)
 				{
 					needRefresh = true;
-					table[tempR][tempC] = n;
+					table[tempR][tempC] = n + '0';
 					record[tempR][tempC].clear();
 					removeRecord(tempR, tempC, n);
 				}
@@ -196,7 +196,7 @@ void Sudoku::easyMode()
 				if (canPutNumber == 1)
 				{
 					needRefresh = true;
-					table[tempR][tempC] = n;
+					table[tempR][tempC] = n + '0';
 					record[tempR][tempC].clear();
 					removeRecord(tempR, tempC, n);
 				}

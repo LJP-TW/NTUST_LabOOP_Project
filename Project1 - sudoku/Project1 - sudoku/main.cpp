@@ -2,31 +2,37 @@
 #include <fstream>
 #include "sudoku.h"
 #define N 9
+//#define DEBUG
 
+#ifdef DEBUG
+#include <ctime>
+#endif
 
 const std::string FILE_NAME = "Question.txt";
 
 void print(char a[N][N]);
-char a[N][N] = { 'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n',
-'n','n','n','n','n','n','n','n','n' };
+
 int main()
 {
+#ifdef DEBUG
+	clock_t start = clock();
+#endif
+
 	// Read sudoku
 	//Sudoku s;
 	Sudoku s(FILE_NAME);
 
 	// Solve sudoku
-	//s.solve();
+	s.solve();
 
 	// Output
 	print(s.getTable());
+
+#ifdef DEBUG
+	clock_t end = clock();
+	cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
+#endif
+
 	system("pause");
 	return 0;
 }
