@@ -18,12 +18,30 @@
     <ClCompile Include="Main.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
-    <ClCompile Include="calculator.cpp">
+    <ClCompile Include="General.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
+    <ClCompile Include="NumObject.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Integer.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
+    <ClCompile Include="Decimal.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="calculator.h">
+    <ClInclude Include="General.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="NumObject.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Integer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Decimal.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

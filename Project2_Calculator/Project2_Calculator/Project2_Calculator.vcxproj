@@ -110,7 +110,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="calculator.cpp">
+    <ClCompile Include="Decimal.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="General.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Integer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -118,9 +126,25 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="NumObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="calculator.h">
+    <ClInclude Include="Decimal.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="General.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Integer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="NumObject.h">
       <SubType>
       </SubType>
     </ClInclude>

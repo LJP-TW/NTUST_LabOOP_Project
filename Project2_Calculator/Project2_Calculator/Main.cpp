@@ -3,65 +3,107 @@
 // Last Update: May 18, 2018
 // Problem statement: This C++ program about a calculator.
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
+#include <map>
 
-#include "calculator.h"
+#include "General.h"
+#include "NumObject.h"
+#include "Integer.h"
+#include "Decimal.h"
 
 using namespace std;
 
 int main()
 {
+	map <string, NumObject> varList;
 	string strFormula;
 	while (cin >> strFormula)
 	{
 		formulaProcess(strFormula);
 
-		stringstream formula;
-		formula << strFormula;
+		stringstream ssCommand;
+		ssCommand << strFormula;
 
-		string command;
-		formula >> command;
+		string strBegin;
+		ssCommand >> strBegin;
 
-		if (command == "Set" || command == "set")
+		stringstream ssFormula;
+
+		// Set Variable
+		if (strBegin == "Set" || strBegin == "set") // Set A = 1 + 2 + B
 		{
-			formula >> command;
+			string varType,	varName, assign;
+			ssCommand >> varType >> varName >> assign;
 
-			string variableName;
-			formula >> variableName;
+			// Set Integer Variable
+			if (varType == "Integer" || varType == "integer")
+			{
+				string pureFormula;
+				getline(ssCommand, pureFormula);
+				pureFormula.erase(pureFormula.begin());
+				ssFormula << pureFormula;
 
-			if (command == "Integer" || command == "integer")
-			{
-				numObject variable = calculate(formula);
-				setInteger(variable);
+				Integer variable = ssFormula;
+				varList[varName] = variable;
 			}
-			else if (command == "Decimal" || command == "decimal")
+
+			// Set Decimal Variable
+			else if (varType == "Decimal" || varType == "decimal")
 			{
-				numObject variable = calculate(formula);
-				setDecimal(variable);
+				string pureFormula;
+				getline(ssCommand, pureFormula);
+				pureFormula.erase(pureFormula.begin());
+				ssFormula << pureFormula;
+
+				Decimal variable = ssFormula;
+				varList[varName] = variable;
 			}
+
+			// Type not defined
 			else
 			{
 				error("TYPE NOT DEFINED");
 			}
 		}
+
+		// Assign varible value or Formula calculate
 		else
 		{
-			string temp;
-			formula >> temp;
+			string strSecond;
+			ssFormula >> strSecond;
 
-			if (temp == "=")
+			// Assign varible value
+			if (strSecond == "=") // A = 1 + 2 + B 
 			{
-				
+				// Search Varible
+				auto it = varList.find(strBegin);
+
+				if (it != varList.end())
+				{
+					string pureFormula;
+					getline(ssCommand, pureFormula);
+					pureFormula.erase(pureFormula.begin());
+					ssFormula << pureFormula;
+
+					it->second = ssFormula;
+				}
+
+				// Variable not exist
+				else
+				{
+					error("VARIABLE NOT EXIST");
+				}
 			}
+
+			// Formula calculate // 1.5 + 3 * ( - ( - 5 ) )
 			else
 			{
-				numObject result = calculate(formula);
+				ssFormula << strFormula;
+				NumObject result = ssFormula;
+				result.print();
 			}
-
 		}
-
-		result.print();
 	}
 	return 0;
 }
