@@ -16,15 +16,26 @@ class Calculator
 public:
 	Calculator();
 	~Calculator();
+
 	string process(string& strFormula);
-
-	bool preProcess(string& strFormula);
-
-	NumObject* calculate(stringstream& formula);
 
 private:
 	map <string, NumObject*> varList;
 
-	// error message function
-	string message(string errorMessage);
+	// process Helper function
+	// - preProcess
+	//   Verify whether strFormula includes a illegal formula
+	//   If strFormula doesn't include a illegal formula, return true
+	//   or return false
+	bool preProcess(string& strFormula);
+	// - calculate
+	//   Handle formula, which may be command that setting variable, or just a single calculable formula
+	//   The pointer returned by this function may be point to a Integer or Decimal
+	NumObject* calculate(stringstream& formula);
+	//   mode 0 : The pointer return by this function points to a Integer
+	//   mode 1 : The pointer return by this function points to a Decimal
+	NumObject* calculate(stringstream& formula, int mode);
+
+	// message function
+	string message(string errorMessage) { return errorMessage; };
 };

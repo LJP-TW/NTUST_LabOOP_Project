@@ -13,13 +13,10 @@ class NumObject
 {
 public:
 	NumObject();
-	NumObject(stringstream& formula);
-	~NumObject();
+	virtual ~NumObject();
 
-	void print();
-
-	const NumObject& operator=(stringstream& formula);
+	// Other functions
+	virtual string getType() const = 0;
 
 private:
-
 };

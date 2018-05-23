@@ -5,6 +5,19 @@
 #include "Calculator.h"
 
 
+Calculator::Calculator()
+{
+}
+
+Calculator::~Calculator()
+{
+	// Free every pointer in varList
+	for (auto it : varList)
+	{
+		delete it.second;
+	}
+}
+
 string Calculator::process(string & strFormula)
 {
 	// determine formula is legal or not
@@ -83,7 +96,8 @@ string Calculator::process(string & strFormula)
 				pureFormula.erase(pureFormula.begin());
 				ssFormula << pureFormula;
 
-				*(it->second) = ssFormula;
+				delete it->second;
+				it->second = calculate(ssFormula);
 
 				return message("SUCCESS VARIABLE ASSIGN");
 			}
@@ -100,8 +114,16 @@ string Calculator::process(string & strFormula)
 		else
 		{
 			ssFormula << strFormula;
-			NumObject result = ssFormula;
-			result.print();
+			NumObject* pt = calculate(ssFormula);
+			if (pt->getType() == "Integer")
+			{
+				cout << *(Integer *)calculate(ssFormula);
+			}
+			else
+			{
+				cout << *(Decimal *)calculate(ssFormula);
+			}
+			delete pt;
 		}
 	}
 	return string();

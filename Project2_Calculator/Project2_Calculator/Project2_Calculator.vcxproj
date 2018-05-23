@@ -114,18 +114,17 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="CalculatorUnfinished.cpp" />
     <ClCompile Include="Decimal.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="General.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="DecimalUnfinished.cpp" />
     <ClCompile Include="Integer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="IntegerUnfinished.cpp" />
     <ClCompile Include="Main.cpp">
       <SubType>
       </SubType>
@@ -138,10 +137,6 @@
   <ItemGroup>
     <ClInclude Include="Calculator.h" />
     <ClInclude Include="Decimal.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="General.h">
       <SubType>
       </SubType>
     </ClInclude>
