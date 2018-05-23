@@ -42,6 +42,11 @@ public:
 	// Allow 2^(2.5) (powering a Integer)
 	const Decimal powerInteger(const Integer& other) const;
 	
+	// Allow (3.0)!
+	// Not allow (3.5)!
+	// factorial() always returns Integer
+	const Integer factorial();
+
 	// Convert Decimal to Integer
 	const Integer dtoi() const;
 

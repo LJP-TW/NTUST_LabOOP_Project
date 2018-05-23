@@ -99,6 +99,17 @@ const Decimal Decimal::powerInteger(const Integer & other) const
 	return newDecimal;
 }
 
+const Integer Decimal::factorial()
+{
+	Integer newInteger;
+
+	// Whether denominator == 1
+
+	// Write some code
+
+	return Integer();
+}
+
 const Integer Decimal::dtoi() const
 {
 	Integer newInteger;
