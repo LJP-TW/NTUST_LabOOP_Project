@@ -136,10 +136,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Calculator.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Calculator.h" />
     <ClInclude Include="Decimal.h">
       <SubType>
       </SubType>
