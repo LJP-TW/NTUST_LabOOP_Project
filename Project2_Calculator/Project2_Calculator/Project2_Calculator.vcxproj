@@ -110,6 +110,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Calculator.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Decimal.cpp">
       <SubType>
       </SubType>
@@ -132,6 +136,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Calculator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Decimal.h">
       <SubType>
       </SubType>

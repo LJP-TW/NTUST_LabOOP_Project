@@ -11,16 +11,20 @@
 #include "NumObject.h"
 #include "Integer.h"
 #include "Decimal.h"
+#include "Calculator.h"
 
 using namespace std;
 
 int main()
 {
-	map <string, NumObject> varList;
+	Calculator calculator;
+
 	string strFormula;
+
 	while (cin >> strFormula)
 	{
-		formulaProcess(strFormula);
+		string result = calculator.process(strFormula);
+		cout << result;
 
 		stringstream ssCommand;
 		ssCommand << strFormula;

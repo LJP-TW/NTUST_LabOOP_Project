@@ -30,6 +30,9 @@
     <ClCompile Include="Decimal.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
+    <ClCompile Include="Calculator.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="General.h">
@@ -42,6 +45,9 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Decimal.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Calculator.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
