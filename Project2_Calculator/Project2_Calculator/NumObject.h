@@ -18,6 +18,9 @@ public:
 	// Other functions
 	virtual const string getType() const = 0;
 	virtual const string getOutput() const = 0;
+	virtual const bool isError() const = 0;
 
-private:
+protected:
+	virtual const void setError(char error) = 0;
+	char errorFlag;
 };

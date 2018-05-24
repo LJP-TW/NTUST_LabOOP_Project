@@ -35,6 +35,8 @@ private:
 	//   mode 0 : The pointer return by this function points to a Integer
 	//   mode 1 : The pointer return by this function points to a Decimal
 	NumObject* calculate(stringstream& formula, int mode);
+	//   - toPostfixExpression
+	string toPostfixExpression(stringstream& formula);
 	//   - getOpPriority
 	//     get priority of operator 
 	int getOpPriority(char op);

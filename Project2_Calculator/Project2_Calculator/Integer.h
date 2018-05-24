@@ -23,10 +23,17 @@ public:
 	const Integer operator -(const Integer& other) const;
 	const Integer operator *(const Integer& other) const;
 	const Integer operator /(const Integer& other) const;
+	const Integer operator %(const Integer& other) const;
 	friend ostream& operator <<(ostream& output, Integer& integer);
 
 	// Only allow legal input
 	friend istream& operator >>(istream& input, Integer& integer);
+
+	const bool operator >(const Integer& other) const;
+	const bool operator >=(const Integer& other) const;
+	const bool operator <(const Integer& other) const;
+	const bool operator <=(const Integer& other) const;
+	const bool operator ==(const Integer& other) const;
 
 	// Accessor
 	bool getSign() const { return sign; };
@@ -44,10 +51,18 @@ public:
 
 	virtual const string getOutput() const;
 	
+	virtual const bool isError() const;
+
 protected:
 	virtual const string getType() const { return "Integer"; };
+	virtual const void setError(char error);
 
 private:
+	enum ErrorType
+	{
+
+	};
+
 	// true  : positive
 	// false : negative
 	bool sign;

@@ -36,6 +36,16 @@ const Integer Integer::operator /(const Integer& other) const
 	return newInteger;
 }
 
+const bool Integer::operator>(const Integer & other) const
+{
+	return false;
+}
+
+const bool Integer::operator<(const Integer & other) const
+{
+	return false;
+}
+
 const Integer Integer::power(const Integer& other) const
 {
 	Integer newInteger;
@@ -57,4 +67,14 @@ const Integer Integer::factorial()
 const string Integer::getOutput() const
 {
 	return string();
+}
+
+const bool Integer::isError() const
+{
+	return false;
+}
+
+const void Integer::setError(char error)
+{
+	return void();
 }

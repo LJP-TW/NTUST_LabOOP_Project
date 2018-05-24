@@ -124,6 +124,11 @@ const string Decimal::getOutput() const
 	return string();
 }
 
+const void Decimal::setError(char error)
+{
+	return void();
+}
+
 ostream& operator <<(ostream& output, Decimal& decimal)
 {
 	// Output to 100 decimal digit
