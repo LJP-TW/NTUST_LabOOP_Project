@@ -39,6 +39,9 @@
     <ClCompile Include="CalculatorUnfinished.cpp">
       <Filter>資源檔</Filter>
     </ClCompile>
+    <ClCompile Include="IntegerJeffery.cpp">
+      <Filter>資源檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NumObject.h">

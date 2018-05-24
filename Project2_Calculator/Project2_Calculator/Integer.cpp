@@ -33,7 +33,7 @@ Integer::Integer(string& number)
 	}
 }
 
-Integer::Integer(Integer& other)
+Integer::Integer(const Integer& other)
 {
 	this->sign = other.sign;
 	this->number = other.number;

@@ -125,6 +125,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="IntegerUnfinished.cpp" />
+    <ClCompile Include="IntegerJeffery.cpp" />
     <ClCompile Include="Main.cpp">
       <SubType>
       </SubType>
