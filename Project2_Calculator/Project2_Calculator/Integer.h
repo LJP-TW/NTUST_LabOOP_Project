@@ -13,7 +13,7 @@ public:
 
 	// Allow 1234 or -1234
 	Integer(string& number);
-	Integer(Integer& other);
+	Integer(const Integer& other);
 	virtual ~Integer();
 
 	// Operator overloading
@@ -24,6 +24,7 @@ public:
 	const Integer operator *(const Integer& other) const;
 	const Integer operator /(const Integer& other) const;
 	friend ostream& operator <<(ostream& output, Integer& integer);
+	
 
 	// Only allow legal input
 	friend istream& operator >>(istream& input, Integer& integer);
