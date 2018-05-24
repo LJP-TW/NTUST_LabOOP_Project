@@ -72,6 +72,56 @@ const Decimal Decimal::operator /(const Integer& other) const
 	return newDecimal;
 }
 
+const bool Decimal::operator>(const Decimal & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator>(const Integer & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator>=(const Decimal & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator>=(const Integer & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator<(const Decimal & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator<(const Integer & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator<=(const Decimal & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator<=(const Integer & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator==(const Decimal & other) const
+{
+	return false;
+}
+
+const bool Decimal::operator==(const Integer & other) const
+{
+	return false;
+}
+
 const Decimal Decimal::power(const Integer& other) const
 {
 	Decimal newDecimal;
@@ -122,6 +172,11 @@ const Integer Decimal::dtoi() const
 const string Decimal::getOutput() const
 {
 	return string();
+}
+
+const bool Decimal::isError() const
+{
+	return false;
 }
 
 const void Decimal::setError(char error)

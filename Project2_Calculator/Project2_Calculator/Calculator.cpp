@@ -67,7 +67,14 @@ string Calculator::process(string strFormula)
 
 			ssFormula << pureFormula;
 
-			varList[varName] = calculate(ssFormula);
+			NumObject* pt = calculate(ssFormula);
+
+			if (pt->isError())
+			{
+				return message("CALCULATION ERROR");
+			}
+
+			varList[varName] = pt;
 			return message("SUCCESS SET VARIABLE");
 		}
 
@@ -85,6 +92,13 @@ string Calculator::process(string strFormula)
 			}
 
 			ssFormula << pureFormula;
+
+			NumObject* pt = calculate(ssFormula);
+
+			if (pt->isError())
+			{
+				return message("CALCULATION ERROR");
+			}
 
 			varList[varName] = calculate(ssFormula);
 
@@ -127,6 +141,13 @@ string Calculator::process(string strFormula)
 
 				ssFormula << pureFormula;
 
+				NumObject* pt = calculate(ssFormula);
+
+				if (pt->isError())
+				{
+					return message("CALCULATION ERROR");
+				}
+
 				delete it->second;
 				it->second = calculate(ssFormula);
 
@@ -144,6 +165,8 @@ string Calculator::process(string strFormula)
 		// 1.5 + 3 * ( - ( - 5 ) )
 		else
 		{
+			string result;
+
 			// preProcess formula
 			if (!preProcess(strFormula))
 			{
@@ -153,15 +176,22 @@ string Calculator::process(string strFormula)
 			ssFormula << strFormula;
 
 			NumObject* pt = calculate(ssFormula);
+
+			if (pt->isError())
+			{
+				return message("CALCULATION ERROR");
+			}
+
 			if (pt->getType() == "Integer")
 			{
-				cout << *(Integer *)calculate(ssFormula);
+				result = ((Integer *)calculate(ssFormula))->getOutput();
 			}
 			else
 			{
-				cout << *(Decimal *)calculate(ssFormula);
+				result = ((Decimal *)calculate(ssFormula))->getOutput();
 			}
 			delete pt;
+			return result;
 		}
 	}
 	return string();

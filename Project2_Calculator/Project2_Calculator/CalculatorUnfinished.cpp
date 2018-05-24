@@ -14,3 +14,13 @@ NumObject* Calculator::calculate(stringstream& formula, int mode)
 {
 	return nullptr;
 }
+
+string Calculator::toPostfixExpression(stringstream& formula)
+{
+	return string();
+}
+
+int Calculator::getOpPriority(char op)
+{
+	return 0;
+}

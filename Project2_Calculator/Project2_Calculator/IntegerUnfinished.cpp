@@ -36,12 +36,32 @@ const Integer Integer::operator /(const Integer& other) const
 	return newInteger;
 }
 
+const Integer Integer::operator%(const Integer & other) const
+{
+	return Integer();
+}
+
 const bool Integer::operator>(const Integer & other) const
 {
 	return false;
 }
 
+const bool Integer::operator>=(const Integer & other) const
+{
+	return false;
+}
+
 const bool Integer::operator<(const Integer & other) const
+{
+	return false;
+}
+
+const bool Integer::operator<=(const Integer & other) const
+{
+	return false;
+}
+
+const bool Integer::operator==(const Integer & other) const
 {
 	return false;
 }
