@@ -94,6 +94,8 @@ NumObject* Calculator::calculate(stringstream& formula)
 					}
 				}
 
+				delete rvalue;
+
 				// Error checking
 				if (pt->isError())
 				{
@@ -103,21 +105,198 @@ NumObject* Calculator::calculate(stringstream& formula)
 			}
 			else if (temp[0] == 'P')
 			{
+				// Do nothing, haha
 			}
 			else if (temp[0] == 'N')
 			{
+				NumObject* pt = numStack.top();
+				if (pt->getType == "Integer")
+				{
+					((Integer *)pt)->setSign(!((Integer *)pt)->getSign());
+				}
+				else
+				{
+					((Decimal *)pt)->setSign(!((Decimal *)pt)->getSign());
+				}
 			}
 			else if (temp[0] == '*')
 			{
+				NumObject* pt = numStack.top();
+				NumObject* rvalue;
+				if (pt->getType() == "Integer")
+				{
+					rvalue = new Integer(*(Integer*)pt);
+				}
+				else
+				{
+					rvalue = new Decimal(*(Decimal*)pt);
+				}
+				delete pt;
+				numStack.pop();
+
+				pt = numStack.top();
+				if (pt->getType() == "Integer")
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Integer *)pt) = (*(Integer *)pt) * (*(Integer *)rvalue);
+					}
+					else
+					{
+						NumObject* temp = pt;
+						pt = rvalue;
+						rvalue = temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Integer *)rvalue);
+					}
+				}
+				else
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Integer *)rvalue);
+					}
+					else
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
+					}
+				}
+
+				delete rvalue;
 			}
 			else if (temp[0] == '/')
 			{
+				NumObject* pt = numStack.top();
+				NumObject* rvalue;
+				if (pt->getType() == "Integer")
+				{
+					rvalue = new Integer(*(Integer*)pt);
+				}
+				else
+				{
+					rvalue = new Decimal(*(Decimal*)pt);
+				}
+				delete pt;
+				numStack.pop();
+
+				pt = numStack.top();
+				if (pt->getType() == "Integer")
+				{
+					// Integer / Integer
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Integer *)pt) = (*(Integer *)pt) / (*(Integer *)rvalue);
+					}
+
+					// Integer / Decimal
+					else
+					{
+						NumObject* temp = pt;
+						pt = rvalue;
+						rvalue = temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Integer *)rvalue);
+					}
+				}
+				else
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Integer *)rvalue);
+					}
+					else
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
+					}
+				}
+
+				delete rvalue;
 			}
 			else if (temp[0] == '+')
 			{
+				NumObject* pt = numStack.top();
+				NumObject* rvalue;
+				if (pt->getType() == "Integer")
+				{
+					rvalue = new Integer(*(Integer*)pt);
+				}
+				else
+				{
+					rvalue = new Decimal(*(Decimal*)pt);
+				}
+				delete pt;
+				numStack.pop();
+
+				pt = numStack.top();
+				if (pt->getType() == "Integer")
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Integer *)pt) = (*(Integer *)pt) + (*(Integer *)rvalue);
+					}
+					else
+					{
+						NumObject* temp = pt;
+						pt = rvalue;
+						rvalue = temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Integer *)rvalue);
+					}
+				}
+				else
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Integer *)rvalue);
+					}
+					else
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
+					}
+				}
+
+				delete rvalue;
 			}
 			else if (temp[0] == '-')
 			{
+				NumObject* pt = numStack.top();
+				NumObject* rvalue;
+				if (pt->getType() == "Integer")
+				{
+					rvalue = new Integer(*(Integer*)pt);
+				}
+				else
+				{
+					rvalue = new Decimal(*(Decimal*)pt);
+				}
+				delete pt;
+				numStack.pop();
+
+				pt = numStack.top();
+				if (pt->getType() == "Integer")
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Integer *)pt) = (*(Integer *)pt) - (*(Integer *)rvalue);
+					}
+					else
+					{
+						NumObject* temp = pt;
+						pt = rvalue;
+						rvalue = temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Integer *)rvalue);
+					}
+				}
+				else
+				{
+					if (rvalue->getType() == "Integer")
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Integer *)rvalue);
+					}
+					else
+					{
+						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
+					}
+				}
+
+				delete rvalue;
 			}
 		}
 	}

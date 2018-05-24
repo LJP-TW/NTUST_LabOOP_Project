@@ -5,7 +5,7 @@
 #pragma once
 #include "NumObject.h" 
 
-class Integer: public NumObject
+class Integer : public NumObject
 {
 public:
 	// Default set sign to positive, 0
@@ -13,7 +13,7 @@ public:
 
 	// Allow 1234 or -1234
 	Integer(string& number);
-	Integer(Integer& other);
+	Integer(const Integer& other);
 	virtual ~Integer();
 
 	// Operator overloading
@@ -50,7 +50,7 @@ public:
 	const Integer factorial();
 
 	virtual const string getOutput() const;
-	
+
 	virtual const bool isError() const;
 
 protected:
