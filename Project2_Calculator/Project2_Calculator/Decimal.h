@@ -14,7 +14,7 @@ public:
 	
 	// Allow 1234 or 1234.5678 or -1234 or -1234.5678
 	Decimal(string& number);
-	Decimal(Decimal& other);
+	Decimal(const Decimal& other);
 	virtual ~Decimal();
 
 	// Operator overloading
@@ -44,6 +44,16 @@ public:
 	const bool operator <=(const Integer& other) const;
 	const bool operator ==(const Decimal& other) const;
 	const bool operator ==(const Integer& other) const;
+
+	// Accessor
+	bool getSign() const { return sign; };
+	Integer getNumerator() const { return numerator; };
+	Integer getDenominator() const { return denominator; };
+
+	// Mutator
+	void setSign(bool sign) { this->sign = sign; };
+	void setNumerator(Integer numerator) { this->numerator = numerator; };
+	void setDenominator(Integer denominator) { this->denominator = denominator; };
 
 	// Other functions
 	// Allow 2.5^(2) or 2.5^(2.5)

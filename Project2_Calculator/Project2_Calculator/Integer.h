@@ -13,7 +13,7 @@ public:
 
 	// Allow 1234 or -1234
 	Integer(string& number);
-	Integer(Integer& other);
+	Integer(const Integer& other);
 	virtual ~Integer();
 
 	// Operator overloading
