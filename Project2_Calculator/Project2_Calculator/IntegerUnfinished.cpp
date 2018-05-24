@@ -94,7 +94,7 @@ const bool Integer::isError() const
 	return false;
 }
 
-const void Integer::setError(char error)
+string Integer::invertToString(char * target, int size) const
 {
-	return void();
+	return string();
 }

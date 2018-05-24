@@ -145,7 +145,7 @@ const Decimal Decimal::powerInteger(const Integer & other) const
 	Decimal newDecimal;
 
 	// Write some code
-	
+
 	return newDecimal;
 }
 
@@ -177,11 +177,6 @@ const string Decimal::getOutput() const
 const bool Decimal::isError() const
 {
 	return false;
-}
-
-const void Decimal::setError(char error)
-{
-	return void();
 }
 
 ostream& operator <<(ostream& output, Decimal& decimal)

@@ -114,6 +114,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="CalculatorMing.cpp" />
     <ClCompile Include="CalculatorUnfinished.cpp" />
     <ClCompile Include="Decimal.cpp">
       <SubType>

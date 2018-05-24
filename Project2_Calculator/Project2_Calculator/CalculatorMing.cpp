@@ -70,24 +70,35 @@ NumObject* Calculator::calculate(stringstream& formula)
 				pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
+					// Integer ^ Integer
 					if (rvalue->getType() == "Integer")
 					{
 						((Integer *)pt)->power(*(Integer *)rvalue);
 					}
+
+					// Integer ^ Decimal
 					else
 					{
 						NumObject* temp = pt;
-						pt = rvalue;
-						rvalue = temp;
-						((Decimal *)pt)->powerInteger(*(Integer *)rvalue);
+						pt = new Decimal(*(Integer *)pt);
+						((Decimal *)pt)->power(*(Decimal *)rvalue);
+
+						delete temp;
 					}
 				}
 				else
 				{
+					// Decimal ^ Integer
 					if (rvalue->getType() == "Integer")
 					{
-						((Decimal *)pt)->power(*(Integer *)rvalue);
+						NumObject* temp = rvalue;
+						rvalue = new Decimal(*(Integer *)rvalue);
+						((Decimal *)pt)->power(*(Decimal *)rvalue);
+
+						delete temp;
 					}
+
+					// Decimal ^ Decimal
 					else
 					{
 						((Decimal *)pt)->power(*(Decimal *)rvalue);
@@ -110,7 +121,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 			else if (temp[0] == 'N')
 			{
 				NumObject* pt = numStack.top();
-				if (pt->getType == "Integer")
+				if (pt->getType() == "Integer")
 				{
 					((Integer *)pt)->setSign(!((Integer *)pt)->getSign());
 				}
@@ -137,24 +148,35 @@ NumObject* Calculator::calculate(stringstream& formula)
 				pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
+					// Integer * Integer
 					if (rvalue->getType() == "Integer")
 					{
 						(*(Integer *)pt) = (*(Integer *)pt) * (*(Integer *)rvalue);
 					}
+
+					// Integer * Decimal
 					else
 					{
 						NumObject* temp = pt;
-						pt = rvalue;
-						rvalue = temp;
-						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Integer *)rvalue);
+						pt = new Decimal(*(Integer *)pt);
+						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
+
+						delete temp;
 					}
 				}
 				else
 				{
+					// Decimal * Integer
 					if (rvalue->getType() == "Integer")
 					{
-						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Integer *)rvalue);
+						NumObject* temp = rvalue;
+						rvalue = new Decimal(*(Integer *)rvalue);
+						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
+
+						delete temp;
 					}
+
+					// Decimal * Decimal
 					else
 					{
 						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
@@ -191,17 +213,25 @@ NumObject* Calculator::calculate(stringstream& formula)
 					else
 					{
 						NumObject* temp = pt;
-						pt = rvalue;
-						rvalue = temp;
-						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Integer *)rvalue);
+						pt = new Decimal(*(Integer *)pt);
+						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
+
+						delete temp;
 					}
 				}
 				else
 				{
+					// Decimal / Integer
 					if (rvalue->getType() == "Integer")
 					{
-						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Integer *)rvalue);
+						NumObject* temp = rvalue;
+						rvalue = new Decimal(*(Integer *)rvalue);
+						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
+
+						delete temp;
 					}
+
+					// Decimal / Decimal
 					else
 					{
 						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
@@ -209,6 +239,13 @@ NumObject* Calculator::calculate(stringstream& formula)
 				}
 
 				delete rvalue;
+
+				// Error checking
+				if (pt->isError())
+				{
+					error = true;
+					break;
+				}
 			}
 			else if (temp[0] == '+')
 			{
@@ -228,24 +265,35 @@ NumObject* Calculator::calculate(stringstream& formula)
 				pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
+					// Integer + Integer
 					if (rvalue->getType() == "Integer")
 					{
 						(*(Integer *)pt) = (*(Integer *)pt) + (*(Integer *)rvalue);
 					}
+
+					// Integer + Decimal
 					else
 					{
 						NumObject* temp = pt;
-						pt = rvalue;
-						rvalue = temp;
-						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Integer *)rvalue);
+						pt = new Decimal(*(Integer *)pt);
+						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
+
+						delete temp;
 					}
 				}
 				else
 				{
+					// Decimal + Integer
 					if (rvalue->getType() == "Integer")
 					{
-						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Integer *)rvalue);
+						NumObject* temp = rvalue;
+						rvalue = new Decimal(*(Integer *)rvalue);
+						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
+
+						delete temp;
 					}
+
+					// Decimal + Decimal
 					else
 					{
 						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
@@ -272,24 +320,35 @@ NumObject* Calculator::calculate(stringstream& formula)
 				pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
+					// Integer - Integer
 					if (rvalue->getType() == "Integer")
 					{
 						(*(Integer *)pt) = (*(Integer *)pt) - (*(Integer *)rvalue);
 					}
+
+					// Integer - Decimal
 					else
 					{
 						NumObject* temp = pt;
-						pt = rvalue;
-						rvalue = temp;
-						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Integer *)rvalue);
+						pt = new Decimal(*(Integer *)pt);
+						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
+
+						delete temp;
 					}
 				}
 				else
 				{
+					// Decimal - Integer
 					if (rvalue->getType() == "Integer")
 					{
-						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Integer *)rvalue);
+						NumObject* temp = rvalue;
+						rvalue = new Decimal(*(Integer *)rvalue);
+						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
+
+						delete temp;
 					}
+
+					// Decimal - Decimal
 					else
 					{
 						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
@@ -301,7 +360,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 		}
 	}
 
-	if (error)
+	if (error || numStack.size() != 1)
 	{
 		while (numStack.size() != 0)
 		{
@@ -312,12 +371,29 @@ NumObject* Calculator::calculate(stringstream& formula)
 		return nullptr;
 	}
 
-	return nullptr;
+	return numStack.top();
 }
 
 NumObject* Calculator::calculate(stringstream& formula, int mode)
 {
-	return nullptr;
+	NumObject* pt = calculate(formula);
+	NumObject* temp = pt;
+
+	// If mode == 0, return Integer
+	if (mode == 0 && pt->getType() == "Decimal")
+	{
+		pt = new Integer(pt->getOutput());
+		delete temp;
+	}
+
+	// Else if mode == 1, return Decimal
+	else if (mode == 1 && pt->getType() == "Integer")
+	{
+		pt = new Decimal(*(Integer *)pt);
+		delete temp;
+	}
+
+	return pt;
 }
 
 string Calculator::toPostfixExpression(stringstream& formula)

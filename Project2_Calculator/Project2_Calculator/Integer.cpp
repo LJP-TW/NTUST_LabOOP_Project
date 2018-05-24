@@ -4,13 +4,16 @@
 // Problem statement: This C++ header to implement class .
 #include "Integer.h"
 
-Integer::Integer() : sign(true), number("0")
+Integer::Integer() : errorFlag(0), sign(true), number("0")
 {
 }
 
-Integer::Integer(string& number)
+Integer::Integer(const string& number)
 {
 	int i = 0;
+
+	this->errorFlag = 0;
+
 	if (number[i] == '-')
 	{
 		++i;
@@ -25,16 +28,17 @@ Integer::Integer(string& number)
 	{
 		this->sign = true;
 	}
-	
+
 	this->number = "";
-	while (number[i])
+	while (number[i] != 0 && number[i] != '.')
 	{
 		this->number += number[i++];
 	}
 }
 
-Integer::Integer(Integer& other)
+Integer::Integer(const Integer& other)
 {
+	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
 	this->number = other.number;
 }
@@ -45,6 +49,7 @@ Integer::~Integer()
 
 const Integer& Integer::operator=(const Integer& other)
 {
+	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
 	this->number = other.number;
 
@@ -54,6 +59,9 @@ const Integer& Integer::operator=(const Integer& other)
 const Integer& Integer::operator=(const string& number)
 {
 	int i = 0;
+
+	this->errorFlag = 0;
+
 	if (number[i] == '-')
 	{
 		++i;

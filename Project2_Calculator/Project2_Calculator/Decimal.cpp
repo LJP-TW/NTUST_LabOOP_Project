@@ -4,13 +4,16 @@
 // Problem statement: This C++ header to implement class .
 #include "Decimal.h"
 
-Decimal::Decimal() : sign(true), numerator(string("0")), denominator(string("1"))
+Decimal::Decimal() : errorFlag(0), sign(true), numerator(string("0")), denominator(string("1"))
 {
 }
 
-Decimal::Decimal(string& number)
+Decimal::Decimal(const string& number)
 {
 	int i = 0;
+
+	this->errorFlag = 0;
+
 	if (number[i] == '-')
 	{
 		++i;
@@ -53,8 +56,18 @@ Decimal::Decimal(string& number)
 	this->denominator = strDenominator;
 }
 
-Decimal::Decimal(Decimal& other)
+Decimal::Decimal(const Integer& other)
 {
+	const NumObject* pt = &other;
+	this->errorFlag = pt->getError();
+	this->sign = other.getSign();
+	this->numerator = other.getNumber();
+	this->denominator = "1";
+}
+
+Decimal::Decimal(const Decimal& other)
+{
+	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
 	this->numerator = other.numerator;
 	this->denominator = other.denominator;
@@ -66,6 +79,7 @@ Decimal::~Decimal()
 
 const Decimal& Decimal::operator=(const Decimal& other)
 {
+	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
 	this->numerator = other.numerator;
 	this->denominator = other.denominator;
@@ -75,6 +89,8 @@ const Decimal& Decimal::operator=(const Decimal& other)
 
 const Decimal& Decimal::operator =(const Integer& other)
 {
+	const NumObject* pt = &other;
+	this->errorFlag = pt->getError();
 	this->sign = other.getSign();
 	this->numerator = other;
 	this->denominator = "1";
@@ -85,6 +101,9 @@ const Decimal& Decimal::operator =(const Integer& other)
 const Decimal& Decimal::operator=(const string& number)
 {
 	int i = 0;
+
+	this->errorFlag = 0;
+
 	if (number[i] == '-')
 	{
 		++i;

@@ -13,7 +13,8 @@ public:
 	Decimal();
 
 	// Allow 1234 or 1234.5678 or -1234 or -1234.5678
-	Decimal(string& number);
+	Decimal(const string& number);
+	Decimal(const Integer& other);
 	Decimal(const Decimal& other);
 	virtual ~Decimal();
 
@@ -77,13 +78,20 @@ public:
 
 protected:
 	virtual const string getType() const { return "Decimal"; };
-	virtual const void setError(char error);
+
+	// Accessor
+	virtual const void setError(char error) { errorFlag = error; };
+
+	// Mutator
+	virtual const char getError() const { return errorFlag; };
 
 private:
 	enum ErrorType
 	{
 
 	};
+
+	char errorFlag;
 
 	// true  : positive
 	// false : negative
