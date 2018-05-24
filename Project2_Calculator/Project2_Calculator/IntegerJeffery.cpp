@@ -5,44 +5,19 @@ const Integer Integer::operator +(const Integer& other) const
 {
 	Integer newInteger; // Result
 
-	// Determine do "+" or "-"
+						// Determine do "+" or "-"
 
-	// "+" + "+"
+						// "+" + "+"
 	if (this->sign && other.sign)
 	{
 		newInteger.sign = true;
-		int* newArr;
+		char* newArr;
 
-		// Determine which is Bigger (Default this is bigger)
-		bool thisIsBigger = true;
-
-		// If length of other bigger than this 
-		if (this->number.length() < other.number.length())
-		{
-			thisIsBigger = false;
-		}
-
-		// If length are same
-		else if (this->number.length() == other.number.length())
-		{
-			for (int i = 0; i < this->number.length(); i++)
-			{
-				if (this->number[i] != other.number[i])
-				{
-					if (this->number[i] < other.number[i])
-					{
-						thisIsBigger = false;
-						break;
-					}
-				}
-			}
-		}
-
-		// If length of this bigger than other 
-		if (thisIsBigger)
+		// If length of this bigger than other or same 
+		if (*this >= other)
 		{
 			// Initial a new Array for newInteger
-			newArr = new int[this->number.length() + 1];
+			newArr = new char[this->number.length() + 1];
 			for (int i = 0; i < this->number.length() + 1; i++)
 			{
 				newArr[i] = 0;
@@ -66,29 +41,8 @@ const Integer Integer::operator +(const Integer& other) const
 				}
 			}
 
-			// Output to string of newInteger "number"
-
-			newInteger.number = ""; // Initial string blank
-			bool zero = false;		// Flag to determine output '0'
-
-			for (int i = this->number.length(); i >= 0; i--)
-			{
-				if ((!newArr[i] && !i) || newArr[i])
-				{
-					zero = true;
-				}
-				if (!newArr[i])
-				{
-					if (zero)
-					{
-						newInteger.number += newArr[i] + ASCII_BASE;
-					}
-				}
-				else
-				{
-					newInteger.number += newArr[i] + ASCII_BASE;
-				}
-			}
+			// Convert to string of newInteger "number"
+			newInteger.number = invertToString(newArr, this->number.length());
 		}
 
 		// If length of other bigger than this 
@@ -108,7 +62,7 @@ const Integer Integer::operator +(const Integer& other) const
 		thisTemp.sign = true;
 		otherTemp.sign = true;
 
-		newInteger = thisTemp + otherTemp; 
+		newInteger = thisTemp + otherTemp;
 		newInteger.sign = false; // - ( "+" + "+" )
 	}
 
@@ -140,36 +94,13 @@ const Integer Integer::operator -(const Integer& other) const
 	// "+" - "+"
 	if (this->sign && other.sign)
 	{
-		int* newArr;
+		char* newArr;
 
-		// Determine which is Bigger (Default this is bigger)
-		bool thisIsBigger = true;
-
-		// If length of other bigger than this 
-		if (this->number.length() < other.number.length())
-		{
-			thisIsBigger = false;
-		}
-		// If length are same
-		else if (this->number.length() == other.number.length())
-		{
-			for (int i = 0; i < this->number.length(); i++)
-			{
-				if (this->number[i] != other.number[i])
-				{
-					if (this->number[i] < other.number[i])
-					{
-						thisIsBigger = false;
-						break;
-					}
-				}
-			}
-		}
-
-		if (thisIsBigger)
+		// If length of this bigger than other or same 
+		if (*this >= other)
 		{
 			// Initial a new Array for newInteger
-			newArr = new int[this->number.length() + 1];
+			newArr = new char[this->number.length() + 1];
 			for (int i = 0; i < this->number.length() + 1; i++)
 			{
 				newArr[i] = 0;
@@ -194,29 +125,11 @@ const Integer Integer::operator -(const Integer& other) const
 			}
 
 			// Output to string of newInteger "number"
-
-			newInteger.number = ""; // Initial string blank
-			bool zero = false;		// Flag to determine output '0'
-
-			for (int i = this->number.length(); i >= 0; i--)
-			{
-				if ((!newArr[i] && !i) || newArr[i])
-				{
-					zero = true;
-				}
-				if (!newArr[i])
-				{
-					if (zero)
-					{
-						newInteger.number += newArr[i] + ASCII_BASE;
-					}
-				}
-				else
-				{
-					newInteger.number += newArr[i] + ASCII_BASE;
-				}
-			}
+			newInteger.number = invertToString(newArr, this->number.length());
 		}
+
+		// If length of other bigger than this 
+		// Exchange this and other then do it again
 		else
 		{
 			newInteger = other - *this;
@@ -253,4 +166,200 @@ const Integer Integer::operator -(const Integer& other) const
 	}
 
 	return newInteger;
+}
+
+const Integer Integer::operator *(const Integer& other) const
+{
+	Integer newInteger;
+
+	// Initial a new Array for newInteger
+	char* newArr = new char[this->number.length() + other.number.length()];
+	for (int i = 0; i < this->number.length() + other.number.length(); i++)
+	{
+		newArr[i] = 0;
+	}
+
+	for (int i = 0; i < other.number.length(); i++)
+	{
+		for (int j = 0; j < this->number.length(); j++)
+		{
+			newArr[i + j] += (this->number[this->number.length() - j - 1] - ASCII_BASE) * (other.number[other.number.length() - i - 1] - ASCII_BASE);
+			while (newArr[i + j] >= 10)
+			{
+				newArr[i + j] -= 10;
+				newArr[i + j + 1]++;
+			}
+		}
+	}
+
+	// Output to string of newInteger "number"
+	newInteger.number = invertToString(newArr, this->number.length() + other.number.length());
+
+	// Determine sign of result
+	if ((this->sign && other.sign) || (!this->sign && !other.sign))
+	{
+		newInteger.sign = true;
+	}
+	else
+	{
+		newInteger.sign = false;
+	}
+
+	return newInteger;
+}
+
+const bool Integer::operator>(const Integer & other) const
+{
+	// If length of this bigger than other 
+	if (this->number.length() > other.number.length())
+	{
+		return true;
+	}
+
+	// If length of other bigger than this
+	else if (this->number.length() < other.number.length())
+	{
+		return false;
+	}
+	// If length are same
+	else if (this->number.length() == other.number.length())
+	{
+		for (int i = 0; i < this->number.length(); i++)
+		{
+			if (this->number[i] != other.number[i])
+			{
+				return this->number[i] > other.number[i];
+			}
+		}
+	}
+	return false;
+}
+
+const bool Integer::operator>=(const Integer & other) const
+{
+	// If length of this bigger than other 
+	if (this->number.length() > other.number.length())
+	{
+		return true;
+	}
+
+	// If length of other bigger than this
+	else if (this->number.length() < other.number.length())
+	{
+		return false;
+	}
+	// If length are same
+	else if (this->number.length() == other.number.length())
+	{
+		for (int i = 0; i < this->number.length(); i++)
+		{
+			if (this->number[i] != other.number[i])
+			{
+				return this->number[i] > other.number[i];
+			}
+		}
+	}
+	return true;
+}
+
+const bool Integer::operator<(const Integer & other) const
+{
+	// If length of this bigger than other 
+	if (this->number.length() > other.number.length())
+	{
+		return false;
+	}
+
+	// If length of other bigger than this
+	else if (this->number.length() < other.number.length())
+	{
+		return true;
+	}
+	// If length are same
+	else if (this->number.length() == other.number.length())
+	{
+		for (int i = 0; i < this->number.length(); i++)
+		{
+			if (this->number[i] != other.number[i])
+			{
+				return this->number[i] < other.number[i];
+			}
+		}
+	}
+	return false;
+}
+
+const bool Integer::operator<=(const Integer & other) const
+{
+	// If length of this bigger than other 
+	if (this->number.length() > other.number.length())
+	{
+		return false;
+	}
+
+	// If length of other bigger than this
+	else if (this->number.length() < other.number.length())
+	{
+		return true;
+	}
+	// If length are same
+	else if (this->number.length() == other.number.length())
+	{
+		for (int i = 0; i < this->number.length(); i++)
+		{
+			if (this->number[i] != other.number[i])
+			{
+				return this->number[i] < other.number[i];
+			}
+		}
+	}
+	return true;
+}
+
+const bool Integer::operator==(const Integer & other) const
+{
+	// If length are same
+	if (this->number.length() == other.number.length())
+	{
+		for (int i = 0; i < this->number.length(); i++)
+		{
+			if (this->number[i] != other.number[i])
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
+	return true;
+}
+
+string Integer::invertToString(char * target, int size) const
+{
+	// Output to string of newInteger "number"
+
+	string number = ""; // Initial string blank
+	bool zero = false;		// Flag to determine output '0'
+
+	for (int i = size - 1; i >= 0; i--)
+	{
+		if ((!target[i] && !i) || target[i])
+		{
+			zero = true;
+		}
+		if (!target[i])
+		{
+			if (zero)
+			{
+				number += target[i] + ASCII_BASE;
+			}
+		}
+		else
+		{
+			number += target[i] + ASCII_BASE;
+		}
+	}
+	return string();
 }

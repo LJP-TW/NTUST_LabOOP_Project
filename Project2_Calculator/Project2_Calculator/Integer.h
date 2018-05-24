@@ -70,4 +70,10 @@ private:
 
 	// "1234" means number 1234
 	string number;
+
+	// Invert a char array to string
+	// e.g.
+	// target[0] = 'h' , [1] = 'e', [2] = 'G'
+	// output string = "Geh"
+	string invertToString(char *target, int size) const;
 };
