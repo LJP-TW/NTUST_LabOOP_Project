@@ -179,11 +179,6 @@ const bool Decimal::isError() const
 	return false;
 }
 
-const void Decimal::setError(char error)
-{
-	return void();
-}
-
 ostream& operator <<(ostream& output, Decimal& decimal)
 {
 	// Output to 100 decimal digit

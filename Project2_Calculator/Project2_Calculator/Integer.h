@@ -55,7 +55,12 @@ public:
 
 protected:
 	virtual const string getType() const { return "Integer"; };
-	virtual const void setError(char error);
+
+	// Accessor
+	virtual const void setError(char error) { errorFlag = error; };
+
+	// Mutator
+	virtual const char getError() const { return errorFlag; };
 
 private:
 	enum ErrorType
@@ -63,10 +68,18 @@ private:
 
 	};
 
+	char errorFlag;
+
 	// true  : positive
 	// false : negative
 	bool sign;
 
 	// "1234" means number 1234
 	string number;
+
+	// Invert a char array to string
+	// e.g.
+	// target[0] = 'h' , [1] = 'e', [2] = 'G'
+	// output string = "Geh"
+	string invertToString(char *target, int size);
 };
