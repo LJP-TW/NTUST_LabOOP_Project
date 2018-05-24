@@ -6,15 +6,15 @@
 #include "NumObject.h"
 #include "Integer.h"
 
-class Decimal: public NumObject
+class Decimal : public NumObject
 {
 public:
 	// Default set sign to positive, 0/1
 	Decimal();
-	
+
 	// Allow 1234 or 1234.5678 or -1234 or -1234.5678
-	Decimal(string& number);
-	Decimal(Integer& other);
+	Decimal(const string& number);
+	Decimal(const Integer& other);
 	Decimal(const Decimal& other);
 	virtual ~Decimal();
 
@@ -60,10 +60,10 @@ public:
 	// Allow 2.5^(2) or 2.5^(2.5)
 	const Decimal power(const Integer& other) const;
 	const Decimal power(const Decimal& other) const;
-	
+
 	// Allow 2^(2.5) (powering a Integer)
 	const Decimal powerInteger(const Integer& other) const;
-	
+
 	// Allow (3.0)!
 	// Not allow (3.5)!
 	// factorial() always returns Integer

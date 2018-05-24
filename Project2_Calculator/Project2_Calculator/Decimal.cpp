@@ -8,7 +8,7 @@ Decimal::Decimal() : errorFlag(0), sign(true), numerator(string("0")), denominat
 {
 }
 
-Decimal::Decimal(string& number)
+Decimal::Decimal(const string& number)
 {
 	int i = 0;
 
@@ -56,9 +56,9 @@ Decimal::Decimal(string& number)
 	this->denominator = strDenominator;
 }
 
-Decimal::Decimal(Integer& other)
+Decimal::Decimal(const Integer& other)
 {
-	NumObject* pt = &other;
+	const NumObject* pt = &other;
 	this->errorFlag = pt->getError();
 	this->sign = other.getSign();
 	this->numerator = other.getNumber();

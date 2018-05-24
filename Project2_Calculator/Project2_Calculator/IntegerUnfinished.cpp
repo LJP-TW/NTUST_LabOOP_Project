@@ -1,32 +1,5 @@
 #include "Integer.h"
 
-const Integer Integer::operator +(const Integer& other) const
-{
-	Integer newInteger;
-
-	// Write some code
-
-	return newInteger;
-}
-
-const Integer Integer::operator -(const Integer& other) const
-{
-	Integer newInteger;
-
-	// Write some code
-
-	return newInteger;
-}
-
-const Integer Integer::operator *(const Integer& other) const
-{
-	Integer newInteger;
-
-	// Write some code
-
-	return newInteger;
-}
-
 const Integer Integer::operator /(const Integer& other) const
 {
 	Integer newInteger;
@@ -39,31 +12,6 @@ const Integer Integer::operator /(const Integer& other) const
 const Integer Integer::operator%(const Integer & other) const
 {
 	return Integer();
-}
-
-const bool Integer::operator>(const Integer & other) const
-{
-	return false;
-}
-
-const bool Integer::operator>=(const Integer & other) const
-{
-	return false;
-}
-
-const bool Integer::operator<(const Integer & other) const
-{
-	return false;
-}
-
-const bool Integer::operator<=(const Integer & other) const
-{
-	return false;
-}
-
-const bool Integer::operator==(const Integer & other) const
-{
-	return false;
 }
 
 const Integer Integer::power(const Integer& other) const
@@ -92,9 +40,4 @@ const string Integer::getOutput() const
 const bool Integer::isError() const
 {
 	return false;
-}
-
-string Integer::invertToString(char * target, int size)
-{
-	return string();
 }

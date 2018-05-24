@@ -5,14 +5,14 @@
 #pragma once
 #include "NumObject.h" 
 
-class Integer: public NumObject
+class Integer : public NumObject
 {
 public:
 	// Default set sign to positive, 0
 	Integer();
 
-	// Allow 1234 or -1234
-	Integer(string& number);
+	// Allow 1234 or -1234 or 1234.5678 (will save as 1234)
+	Integer(const string& number);
 	Integer(const Integer& other);
 	virtual ~Integer();
 
@@ -50,7 +50,7 @@ public:
 	const Integer factorial();
 
 	virtual const string getOutput() const;
-	
+
 	virtual const bool isError() const;
 
 protected:
@@ -81,5 +81,5 @@ private:
 	// e.g.
 	// target[0] = 'h' , [1] = 'e', [2] = 'G'
 	// output string = "Geh"
-	string invertToString(char *target, int size);
+	string invertToString(char *target, int size) const;
 };
