@@ -42,8 +42,10 @@ public:
 
 	const Integer factorial();
 
+	virtual const string getOutput() const;
+	
 protected:
-	virtual string getType() const { return "Integer"; };
+	virtual const string getType() const { return "Integer"; };
 
 private:
 	// true  : positive

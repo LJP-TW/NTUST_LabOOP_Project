@@ -17,7 +17,7 @@ public:
 	Calculator();
 	~Calculator();
 
-	string process(string& strFormula);
+	string process(string strFormula);
 
 private:
 	map <string, NumObject*> varList;
@@ -35,6 +35,9 @@ private:
 	//   mode 0 : The pointer return by this function points to a Integer
 	//   mode 1 : The pointer return by this function points to a Decimal
 	NumObject* calculate(stringstream& formula, int mode);
+	//   - getOpPriority
+	//     get priority of operator 
+	int getOpPriority(char op);
 
 	// message function
 	string message(string errorMessage) { return errorMessage; };

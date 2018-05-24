@@ -53,3 +53,8 @@ const Integer Integer::factorial()
 
 	return newInteger;
 }
+
+const string Integer::getOutput() const
+{
+	return string();
+}

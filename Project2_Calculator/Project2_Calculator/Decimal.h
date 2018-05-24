@@ -50,8 +50,10 @@ public:
 	// Convert Decimal to Integer
 	const Integer dtoi() const;
 
+	virtual const string getOutput() const;
+
 protected:
-	virtual string getType() const { return "Decimal"; };
+	virtual const string getType() const { return "Decimal"; };
 
 private:
 	// true  : positive

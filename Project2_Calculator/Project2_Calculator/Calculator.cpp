@@ -18,12 +18,20 @@ Calculator::~Calculator()
 	}
 }
 
-string Calculator::process(string & strFormula)
+string Calculator::process(string strFormula)
 {
-	// determine formula is legal or not
-	if (!preProcess(strFormula))
+	// Make sure that '=' are covered by ' '
+	auto found = strFormula.find('=');
+	if (found != string::npos)
 	{
-		return message("ERROR! HOW STUPID YOU ARE!");
+		if (strFormula[found + 1] != ' ')
+		{
+			strFormula.insert(found + 1, " ");
+		}
+		if (strFormula[found - 1] != ' ')
+		{
+			strFormula.insert(found - 1, " ");
+		}
 	}
 
 	stringstream ssCommand;
@@ -50,6 +58,13 @@ string Calculator::process(string & strFormula)
 			string pureFormula;
 			getline(ssCommand, pureFormula);
 			pureFormula.erase(pureFormula.begin());
+
+			// preProcess formula
+			if (!preProcess(pureFormula))
+			{
+				return message("EXPRESSION ERROR");
+			}
+
 			ssFormula << pureFormula;
 
 			varList[varName] = calculate(ssFormula);
@@ -62,6 +77,13 @@ string Calculator::process(string & strFormula)
 			string pureFormula;
 			getline(ssCommand, pureFormula);
 			pureFormula.erase(pureFormula.begin());
+
+			// preProcess formula
+			if (!preProcess(pureFormula))
+			{
+				return message("EXPRESSION ERROR");
+			}
+
 			ssFormula << pureFormula;
 
 			varList[varName] = calculate(ssFormula);
@@ -86,6 +108,8 @@ string Calculator::process(string & strFormula)
 		// A = 1 + 2 + B 
 		if (strSecond == "=") 
 		{
+			// Is strBegin legal
+
 			// Search Varible
 			auto it = varList.find(strBegin);
 
@@ -94,6 +118,13 @@ string Calculator::process(string & strFormula)
 				string pureFormula;
 				getline(ssCommand, pureFormula);
 				pureFormula.erase(pureFormula.begin());
+
+				// preProcess formula
+				if (!preProcess(pureFormula))
+				{
+					return message("EXPRESSION ERROR");
+				}
+
 				ssFormula << pureFormula;
 
 				delete it->second;
@@ -113,7 +144,14 @@ string Calculator::process(string & strFormula)
 		// 1.5 + 3 * ( - ( - 5 ) )
 		else
 		{
+			// preProcess formula
+			if (!preProcess(strFormula))
+			{
+				return message("EXPRESSION ERROR");
+			}
+
 			ssFormula << strFormula;
+
 			NumObject* pt = calculate(ssFormula);
 			if (pt->getType() == "Integer")
 			{

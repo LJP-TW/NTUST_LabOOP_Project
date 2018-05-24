@@ -16,7 +16,8 @@ public:
 	virtual ~NumObject();
 
 	// Other functions
-	virtual string getType() const = 0;
+	virtual const string getType() const = 0;
+	virtual const string getOutput() const = 0;
 
 private:
 };
