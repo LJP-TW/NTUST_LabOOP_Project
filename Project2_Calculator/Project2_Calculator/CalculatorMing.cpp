@@ -72,16 +72,34 @@ NumObject* Calculator::calculate(stringstream& formula)
 				{
 					if (rvalue->getType() == "Integer")
 					{
-
+						((Integer *)pt)->power(*(Integer *)rvalue);
 					}
 					else
 					{
+						NumObject* temp = pt;
+						pt = rvalue;
+						rvalue = temp;
+						((Decimal *)pt)->powerInteger(*(Integer *)rvalue);
 					}
 				}
 				else
 				{
+					if (rvalue->getType() == "Integer")
+					{
+						((Decimal *)pt)->power(*(Integer *)rvalue);
+					}
+					else
+					{
+						((Decimal *)pt)->power(*(Decimal *)rvalue);
+					}
 				}
 
+				// Error checking
+				if (pt->isError())
+				{
+					error = true;
+					break;
+				}
 			}
 			else if (temp[0] == 'P')
 			{
