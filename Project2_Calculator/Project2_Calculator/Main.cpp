@@ -20,10 +20,10 @@ int main()
 	string strFormula;
 	string result;
 
-	while (cin >> strFormula)
+	while (getline(cin, strFormula))
 	{
 		result = calculator.process(strFormula);
-		cout << result;
+		cout << result << endl;
 	}
 	return 0;
 }

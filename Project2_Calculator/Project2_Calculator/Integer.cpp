@@ -29,9 +29,9 @@ Integer::Integer(const string& number)
 	{
 		this->sign = true;
 	}
-	
+
 	this->number = "";
-	while (number[i])
+	while (number[i] != 0 && number[i] != '.')
 	{
 		this->number += number[i++];
 	}
@@ -52,9 +52,8 @@ const Integer Integer::operator +(const Integer& other) const
 {
 	Integer newInteger; // Result
 
-						// Determine do "+" or "-"
-
-						// "+" + "+"
+	// Determine do "+" or "-"
+	// "+" + "+"
 	if (this->sign && other.sign)
 	{
 		newInteger.sign = true;
@@ -89,7 +88,9 @@ const Integer Integer::operator +(const Integer& other) const
 			}
 
 			// Convert to string of newInteger "number"
-			newInteger.number = invertToString(newArr, this->number.length());
+			newInteger.number = invertToString(newArr, this->number.length() + 1);
+
+			delete[] newArr;
 		}
 
 		// If length of other bigger than this 
@@ -153,7 +154,7 @@ const Integer Integer::operator -(const Integer& other) const
 				newArr[i] = 0;
 			}
 
-			// Process two value addition
+			// Process two value subtraction
 			for (int i = 0; i < this->number.length(); i++)
 			{
 				if (i < other.number.length())
@@ -172,7 +173,9 @@ const Integer Integer::operator -(const Integer& other) const
 			}
 
 			// Output to string of newInteger "number"
-			newInteger.number = invertToString(newArr, this->number.length());
+			newInteger.number = invertToString(newArr, this->number.length() + 1);
+
+			delete[] newArr;
 		}
 
 		// If length of other bigger than this 
@@ -251,6 +254,8 @@ const Integer Integer::operator *(const Integer& other) const
 	{
 		newInteger.sign = false;
 	}
+
+	delete[] newArr;
 
 	return newInteger;
 }
@@ -468,5 +473,5 @@ string Integer::invertToString(char * target, int size) const
 			number += target[i] + ASCII_BASE;
 		}
 	}
-	return string();
+	return number;
 }

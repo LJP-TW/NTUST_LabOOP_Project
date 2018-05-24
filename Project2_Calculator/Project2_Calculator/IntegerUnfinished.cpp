@@ -34,7 +34,7 @@ const Integer Integer::factorial()
 
 const string Integer::getOutput() const
 {
-	return string();
+	return sign == true ? (number) : (string("-") + number);
 }
 
 const bool Integer::isError() const

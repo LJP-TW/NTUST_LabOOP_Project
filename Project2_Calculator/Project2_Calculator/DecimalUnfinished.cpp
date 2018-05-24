@@ -145,7 +145,7 @@ const Decimal Decimal::powerInteger(const Integer & other) const
 	Decimal newDecimal;
 
 	// Write some code
-	
+
 	return newDecimal;
 }
 
