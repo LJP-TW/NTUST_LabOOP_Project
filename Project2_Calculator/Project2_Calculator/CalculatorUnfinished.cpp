@@ -21,6 +21,7 @@ bool Calculator::preProcess(string& strFormula)
 	/*歸零在遇空白和換單位 確認乘冪用*/
 	bool meetPower = false;
 	int checkPower = 0;
+	string variable = "";	/*變數名稱*/
 
 	/*英文3/operator2/數字1/括號4*/
 	int pre = 0;
@@ -73,6 +74,7 @@ bool Calculator::preProcess(string& strFormula)
 		/*字母*/
 		else if (strFormula[i] >= 'a' && strFormula[i] <= 'z' || strFormula[i] >= 'A' && strFormula[i] <= 'Z')
 		{
+			variable += strFormula[i];
 			now = 3;
 		}
 		/*判斷括號有無對稱*/
@@ -179,6 +181,21 @@ bool Calculator::preProcess(string& strFormula)
 				strFormula.insert(i, " ");
 				number_Of_Dot = 0;
 				i++;
+			}
+
+			/* 如果 pre 是變數時 */
+			if (pre == 3)
+			{
+				/*檢查變數是否存在*/
+				auto find = varList.find(variable);
+				if (find == varList.end())
+				{
+					illegal = true;
+					cout << "Variable doesn't exist!" << endl;
+					break;
+				}
+
+				variable = "";
 			}
 		}
 
