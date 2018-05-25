@@ -260,7 +260,112 @@ const Integer Integer::operator *(const Integer& other) const
 	return newInteger;
 }
 
-const Integer& Integer::operator=(const Integer& other)
+const Integer Integer::operator /(const Integer& other) const
+{
+	Integer newInteger;
+
+	// Initial zero Integer
+	string strZero = "0";
+	Integer zero(strZero);
+
+	// At first to check legal or zero
+	if (other == zero)
+	{
+		newInteger.number = "WTF?";
+		return newInteger;
+	}
+	else if (other > *this)
+	{
+		return zero;
+	}
+
+	// Initial BN array
+	Integer BN[11];
+	for (int i = 0; i < 11; i++)
+	{
+		if (!i)
+		{
+			string zero = "0";
+			BN[i] = Integer(zero);
+		}
+		else
+		{
+			BN[i] = BN[i - 1] + other;
+		}
+	}
+
+	// Initial a new Array for newInteger
+	char* newArr = new char[this->number.length() - other.number.length() + 1];
+	for (int i = 0; i <this->number.length() - other.number.length() + 1; i++)
+	{
+		newArr[i] = 0;
+	}
+
+	// Create a temp Integer to do "/"
+	string strTemp;
+	strTemp.assign(this->number, 0, other.number.length());
+	strTemp = "0" + strTemp;
+	Integer thisTemp(strTemp);
+
+	// Process "/"
+	int strLocation = other.number.length();
+	int arrLocation = this->number.length() - other.number.length();
+	while (this->number.length() >= strLocation)
+	{
+		if (strLocation != other.number.length())
+		{
+			thisTemp.number += this->number[strLocation - 1];
+		}
+		for (int i = 0; i < 11; i++)
+		{
+			if (BN[i] > thisTemp)
+			{
+				thisTemp = thisTemp - BN[i - 1];
+				newArr[arrLocation] = i - 1;
+				arrLocation--;
+				break;
+
+			}
+			else if (BN[i] == thisTemp)
+			{
+				thisTemp = zero;
+				newArr[arrLocation] = i;
+				arrLocation--;
+				break;
+			}
+		}
+		strLocation++;
+	}
+
+	// Output to string of newInteger "number"
+	newInteger.number = invertToString(newArr, this->number.length() - other.number.length() + 1);
+
+	// delete newArr
+	delete[] newArr;
+
+	// Determine sign of result
+	if ((this->sign && other.sign) || (!this->sign && !other.sign))
+	{
+		newInteger.sign = true;
+	}
+	else
+	{
+		newInteger.sign = false;
+	}
+
+	return newInteger;
+}
+
+const Integer Integer::operator %(const Integer& other) const
+{
+	Integer newInteger, temp;
+	temp = *this / other;
+	newInteger = *this - (temp*other);
+
+	return newInteger;
+}
+
+const Integer& Integer::operator =(const Integer& other)
 {
 	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
@@ -269,7 +374,7 @@ const Integer& Integer::operator=(const Integer& other)
 	return *this;
 }
 
-const Integer& Integer::operator=(const string& number)
+const Integer& Integer::operator =(const string& number)
 {
 	int i = 0;
 
@@ -299,135 +404,187 @@ const Integer& Integer::operator=(const string& number)
 	return *this;
 }
 
-const bool Integer::operator>(const Integer & other) const
+const bool Integer::operator >(const Integer& other) const
 {
+	Integer thisTemp = *this;
+	Integer otherTemp = other;
+
 	// If length of this bigger than other 
-	if (this->number.length() > other.number.length())
+	if (thisTemp.number.length() > otherTemp.number.length())
 	{
-		return true;
+		int diff = thisTemp.number.length() - otherTemp.number.length();
+		for (int i = 0; i < diff; i++)
+		{
+			otherTemp.number = "0" + otherTemp.number;
+		}
 	}
 
 	// If length of other bigger than this
-	else if (this->number.length() < other.number.length())
+	else if (thisTemp.number.length() < otherTemp.number.length())
 	{
-		return false;
-	}
-	// If length are same
-	else if (this->number.length() == other.number.length())
-	{
-		for (int i = 0; i < this->number.length(); i++)
+		int diff = otherTemp.number.length() - thisTemp.number.length();
+		for (int i = 0; i < diff; i++)
 		{
-			if (this->number[i] != other.number[i])
-			{
-				return this->number[i] > other.number[i];
-			}
+			thisTemp.number = "0" + thisTemp.number;
+		}
+	}
+
+	// Now both length are same
+	for (int i = 0; i < thisTemp.number.length(); i++)
+	{
+		if (thisTemp.number[i] != otherTemp.number[i])
+		{
+			return thisTemp.number[i] > otherTemp.number[i];
 		}
 	}
 	return false;
 }
 
-const bool Integer::operator>=(const Integer & other) const
+const bool Integer::operator >=(const Integer& other) const
 {
+	Integer thisTemp = *this;
+	Integer otherTemp = other;
+
 	// If length of this bigger than other 
-	if (this->number.length() > other.number.length())
+	if (thisTemp.number.length() > otherTemp.number.length())
 	{
-		return true;
+		int diff = thisTemp.number.length() - otherTemp.number.length();
+		for (int i = 0; i < diff; i++)
+		{
+			otherTemp.number = "0" + otherTemp.number;
+		}
 	}
 
 	// If length of other bigger than this
-	else if (this->number.length() < other.number.length())
+	else if (thisTemp.number.length() < otherTemp.number.length())
 	{
-		return false;
-	}
-	// If length are same
-	else if (this->number.length() == other.number.length())
-	{
-		for (int i = 0; i < this->number.length(); i++)
+		int diff = otherTemp.number.length() - thisTemp.number.length();
+		for (int i = 0; i < diff; i++)
 		{
-			if (this->number[i] != other.number[i])
-			{
-				return this->number[i] > other.number[i];
-			}
+			thisTemp.number = "0" + thisTemp.number;
+		}
+	}
+
+	// Now both length are same
+	for (int i = 0; i < thisTemp.number.length(); i++)
+	{
+		if (thisTemp.number[i] != otherTemp.number[i])
+		{
+			return thisTemp.number[i] > otherTemp.number[i];
 		}
 	}
 	return true;
 }
 
-const bool Integer::operator<(const Integer & other) const
+const bool Integer::operator <(const Integer& other) const
 {
+	Integer thisTemp = *this;
+	Integer otherTemp = other;
+
 	// If length of this bigger than other 
-	if (this->number.length() > other.number.length())
+	if (thisTemp.number.length() > otherTemp.number.length())
 	{
-		return false;
+		int diff = thisTemp.number.length() - otherTemp.number.length();
+		for (int i = 0; i < diff; i++)
+		{
+			otherTemp.number = "0" + otherTemp.number;
+		}
 	}
 
 	// If length of other bigger than this
-	else if (this->number.length() < other.number.length())
+	else if (thisTemp.number.length() < otherTemp.number.length())
 	{
-		return true;
-	}
-	// If length are same
-	else if (this->number.length() == other.number.length())
-	{
-		for (int i = 0; i < this->number.length(); i++)
+		int diff = otherTemp.number.length() - thisTemp.number.length();
+		for (int i = 0; i < diff; i++)
 		{
-			if (this->number[i] != other.number[i])
-			{
-				return this->number[i] < other.number[i];
-			}
+			thisTemp.number = "0" + thisTemp.number;
+		}
+	}
+
+	// Now both length are same
+	for (int i = 0; i < thisTemp.number.length(); i++)
+	{
+		if (thisTemp.number[i] != otherTemp.number[i])
+		{
+			return thisTemp.number[i] < otherTemp.number[i];
 		}
 	}
 	return false;
 }
 
-const bool Integer::operator<=(const Integer & other) const
+const bool Integer::operator <=(const Integer& other) const
 {
+	Integer thisTemp = *this;
+	Integer otherTemp = other;
+
 	// If length of this bigger than other 
-	if (this->number.length() > other.number.length())
+	if (thisTemp.number.length() > otherTemp.number.length())
 	{
-		return false;
+		int diff = thisTemp.number.length() - otherTemp.number.length();
+		for (int i = 0; i < diff; i++)
+		{
+			otherTemp.number = "0" + otherTemp.number;
+		}
 	}
 
 	// If length of other bigger than this
-	else if (this->number.length() < other.number.length())
+	else if (thisTemp.number.length() < otherTemp.number.length())
 	{
-		return true;
-	}
-	// If length are same
-	else if (this->number.length() == other.number.length())
-	{
-		for (int i = 0; i < this->number.length(); i++)
+		int diff = otherTemp.number.length() - thisTemp.number.length();
+		for (int i = 0; i < diff; i++)
 		{
-			if (this->number[i] != other.number[i])
-			{
-				return this->number[i] < other.number[i];
-			}
+			thisTemp.number = "0" + thisTemp.number;
+		}
+	}
+
+	// Now both length are same
+	for (int i = 0; i < thisTemp.number.length(); i++)
+	{
+		if (thisTemp.number[i] != otherTemp.number[i])
+		{
+			return thisTemp.number[i] < otherTemp.number[i];
 		}
 	}
 	return true;
 }
 
-const bool Integer::operator==(const Integer & other) const
+const bool Integer::operator ==(const Integer& other) const
 {
-	// If length are same
-	if (this->number.length() == other.number.length())
+	Integer thisTemp = *this;
+	Integer otherTemp = other;
+
+	// If length of this bigger than other 
+	if (thisTemp.number.length() > otherTemp.number.length())
 	{
-		for (int i = 0; i < this->number.length(); i++)
+		int diff = thisTemp.number.length() - otherTemp.number.length();
+		for (int i = 0; i < diff; i++)
 		{
-			if (this->number[i] != other.number[i])
-			{
-				return false;
-			}
+			otherTemp.number = "0" + otherTemp.number;
 		}
 	}
-	else
+
+	// If length of other bigger than this
+	else if (thisTemp.number.length() < otherTemp.number.length())
 	{
-		return false;
+		int diff = otherTemp.number.length() - thisTemp.number.length();
+		for (int i = 0; i < diff; i++)
+		{
+			thisTemp.number = "0" + thisTemp.number;
+		}
+	}
+
+	// Now both length are same
+	for (int i = 0; i < thisTemp.number.length(); i++)
+	{
+		if (thisTemp.number[i] != otherTemp.number[i])
+		{
+			return false;
+		}
 	}
 	return true;
 }
 
-const bool Integer::operator!=(const Integer & other) const
+const bool Integer::operator !=(const Integer& other) const
 {
 	return *this == other ? false : true;
 }
