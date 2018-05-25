@@ -265,13 +265,13 @@ const Integer Integer::operator /(const Integer& other) const
 	Integer newInteger;
 
 	// Initial zero Integer
-	string strZero = "0";
-	Integer zero(strZero);
+	Integer zero = "0";
 
 	// At first to check legal or zero
 	if (other == zero)
 	{
-		newInteger.number = "WTF?";
+		newInteger.number = "0";
+		newInteger.setError(ERROR_DIVISION);
 		return newInteger;
 	}
 	else if (other > *this)

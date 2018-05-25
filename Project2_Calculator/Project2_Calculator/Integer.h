@@ -62,7 +62,8 @@ protected:
 private:
 	enum ErrorType
 	{
-		ERROR_FACTORIAL	= 0b00000001,
+		ERROR_FACTORIAL = 0b00000001,
+		ERROR_DIVISION	= 0b00000010,
 	};
 
 	char errorFlag;
