@@ -427,6 +427,11 @@ const bool Integer::operator==(const Integer & other) const
 	return true;
 }
 
+const bool Integer::operator!=(const Integer & other) const
+{
+	return *this == other ? false : true;
+}
+
 ostream& operator <<(ostream& output, Integer& integer)
 {
 	if (!integer.sign)
@@ -474,4 +479,48 @@ string Integer::invertToString(char * target, int size) const
 		}
 	}
 	return number;
+}
+
+const Integer Integer::factorial()
+{
+	Integer newInteger = "1";
+	Integer temp = *this;
+	Integer zero = "0";
+	Integer one = "1";
+
+	// Not allow for (-87)!
+	if (!this->sign)
+	{
+		newInteger.setError(ERROR_FACTORIAL);
+		return newInteger;
+	}
+
+	while (temp != zero)
+	{
+		newInteger = newInteger * temp;
+		temp = temp - one;
+	}
+
+	return newInteger;
+}
+
+const Integer Integer::power(const Integer& other) const
+{
+	Integer newInteger = "1";
+	Integer temp = other;
+	Integer one = "1";
+	Integer zero = "0";
+
+	while (temp != zero)
+	{
+		newInteger = newInteger * (*this);
+		temp = temp - one;
+	}
+
+	return newInteger;
+}
+
+const string Integer::getOutput() const
+{
+	return sign == true ? (number) : (string("-") + number);
 }

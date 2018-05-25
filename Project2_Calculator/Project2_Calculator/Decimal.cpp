@@ -212,3 +212,26 @@ istream& operator >>(istream& input, Decimal& decimal)
 
 	return input;
 }
+
+const Integer Decimal::factorial()
+{
+	Integer newInteger = "1";
+	Integer temp = numerator;
+	Integer zero = "0";
+	Integer one = "1";
+
+	// Not allow for nagetive decimal or denominator != 1
+	if (!this->sign || this->denominator != one)
+	{
+		newInteger.setError(ERROR_FACTORIAL);
+		return newInteger;
+	}
+
+	while (temp != zero)
+	{
+		newInteger = newInteger * temp;
+		temp = temp - one;
+	}
+
+	return newInteger;
+}

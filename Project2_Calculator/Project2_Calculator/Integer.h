@@ -34,12 +34,15 @@ public:
 	const bool operator <(const Integer& other) const;
 	const bool operator <=(const Integer& other) const;
 	const bool operator ==(const Integer& other) const;
+	const bool operator !=(const Integer& other) const;
 
 	// Accessor
+	virtual const void setError(char error) { errorFlag = error; };
 	bool getSign() const { return sign; };
 	string getNumber() const { return number; };
 
 	// Mutator
+	virtual const char getError() const { return errorFlag; };
 	void setSign(bool sign) { this->sign = sign; };
 	void setNumber(string number) { this->number = number; };
 
@@ -51,21 +54,15 @@ public:
 
 	virtual const string getOutput() const;
 
-	virtual const bool isError() const;
+	virtual const bool isError() const { return errorFlag ? true : false; };
 
 protected:
 	virtual const string getType() const { return "Integer"; };
 
-	// Accessor
-	virtual const void setError(char error) { errorFlag = error; };
-
-	// Mutator
-	virtual const char getError() const { return errorFlag; };
-
 private:
 	enum ErrorType
 	{
-
+		ERROR_FACTORIAL	= 0b00000001,
 	};
 
 	char errorFlag;

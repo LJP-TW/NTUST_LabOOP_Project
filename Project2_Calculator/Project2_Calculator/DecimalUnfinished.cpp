@@ -59,17 +59,6 @@ const Decimal Decimal::power(const Decimal& other) const
 	return newDecimal;
 }
 
-const Integer Decimal::factorial()
-{
-	Integer newInteger;
-
-	// Whether denominator == 1
-
-	// Write some code
-
-	return Integer();
-}
-
 const Integer Decimal::dtoi() const
 {
 	Integer newInteger;
@@ -82,11 +71,6 @@ const Integer Decimal::dtoi() const
 const string Decimal::getOutput() const
 {
 	return string();
-}
-
-const bool Decimal::isError() const
-{
-	return false;
 }
 
 ostream& operator <<(ostream& output, Decimal& decimal)

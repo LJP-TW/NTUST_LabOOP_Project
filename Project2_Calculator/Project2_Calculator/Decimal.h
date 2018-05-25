@@ -43,11 +43,13 @@ public:
 	const bool operator ==(const Integer& other) const;
 
 	// Accessor
+	virtual const void setError(char error) { errorFlag = error; };
 	bool getSign() const { return sign; };
 	Integer getNumerator() const { return numerator; };
 	Integer getDenominator() const { return denominator; };
 
 	// Mutator
+	virtual const char getError() const { return errorFlag; };
 	void setSign(bool sign) { this->sign = sign; };
 	void setNumerator(Integer numerator) { this->numerator = numerator; };
 	void setDenominator(Integer denominator) { this->denominator = denominator; };
@@ -66,21 +68,15 @@ public:
 
 	virtual const string getOutput() const;
 
-	virtual const bool isError() const;
+	virtual const bool isError() const { return errorFlag ? true : false; };
 
 protected:
 	virtual const string getType() const { return "Decimal"; };
 
-	// Accessor
-	virtual const void setError(char error) { errorFlag = error; };
-
-	// Mutator
-	virtual const char getError() const { return errorFlag; };
-
 private:
 	enum ErrorType
 	{
-
+		ERROR_FACTORIAL = 0b00000001,
 	};
 
 	char errorFlag;
