@@ -23,13 +23,9 @@ public:
 	const Decimal& operator =(const Integer& other);
 	const Decimal& operator =(const string& number);
 	const Decimal operator +(const Decimal& other) const;
-	const Decimal operator +(const Integer& other) const;
 	const Decimal operator -(const Decimal& other) const;
-	const Decimal operator -(const Integer& other) const;
 	const Decimal operator *(const Decimal& other) const;
-	const Decimal operator *(const Integer& other) const;
 	const Decimal operator /(const Decimal& other) const;
-	const Decimal operator /(const Integer& other) const;
 	friend ostream& operator <<(ostream& output, Decimal& decimal);
 
 	// Only allow legal input
@@ -58,11 +54,7 @@ public:
 
 	// Other functions
 	// Allow 2.5^(2) or 2.5^(2.5)
-	const Decimal power(const Integer& other) const;
 	const Decimal power(const Decimal& other) const;
-
-	// Allow 2^(2.5) (powering a Integer)
-	const Decimal powerInteger(const Integer& other) const;
 
 	// Allow (3.0)!
 	// Not allow (3.5)!

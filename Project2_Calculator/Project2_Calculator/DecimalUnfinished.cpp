@@ -9,25 +9,7 @@ const Decimal Decimal::operator +(const Decimal& other) const
 	return newDecimal;
 }
 
-const Decimal Decimal::operator +(const Integer& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
 const Decimal Decimal::operator -(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::operator -(const Integer& other) const
 {
 	Decimal newDecimal;
 
@@ -45,25 +27,7 @@ const Decimal Decimal::operator *(const Decimal& other) const
 	return newDecimal;
 }
 
-const Decimal Decimal::operator *(const Integer& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
 const Decimal Decimal::operator /(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::operator /(const Integer& other) const
 {
 	Decimal newDecimal;
 
@@ -122,25 +86,7 @@ const bool Decimal::operator==(const Integer & other) const
 	return false;
 }
 
-const Decimal Decimal::power(const Integer& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
 const Decimal Decimal::power(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::powerInteger(const Integer & other) const
 {
 	Decimal newDecimal;
 
