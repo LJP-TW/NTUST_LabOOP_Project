@@ -70,7 +70,7 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt->isError())
+			if (pt == nullptr || pt->isError())
 			{
 				return message("CALCULATION ERROR");
 			}
@@ -96,7 +96,7 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt->isError())
+			if (pt == nullptr || pt->isError())
 			{
 				return message("CALCULATION ERROR");
 			}
@@ -144,7 +144,7 @@ string Calculator::process(string strFormula)
 
 				NumObject* pt = calculate(ssFormula);
 
-				if (pt->isError())
+				if (pt == nullptr || pt->isError())
 				{
 					return message("CALCULATION ERROR");
 				}
@@ -178,7 +178,7 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt->isError())
+			if (pt == nullptr || pt->isError())
 			{
 				return message("CALCULATION ERROR");
 			}
@@ -228,25 +228,27 @@ NumObject* Calculator::calculate(stringstream& formula)
 				NumObject* pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
-					((Integer*)pt)->factorial();
+					(*(Integer*)pt) = ((Integer*)pt)->factorial();
 				}
 				else
 				{
-					((Decimal*)pt)->factorial();
+					(*(Integer*)pt) = ((Decimal*)pt)->factorial();
+				}
 
-					// Error checking
-					if (pt->isError())
-					{
-						error = true;
-						break;
-					}
+				// Error checking
+				if (pt->isError())
+				{
+					error = true;
+					break;
 				}
 			}
 			else if (temp[0] == '^')
 			{
 				NumObject* pt = numStack.top();
 				NumObject* rvalue;
-				if (pt->getType() == "Integer")
+
+				// If it is positive Integer
+				if (pt->getType() == "Integer" && (*(Integer *)pt).getSign())
 				{
 					rvalue = new Integer(*(Integer*)pt);
 				}
@@ -260,10 +262,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 				pt = numStack.top();
 				if (pt->getType() == "Integer")
 				{
-					// Integer ^ Integer
+					// Integer ^ Positive Integer
 					if (rvalue->getType() == "Integer")
 					{
-						((Integer *)pt)->power(*(Integer *)rvalue);
+						(*(Integer *)pt) = ((Integer *)pt)->power(*(Integer *)rvalue);
 					}
 
 					// Integer ^ Decimal
@@ -271,7 +273,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 					{
 						NumObject* temp = pt;
 						pt = new Decimal(*(Integer *)pt);
-						((Decimal *)pt)->power(*(Decimal *)rvalue);
+						(*(Decimal *)pt) = ((Decimal *)pt)->power(*(Decimal *)rvalue);
 
 						delete temp;
 					}
@@ -283,7 +285,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 					{
 						NumObject* temp = rvalue;
 						rvalue = new Decimal(*(Integer *)rvalue);
-						((Decimal *)pt)->power(*(Decimal *)rvalue);
+						(*(Decimal *)pt) = ((Decimal *)pt)->power(*(Decimal *)rvalue);
 
 						delete temp;
 					}
@@ -291,7 +293,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal ^ Decimal
 					else
 					{
-						((Decimal *)pt)->power(*(Decimal *)rvalue);
+						(*(Decimal *)pt) = ((Decimal *)pt)->power(*(Decimal *)rvalue);
 					}
 				}
 
