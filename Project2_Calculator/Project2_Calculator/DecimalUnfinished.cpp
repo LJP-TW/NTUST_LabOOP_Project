@@ -1,41 +1,5 @@
 #include "Decimal.h"
 
-const Decimal Decimal::operator +(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::operator -(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::operator *(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
-const Decimal Decimal::operator /(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
 const bool Decimal::operator>(const Decimal & other) const
 {
 	return false;

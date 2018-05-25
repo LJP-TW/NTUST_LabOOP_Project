@@ -77,7 +77,7 @@ Decimal::~Decimal()
 {
 }
 
-const Decimal& Decimal::operator=(const Decimal& other)
+const Decimal& Decimal::operator =(const Decimal& other)
 {
 	this->errorFlag = other.errorFlag;
 	this->sign = other.sign;
@@ -146,6 +146,62 @@ const Decimal& Decimal::operator=(const string& number)
 	this->denominator = strDenominator;
 
 	return *this;
+}
+
+const Decimal Decimal::operator +(const Decimal& other) const
+{
+	Decimal newDecimal;
+
+	newDecimal.numerator = this->numerator * other.denominator + other.numerator * this->denominator;
+	newDecimal.denominator = this->denominator * other.denominator;
+
+	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.numerator.setSign(true);
+	newDecimal.denominator.setSign(true);
+
+	return newDecimal;
+}
+
+const Decimal Decimal::operator -(const Decimal& other) const
+{
+	Decimal newDecimal;
+
+	newDecimal.numerator = this->numerator * other.denominator - other.numerator * this->denominator;
+	newDecimal.denominator = this->denominator * other.denominator;
+
+	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.numerator.setSign(true);
+	newDecimal.denominator.setSign(true);
+
+	return newDecimal;
+}
+
+const Decimal Decimal::operator *(const Decimal& other) const
+{
+	Decimal newDecimal;
+
+	newDecimal.numerator = this->numerator * other.numerator;
+	newDecimal.denominator = this->denominator * other.denominator;
+
+	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.numerator.setSign(true);
+	newDecimal.denominator.setSign(true);
+
+	return newDecimal;
+}
+
+const Decimal Decimal::operator /(const Decimal& other) const
+{
+	Decimal newDecimal;
+
+	newDecimal.numerator = this->numerator * other.denominator;
+	newDecimal.denominator = this->denominator * other.numerator;
+
+	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.numerator.setSign(true);
+	newDecimal.denominator.setSign(true);
+
+	return newDecimal;
 }
 
 istream& operator >>(istream& input, Decimal& decimal)
