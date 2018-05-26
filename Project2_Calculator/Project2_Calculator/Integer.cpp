@@ -679,5 +679,8 @@ const Integer Integer::power(const Integer& other) const
 
 const string Integer::getOutput() const
 {
-	return sign == true ? (number) : (string("-") + number);
+	if (*this == Integer("0"))
+		return "0";
+	else
+		return sign == true ? (number) : (string("-") + number);
 }

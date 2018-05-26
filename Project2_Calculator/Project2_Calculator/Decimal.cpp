@@ -264,6 +264,6 @@ const string Decimal::getOutput() const
 	remainder = remainder / this->denominator;
 
 	string strPrefix(100 - remainder.getNumber().length(), '0');
-
-	return integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
+	string sign = this->sign ? "" : "-";
+	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
 }
