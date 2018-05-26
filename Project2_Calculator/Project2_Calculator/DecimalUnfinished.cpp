@@ -50,15 +50,6 @@ const bool Decimal::operator==(const Integer& other) const
 	return false;
 }
 
-const Decimal Decimal::power(const Decimal& other) const
-{
-	Decimal newDecimal;
-
-	// Write some code
-
-	return newDecimal;
-}
-
 const Integer Decimal::dtoi() const
 {
 	Integer newInteger;

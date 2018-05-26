@@ -82,6 +82,7 @@ private:
 	enum ErrorType
 	{
 		ERROR_FACTORIAL = 0b00000001,
+		ERROR_POWER		= 0b00000010,
 	};
 
 	char errorFlag;
@@ -105,4 +106,8 @@ private:
 	//   - getGCD()
 	//     To get greatest common divisor
 	Integer getGCD(Integer a, Integer b) const;
+
+	// power
+	//   - squareRoot()
+	Decimal squareRoot(string target) const;
 };

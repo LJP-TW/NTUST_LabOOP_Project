@@ -3,6 +3,7 @@
 // Last Update: April 7, 2018
 // Problem statement: This C++ header to implement class .
 #include "Decimal.h"
+#define OUTPUT_DIGITS 100
 
 Decimal::Decimal() : errorFlag(0), sign(true), numerator(string("0")), denominator(string("1"))
 {
@@ -274,4 +275,157 @@ const string Decimal::getOutput() const
 	string strPrefix(100 - remainder.getNumber().length(), '0');
 	string sign = this->sign ? "" : "-";
 	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
+}
+
+const Decimal Decimal::power(const Decimal& other) const
+{
+	Decimal newDecimal = "1";
+	Decimal temp = *this;
+	Integer powerTimes = other.numerator;
+	Integer one = "1";
+	Integer zero = "0";
+	bool needRoot = false;
+
+	if (other.denominator == Integer("2"))
+	{
+		needRoot = true;
+	}
+
+	// Only can handle case which is powered by multiple of 0.5
+	if (other.denominator != Integer("1") && !needRoot)
+	{
+		newDecimal.setError(ERROR_POWER);
+		return newDecimal;
+	}
+
+	// If newDecimal is powered by nagetive number
+	if (!other.sign)
+	{
+		Integer intTemp = temp.denominator;
+		temp.denominator = temp.numerator;
+		temp.numerator = intTemp;
+	}
+
+	while (powerTimes != zero)
+	{
+		newDecimal = newDecimal * (*this);
+		powerTimes = powerTimes - one;
+	}
+
+	if (needRoot)
+	{
+		newDecimal = squareRoot(newDecimal.getOutput());
+	}
+
+	return newDecimal;
+}
+
+Decimal Decimal::squareRoot(string target) const
+{
+	// Using long division method
+	Decimal newDecimal;
+	Integer dividend;
+	Integer divisor;
+	string quotient;
+	int dotPos;
+	int nowPos = 0;
+	int digits = 0;
+	bool afterDot = false;
+
+	// Preprocess the target string
+	dotPos = target.find('.');
+	if (dotPos != string::npos)
+	{
+		if ((target.size() - dotPos) % 2 == 0)
+		{
+			target += '0';
+		}
+
+		if (dotPos % 2 == 1)
+		{
+			target.insert(0, "0");
+			dotPos += 1;
+		}
+
+		dotPos /= 2;
+	}
+	else
+	{
+		if (target.size() % 2 == 1)
+		{
+			target.insert(0, "0");
+		}
+
+		dotPos = target.size() / 2;
+	}
+	target.erase(dotPos * 2, 1);
+
+	// Long division
+	// Init
+	dividend.setNumber("");
+	divisor.setNumber("");
+
+	// main loop
+	while (digits != OUTPUT_DIGITS)
+	{
+		string strNowDivisor;
+		// If this position is for digits
+		if (nowPos == dotPos)
+		{
+			quotient += '.';
+			afterDot = true;
+			nowPos += 1;
+			continue;
+		}
+
+		// If there are number in target
+		if (target.size())
+		{
+			dividend.setNumber(dividend.getNumber() + target.substr(0, 2));
+			target.erase(0, 2);
+		}
+		// Else, fill 00
+		else
+		{
+			dividend.setNumber(dividend.getNumber() + "00");
+		}
+
+		// Find the correct divisor
+		strNowDivisor = divisor.getNumber();
+		for (char i = '0'; i <= '9'; ++i)
+		{
+			bool foundDivisor = false;
+			divisor.setNumber(strNowDivisor + i);
+
+			string strTemp = "" + i;
+			Integer integerTemp = divisor * Integer(strTemp);
+
+			if (integerTemp >= dividend)
+			{
+				foundDivisor = true;
+
+				--i;
+				divisor.setNumber(strNowDivisor + i);
+
+				strTemp = "" + i;
+				integerTemp = divisor * Integer(strTemp);
+			}
+
+			if (foundDivisor || i == '9')
+			{
+				dividend = dividend - integerTemp;
+				divisor = divisor + Integer(strTemp);
+
+				quotient += i;
+				++nowPos;
+				if (afterDot)
+				{
+					++digits;
+				}
+				break;
+			}
+		}
+	}
+
+	return Decimal(quotient);
 }
