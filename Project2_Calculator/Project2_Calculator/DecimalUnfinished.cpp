@@ -73,6 +73,16 @@ const string Decimal::getOutput() const
 	return string();
 }
 
+void Decimal::reduceFraction()
+{
+	// ¬ù¤À
+}
+
+Integer Decimal::getGCD(Integer a, Integer b) const
+{
+	return Integer();
+}
+
 ostream& operator <<(ostream& output, Decimal& decimal)
 {
 	// Output to 100 decimal digit

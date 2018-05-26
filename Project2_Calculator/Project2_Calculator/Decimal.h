@@ -90,4 +90,14 @@ private:
 	// denominator : 4
 	Integer numerator;
 	Integer denominator;
+
+	// Other functions
+	// To reduce a fraction to lowest terms
+	void reduceFraction();
+
+	// Helper functions
+	// reduceFraction()
+	//   - getGCD()
+	//     To get greatest common divisor
+	Integer getGCD(Integer a, Integer b) const;
 };

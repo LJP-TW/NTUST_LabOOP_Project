@@ -12,8 +12,10 @@ Decimal::Decimal(const string& number)
 {
 	int i = 0;
 
+	// Handling errorFlag
 	this->errorFlag = 0;
 
+	// Handling sign
 	if (number[i] == '-')
 	{
 		++i;
@@ -29,8 +31,9 @@ Decimal::Decimal(const string& number)
 		this->sign = true;
 	}
 
+	// Handling numerator and denominator
 	string strNumerator = "";
-	string strDenominator = "";
+	string strDenominator = "1";
 
 	while (number[i] != '.' && number[i])
 	{
@@ -42,13 +45,15 @@ Decimal::Decimal(const string& number)
 	{
 		strDenominator = "1";
 	}
+
 	// For case like 1234.5678 or -1234.5678
 	else
 	{
 		++i;
 		while (number[i])
 		{
-			strDenominator += number[i++];
+			strNumerator += number[i++];
+			strDenominator += '0';
 		}
 	}
 
@@ -62,6 +67,7 @@ Decimal::Decimal(const Integer& other)
 	this->errorFlag = pt->getError();
 	this->sign = other.getSign();
 	this->numerator = other.getNumber();
+	this->numerator.setSign(true);
 	this->denominator = "1";
 }
 
@@ -93,17 +99,20 @@ const Decimal& Decimal::operator =(const Integer& other)
 	this->errorFlag = pt->getError();
 	this->sign = other.getSign();
 	this->numerator = other;
+	this->numerator.setSign(true);
 	this->denominator = "1";
 
 	return *this;
 }
 
-const Decimal& Decimal::operator=(const string& number)
+const Decimal& Decimal::operator =(const string& number)
 {
 	int i = 0;
 
+	// Handling errorFlag
 	this->errorFlag = 0;
 
+	// Handling sign
 	if (number[i] == '-')
 	{
 		++i;
@@ -119,8 +128,9 @@ const Decimal& Decimal::operator=(const string& number)
 		this->sign = true;
 	}
 
+	// Handling numerator and denominator
 	string strNumerator = "";
-	string strDenominator = "";
+	string strDenominator = "1";
 
 	while (number[i] != '.' && number[i])
 	{
@@ -138,7 +148,8 @@ const Decimal& Decimal::operator=(const string& number)
 		++i;
 		while (number[i])
 		{
-			strDenominator += number[i++];
+			strNumerator += number[i++];
+			strDenominator += '0';
 		}
 	}
 
@@ -152,12 +163,17 @@ const Decimal Decimal::operator +(const Decimal& other) const
 {
 	Decimal newDecimal;
 
-	newDecimal.numerator = this->numerator * other.denominator + other.numerator * this->denominator;
+	Integer thisNumerator = this->numerator;
+	thisNumerator.setSign(this->getSign());
+
+	Integer otherNumerator = other.numerator;
+	otherNumerator.setSign(other.getSign());
+
+	newDecimal.numerator = thisNumerator * other.denominator + otherNumerator * this->denominator;
 	newDecimal.denominator = this->denominator * other.denominator;
 
-	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.sign = newDecimal.numerator.getSign();
 	newDecimal.numerator.setSign(true);
-	newDecimal.denominator.setSign(true);
 
 	return newDecimal;
 }
@@ -166,12 +182,17 @@ const Decimal Decimal::operator -(const Decimal& other) const
 {
 	Decimal newDecimal;
 
-	newDecimal.numerator = this->numerator * other.denominator - other.numerator * this->denominator;
+	Integer thisNumerator = this->numerator;
+	thisNumerator.setSign(this->getSign());
+
+	Integer otherNumerator = other.numerator;
+	otherNumerator.setSign(other.getSign());
+
+	newDecimal.numerator = thisNumerator * other.denominator - otherNumerator * this->denominator;
 	newDecimal.denominator = this->denominator * other.denominator;
 
-	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
+	newDecimal.sign = newDecimal.numerator.getSign();
 	newDecimal.numerator.setSign(true);
-	newDecimal.denominator.setSign(true);
 
 	return newDecimal;
 }
@@ -183,9 +204,7 @@ const Decimal Decimal::operator *(const Decimal& other) const
 	newDecimal.numerator = this->numerator * other.numerator;
 	newDecimal.denominator = this->denominator * other.denominator;
 
-	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
-	newDecimal.numerator.setSign(true);
-	newDecimal.denominator.setSign(true);
+	newDecimal.sign = !(this->getSign() ^ other.getSign());
 
 	return newDecimal;
 }
@@ -197,9 +216,7 @@ const Decimal Decimal::operator /(const Decimal& other) const
 	newDecimal.numerator = this->numerator * other.denominator;
 	newDecimal.denominator = this->denominator * other.numerator;
 
-	newDecimal.sign = !(newDecimal.numerator.getSign() ^ newDecimal.denominator.getSign());
-	newDecimal.numerator.setSign(true);
-	newDecimal.denominator.setSign(true);
+	newDecimal.sign = !(this->getSign() ^ other.getSign());
 
 	return newDecimal;
 }
