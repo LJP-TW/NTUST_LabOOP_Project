@@ -25,13 +25,13 @@ string Calculator::process(string strFormula)
 	auto found = strFormula.find('=');
 	if (found != string::npos)
 	{
-		if (strFormula[found + 1] != ' ')
+		if (found + 1 < strFormula.size() && strFormula[found + 1] != ' ')
 		{
 			strFormula.insert(found + 1, " ");
 		}
-		if (strFormula[found - 1] != ' ')
+		if (found - 1 >= 0 && strFormula[found - 1] != ' ')
 		{
-			strFormula.insert(found - 1, " ");
+			strFormula.insert(found, " ");
 		}
 	}
 
@@ -70,12 +70,18 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt == nullptr || pt->isError())
+			if (pt == nullptr)
 			{
 				return message("CALCULATION ERROR");
 			}
 
+			// If there is a object, delete it and then put a new pointer to replace it.
+			if (varList[varName])
+			{
+				delete varList[varName];
+			}
 			varList[varName] = pt;
+
 			return message("SUCCESS SET VARIABLE");
 		}
 
@@ -96,12 +102,17 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt == nullptr || pt->isError())
+			if (pt == nullptr)
 			{
 				return message("CALCULATION ERROR");
 			}
 
-			varList[varName] = calculate(ssFormula);
+			// If there is a object, delete it and then put a new pointer to replace it.
+			if (varList[varName])
+			{
+				delete varList[varName];
+			}
+			varList[varName] = pt;
 
 			return message("SUCCESS SET VARIABLE");
 		}
@@ -121,13 +132,14 @@ string Calculator::process(string strFormula)
 
 		// Assign varible value
 		// A = 1 + 2 + B 
-		if (strSecond == "=") 
+		if (strSecond == "=")
 		{
 			// Is strBegin legal
 
 			// Search Varible
 			auto it = varList.find(strBegin);
 
+			// If the variable is found
 			if (it != varList.end())
 			{
 				string pureFormula;
@@ -144,13 +156,14 @@ string Calculator::process(string strFormula)
 
 				NumObject* pt = calculate(ssFormula);
 
-				if (pt == nullptr || pt->isError())
+				if (pt == nullptr)
 				{
 					return message("CALCULATION ERROR");
 				}
 
+				// Delete old object, and then put a new object pointer to replace it.
 				delete it->second;
-				it->second = calculate(ssFormula);
+				it->second = pt;
 
 				return message("SUCCESS VARIABLE ASSIGN");
 			}
@@ -178,7 +191,7 @@ string Calculator::process(string strFormula)
 
 			NumObject* pt = calculate(ssFormula);
 
-			if (pt == nullptr || pt->isError())
+			if (pt == nullptr)
 			{
 				return message("CALCULATION ERROR");
 			}
@@ -429,11 +442,11 @@ bool Calculator::preProcess(string& strFormula)
 		{
 			if (strFormula[i] == '+')
 			{
-				strFormula.replace(i, 1, "P");
+				strFormula.replace(i, 1, "@");
 			}
 			else if (strFormula[i] == '-')
 			{
-				strFormula.replace(i, 1, "N");
+				strFormula.replace(i, 1, "#");
 			}
 		}
 
@@ -529,6 +542,21 @@ NumObject* Calculator::calculate(stringstream& formula)
 			}
 		}
 
+		// Else if temp is a variable
+		if ((temp[0] >= 'a' && temp[0] <= 'z') ||
+			(temp[0] >= 'A' && temp[0] <= 'Z'))
+		{
+			// Create a temp variable for calculation
+			if (varList[temp]->getType() == "Decimal")
+			{
+				numStack.push(new Decimal(*(Decimal *)varList[temp]));
+			}
+			else
+			{
+				numStack.push(new Integer(*(Integer *)varList[temp]));
+			}
+		}
+
 		// Else if temp is a operator
 		else
 		{
@@ -615,11 +643,11 @@ NumObject* Calculator::calculate(stringstream& formula)
 					break;
 				}
 			}
-			else if (temp[0] == 'P')
+			else if (temp[0] == '@')
 			{
 				// Do nothing, haha
 			}
-			else if (temp[0] == 'N')
+			else if (temp[0] == '#')
 			{
 				NumObject* pt = numStack.top();
 				if (pt->getType() == "Integer")
@@ -906,8 +934,10 @@ string Calculator::toPostfixExpression(stringstream& formula)
 
 	while (formula >> temp)
 	{
-		// If temp is a number
-		if (temp[0] >= '0' && temp[0] <= '9')
+		// If temp is a number or a variable
+		if ((temp[0] >= '0' && temp[0] <= '9') ||
+			(temp[0] >= 'a' && temp[0] <= 'z') ||
+			(temp[0] >= 'A' && temp[0] <= 'Z'))
 		{
 			// Just put it into postfixExpression
 			postfixExpression += temp;
@@ -992,7 +1022,7 @@ int Calculator::getOpPriority(char op)
 		"(",
 		"+-", // Addition sign, Subtraction sign
 		"*/",
-		"PN", // Plus sign, not addition sign, Minus sign, not subtraction sign
+		"@#", // @ : Plus sign, not addition sign; # : Minus sign, not subtraction sign
 		"^",
 		"!"
 	};
