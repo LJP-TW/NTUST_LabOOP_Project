@@ -313,7 +313,7 @@ bool Calculator::preProcess(string& strFormula)
 		{
 			number_Of_Dot++;
 			/*§PÂ_1.5.3 ©M 2 ^ 0.5ªº±¡ªp*/
-			if ((meetPower && strFormula[i + 1] != '5') || number_Of_Dot > 1)
+			if ((meetPower && (strFormula[i + 1] != '5' && strFormula[i + 1] != '0')) || number_Of_Dot > 1)
 			{
 				illegal = true;
 				cout << "Dot repeat or power error\n";
