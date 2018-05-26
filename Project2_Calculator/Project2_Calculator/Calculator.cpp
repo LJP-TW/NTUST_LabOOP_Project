@@ -591,8 +591,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 				NumObject* pt = numStack.top();
 				NumObject* rvalue;
 
-				// If it is positive Integer
-				if (pt->getType() == "Integer" && (*(Integer *)pt).getSign())
+				if (pt->getType() == "Integer")
 				{
 					rvalue = new Integer(*(Integer*)pt);
 				}

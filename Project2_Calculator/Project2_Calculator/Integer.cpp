@@ -668,6 +668,13 @@ const Integer Integer::power(const Integer& other) const
 	Integer one = "1";
 	Integer zero = "0";
 
+	// If case like 2^(-5), the result must small than 0.
+	// Because the value returning is Integer, so it will be 0 (Decimal 0.xxxxxx ==> Integer 0)
+	if (!other.getSign())
+	{
+		return zero;
+	}
+
 	while (temp != zero)
 	{
 		newInteger = newInteger * (*this);
