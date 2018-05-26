@@ -68,11 +68,6 @@ const Integer Decimal::dtoi() const
 	return newInteger;
 }
 
-const string Decimal::getOutput() const
-{
-	return string();
-}
-
 void Decimal::reduceFraction()
 {
 	// ¬ù¤À

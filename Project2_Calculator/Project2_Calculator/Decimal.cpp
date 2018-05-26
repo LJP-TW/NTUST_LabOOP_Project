@@ -252,3 +252,18 @@ const Integer Decimal::factorial()
 
 	return newInteger;
 }
+
+const string Decimal::getOutput() const
+{
+	Integer integerPart = this->numerator / this->denominator;
+	Integer remainder = this->numerator % this->denominator;
+
+	string strPostfix(100, '0');
+	remainder.setNumber(remainder.getNumber() + strPostfix);
+
+	remainder = remainder / this->denominator;
+
+	string strPrefix(100 - remainder.getNumber().length(), '0');
+
+	return integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
+}
