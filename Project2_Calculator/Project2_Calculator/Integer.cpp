@@ -589,7 +589,7 @@ const bool Integer::operator !=(const Integer& other) const
 	return *this == other ? false : true;
 }
 
-ostream& operator <<(ostream& output, Integer& integer)
+ostream& operator <<(ostream& output, const Integer& integer)
 {
 	if (!integer.sign)
 	{

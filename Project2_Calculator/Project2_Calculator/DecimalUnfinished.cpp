@@ -78,9 +78,22 @@ Integer Decimal::getGCD(Integer a, Integer b) const
 	return Integer();
 }
 
-ostream& operator <<(ostream& output, Decimal& decimal)
+Decimal operator+(const Integer & lva, const Decimal & rva)
 {
-	// Output to 100 decimal digit
+	return Decimal();
+}
 
-	return output;
+Decimal operator-(const Integer & lva, const Decimal & rva)
+{
+	return Decimal();
+}
+
+Decimal operator*(const Integer & lva, const Decimal & rva)
+{
+	return Decimal();
+}
+
+Decimal operator/(const Integer & lva, const Decimal & rva)
+{
+	return Decimal();
 }

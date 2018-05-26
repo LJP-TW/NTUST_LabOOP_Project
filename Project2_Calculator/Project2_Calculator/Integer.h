@@ -24,10 +24,6 @@ public:
 	const Integer operator *(const Integer& other) const;
 	const Integer operator /(const Integer& other) const;
 	const Integer operator %(const Integer& other) const;
-	friend ostream& operator <<(ostream& output, Integer& integer);
-
-	// Only allow legal input
-	friend istream& operator >>(istream& input, Integer& integer);
 
 	const bool operator >(const Integer& other) const;
 	const bool operator >=(const Integer& other) const;
@@ -35,6 +31,11 @@ public:
 	const bool operator <=(const Integer& other) const;
 	const bool operator ==(const Integer& other) const;
 	const bool operator !=(const Integer& other) const;
+
+	friend ostream& operator <<(ostream& output, const Integer& integer);
+
+	// Only allow legal input
+	friend istream& operator >>(istream& input, Integer& integer);
 
 	// Accessor
 	virtual const void setError(char error) { errorFlag = error; };

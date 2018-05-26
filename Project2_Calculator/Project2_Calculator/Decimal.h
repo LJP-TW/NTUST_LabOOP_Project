@@ -26,10 +26,6 @@ public:
 	const Decimal operator -(const Decimal& other) const;
 	const Decimal operator *(const Decimal& other) const;
 	const Decimal operator /(const Decimal& other) const;
-	friend ostream& operator <<(ostream& output, Decimal& decimal);
-
-	// Only allow legal input
-	friend istream& operator >>(istream& input, Decimal& decimal);
 
 	const bool operator >(const Decimal& other) const;
 	const bool operator >(const Integer& other) const;
@@ -41,6 +37,15 @@ public:
 	const bool operator <=(const Integer& other) const;
 	const bool operator ==(const Decimal& other) const;
 	const bool operator ==(const Integer& other) const;
+
+	friend Decimal operator + (const Integer& lva, const Decimal& rva);
+	friend Decimal operator - (const Integer& lva, const Decimal& rva);
+	friend Decimal operator * (const Integer& lva, const Decimal& rva);
+	friend Decimal operator / (const Integer& lva, const Decimal& rva);
+	friend ostream& operator <<(ostream& output, const Decimal& decimal);
+
+	// Only allow legal input
+	friend istream& operator >>(istream& input, Decimal& decimal);
 
 	// Accessor
 	virtual const void setError(char error) { errorFlag = error; };

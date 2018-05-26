@@ -221,6 +221,14 @@ const Decimal Decimal::operator /(const Decimal& other) const
 	return newDecimal;
 }
 
+ostream& operator <<(ostream& output, const Decimal& decimal)
+{
+	// Output to 100 decimal digit
+	output << decimal.getOutput();
+
+	return output;
+}
+
 istream& operator >>(istream& input, Decimal& decimal)
 {
 	string number;
