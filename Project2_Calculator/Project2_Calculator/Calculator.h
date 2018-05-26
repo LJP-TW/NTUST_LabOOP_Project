@@ -28,15 +28,19 @@ private:
 	//   If strFormula doesn't include a illegal formula, return true
 	//   or return false
 	bool preProcess(string& strFormula);
+
 	// - calculate
 	//   Handle formula, which may be command that setting variable, or just a single calculable formula
 	//   The pointer returned by this function may be point to a Integer or Decimal
 	NumObject* calculate(stringstream& formula);
+
 	//   mode 0 : The pointer return by this function points to a Integer
 	//   mode 1 : The pointer return by this function points to a Decimal
 	NumObject* calculate(stringstream& formula, int mode);
+
 	//   - toPostfixExpression
 	string toPostfixExpression(stringstream& formula);
+
 	//   - getOpPriority
 	//     get priority of operator 
 	int getOpPriority(char op);

@@ -1,3 +1,10 @@
 1 + 1
 1 + 1.0
 2 ^ (2.0)
+set integer a = 87.5566
+a
+set integer a = -3.4 * 2
+a
+set integer a = -2 / 1.0
+-2 / 1.0
+-2 * 1.0

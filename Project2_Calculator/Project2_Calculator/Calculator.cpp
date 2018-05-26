@@ -68,7 +68,7 @@ string Calculator::process(string strFormula)
 
 			ssFormula << pureFormula;
 
-			NumObject* pt = calculate(ssFormula);
+			NumObject* pt = calculate(ssFormula, 0);
 
 			if (pt == nullptr)
 			{
@@ -100,7 +100,7 @@ string Calculator::process(string strFormula)
 
 			ssFormula << pureFormula;
 
-			NumObject* pt = calculate(ssFormula);
+			NumObject* pt = calculate(ssFormula, 1);
 
 			if (pt == nullptr)
 			{
@@ -142,6 +142,7 @@ string Calculator::process(string strFormula)
 			// If the variable is found
 			if (it != varList.end())
 			{
+				NumObject* pt;
 				string pureFormula;
 				getline(ssCommand, pureFormula);
 				pureFormula.erase(pureFormula.begin());
@@ -154,7 +155,14 @@ string Calculator::process(string strFormula)
 
 				ssFormula << pureFormula;
 
-				NumObject* pt = calculate(ssFormula);
+				if (it->second->getType() == "Integer")
+				{
+					pt = calculate(ssFormula, 0);
+				}
+				else
+				{
+					pt = calculate(ssFormula, 1);
+				}
 
 				if (pt == nullptr)
 				{
@@ -202,7 +210,6 @@ string Calculator::process(string strFormula)
 			return result;
 		}
 	}
-
 }
 
 bool Calculator::preProcess(string& strFormula)
@@ -543,7 +550,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 		}
 
 		// Else if temp is a variable
-		if ((temp[0] >= 'a' && temp[0] <= 'z') ||
+		else if ((temp[0] >= 'a' && temp[0] <= 'z') ||
 			(temp[0] >= 'A' && temp[0] <= 'Z'))
 		{
 			// Create a temp variable for calculation
@@ -608,11 +615,14 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Integer ^ Decimal
 					else
 					{
-						NumObject* temp = pt;
-						pt = new Decimal(*(Integer *)pt);
-						(*(Decimal *)pt) = ((Decimal *)pt)->power(*(Decimal *)rvalue);
+						// Make a new decimal, pop old data, push new data
+						Decimal newDecimal = Decimal(*(Integer *)pt).power((*(Decimal *)rvalue));
 
-						delete temp;
+						delete pt;
+						numStack.pop();
+						numStack.push(new Decimal(newDecimal));
+
+						pt = numStack.top();
 					}
 				}
 				else
@@ -620,11 +630,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal ^ Integer
 					if (rvalue->getType() == "Integer")
 					{
-						NumObject* temp = rvalue;
-						rvalue = new Decimal(*(Integer *)rvalue);
-						(*(Decimal *)pt) = ((Decimal *)pt)->power(*(Decimal *)rvalue);
+						// Make a new decimal
+						Decimal newDecimal(*(Integer *)rvalue);
 
-						delete temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt).power(newDecimal);
 					}
 
 					// Decimal ^ Decimal
@@ -686,11 +695,14 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Integer * Decimal
 					else
 					{
-						NumObject* temp = pt;
-						pt = new Decimal(*(Integer *)pt);
-						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
+						// Make a new decimal, pop old data, push new data
+						Decimal newDecimal = Decimal(*(Integer *)pt) * (*(Decimal *)rvalue);
 
-						delete temp;
+						delete pt;
+						numStack.pop();
+						numStack.push(new Decimal(newDecimal));
+
+						pt = numStack.top();
 					}
 				}
 				else
@@ -698,11 +710,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal * Integer
 					if (rvalue->getType() == "Integer")
 					{
-						NumObject* temp = rvalue;
-						rvalue = new Decimal(*(Integer *)rvalue);
-						(*(Decimal *)pt) = (*(Decimal *)pt) * (*(Decimal *)rvalue);
+						// Make a new decimal
+						Decimal newDecimal(*(Integer *)rvalue);
 
-						delete temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) * newDecimal;
 					}
 
 					// Decimal * Decimal
@@ -741,11 +752,14 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Integer / Decimal
 					else
 					{
-						NumObject* temp = pt;
-						pt = new Decimal(*(Integer *)pt);
-						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
+						// Make a new decimal, pop old data, push new data
+						Decimal newDecimal = Decimal(*(Integer *)pt) / (*(Decimal *)rvalue);
 
-						delete temp;
+						delete pt;
+						numStack.pop();
+						numStack.push(new Decimal(newDecimal));
+
+						pt = numStack.top();
 					}
 				}
 				else
@@ -753,11 +767,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal / Integer
 					if (rvalue->getType() == "Integer")
 					{
-						NumObject* temp = rvalue;
-						rvalue = new Decimal(*(Integer *)rvalue);
-						(*(Decimal *)pt) = (*(Decimal *)pt) / (*(Decimal *)rvalue);
+						// Make a new decimal
+						Decimal newDecimal(*(Integer *)rvalue);
 
-						delete temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) / newDecimal;
 					}
 
 					// Decimal / Decimal
@@ -803,11 +816,14 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Integer + Decimal
 					else
 					{
-						NumObject* temp = pt;
-						pt = new Decimal(*(Integer *)pt);
-						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
+						// Make a new decimal, pop old data, push new data
+						Decimal newDecimal = Decimal(*(Integer *)pt) + (*(Decimal *)rvalue);
 
-						delete temp;
+						delete pt;
+						numStack.pop();
+						numStack.push(new Decimal(newDecimal));
+
+						pt = numStack.top();
 					}
 				}
 				else
@@ -815,11 +831,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal + Integer
 					if (rvalue->getType() == "Integer")
 					{
-						NumObject* temp = rvalue;
-						rvalue = new Decimal(*(Integer *)rvalue);
-						(*(Decimal *)pt) = (*(Decimal *)pt) + (*(Decimal *)rvalue);
+						// Make a new decimal
+						Decimal newDecimal(*(Integer *)rvalue);
 
-						delete temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) + newDecimal;
 					}
 
 					// Decimal + Decimal
@@ -858,11 +873,14 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Integer - Decimal
 					else
 					{
-						NumObject* temp = pt;
-						pt = new Decimal(*(Integer *)pt);
-						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
+						// Make a new decimal, pop old data, push new data
+						Decimal newDecimal = Decimal(*(Integer *)pt) - (*(Decimal *)rvalue);
 
-						delete temp;
+						delete pt;
+						numStack.pop();
+						numStack.push(new Decimal(newDecimal));
+
+						pt = numStack.top();
 					}
 				}
 				else
@@ -870,11 +888,10 @@ NumObject* Calculator::calculate(stringstream& formula)
 					// Decimal - Integer
 					if (rvalue->getType() == "Integer")
 					{
-						NumObject* temp = rvalue;
-						rvalue = new Decimal(*(Integer *)rvalue);
-						(*(Decimal *)pt) = (*(Decimal *)pt) - (*(Decimal *)rvalue);
+						// Make a new decimal
+						Decimal newDecimal(*(Integer *)rvalue);
 
-						delete temp;
+						(*(Decimal *)pt) = (*(Decimal *)pt) - newDecimal;
 					}
 
 					// Decimal - Decimal
@@ -911,7 +928,12 @@ NumObject* Calculator::calculate(stringstream& formula, int mode)
 	// If mode == 0, return Integer
 	if (mode == 0 && pt->getType() == "Decimal")
 	{
-		pt = new Integer(pt->getOutput());
+		Integer numerator = (*(Decimal *)pt).getNumerator();
+		numerator.setSign((*(Decimal *)pt).getSign());
+
+		Integer denominator = (*(Decimal *)pt).getDenominator();
+
+		pt = new Integer(numerator / denominator);
 		delete temp;
 	}
 
