@@ -59,16 +59,6 @@ const Integer Decimal::dtoi() const
 	return newInteger;
 }
 
-void Decimal::reduceFraction()
-{
-	// ¬ù¤À
-}
-
-Integer Decimal::getGCD(Integer a, Integer b) const
-{
-	return Integer();
-}
-
 Decimal operator+(const Integer & lva, const Decimal & rva)
 {
 	return Decimal();

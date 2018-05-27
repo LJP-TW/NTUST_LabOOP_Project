@@ -60,6 +60,8 @@ Decimal::Decimal(const string& number)
 
 	this->numerator = strNumerator;
 	this->denominator = strDenominator;
+
+	reduceFraction();
 }
 
 Decimal::Decimal(const Integer& other)
@@ -90,6 +92,8 @@ const Decimal& Decimal::operator =(const Decimal& other)
 	this->sign = other.sign;
 	this->numerator = other.numerator;
 	this->denominator = other.denominator;
+
+	reduceFraction();
 
 	return *this;
 }
@@ -156,6 +160,8 @@ const Decimal& Decimal::operator =(const string& number)
 
 	this->numerator = strNumerator;
 	this->denominator = strDenominator;
+
+	reduceFraction();
 
 	return *this;
 }
@@ -428,4 +434,54 @@ Decimal Decimal::squareRoot(string target) const
 	}
 
 	return Decimal(quotient);
+}
+
+void Decimal::reduceFraction()
+{
+	Integer GCD = getGCD(numerator, denominator);
+	Integer notExist = "-1";
+
+	if (GCD != notExist)
+	{
+		numerator = numerator / GCD;
+		denominator = denominator / GCD;
+	}
+
+}
+
+Integer Decimal::getGCD(Integer a, Integer b) const
+{
+	/* a == numerator, b == denominator */
+	Integer zero = "0";
+	Integer one = "1";
+	Integer GCD_notExist = "-1";
+
+	while (1)
+	{
+		if (a == one || b == one)
+		{
+			return GCD_notExist;
+		}
+		if (a == zero)
+		{
+			return b;
+		}
+		if (b == zero)
+		{
+			return a;
+		}
+
+		if (a > b)
+		{
+			a = a % b;
+		}
+		else if (a == b)
+		{
+			return a;
+		}
+		else
+		{
+			b = b % a;
+		}
+	}
 }
