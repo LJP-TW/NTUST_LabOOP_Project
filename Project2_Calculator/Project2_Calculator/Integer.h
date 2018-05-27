@@ -76,6 +76,11 @@ private:
 	// "1234" means number 1234
 	string number;
 
+	// Other Functions
+	// Remove the 0 prefix
+	void removeZeroPrefix();
+
+	// Helper Functions
 	// Invert a char array to string
 	// e.g.
 	// target[0] = 'h' , [1] = 'e', [2] = 'G'
