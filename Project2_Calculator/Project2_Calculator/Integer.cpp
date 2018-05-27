@@ -35,6 +35,8 @@ Integer::Integer(const string& number)
 	{
 		this->number += number[i++];
 	}
+
+	removeZeroPrefix();
 }
 
 Integer::Integer(const Integer& other)
@@ -46,6 +48,47 @@ Integer::Integer(const Integer& other)
 
 Integer::~Integer()
 {
+}
+
+const Integer& Integer::operator =(const Integer& other)
+{
+	this->errorFlag = other.errorFlag;
+	this->sign = other.sign;
+	this->number = other.number;
+
+	return *this;
+}
+
+const Integer& Integer::operator =(const string& number)
+{
+	int i = 0;
+
+	this->errorFlag = 0;
+
+	if (number[i] == '-')
+	{
+		++i;
+		this->sign = false;
+	}
+	else if (number[i] == '+')
+	{
+		++i;
+		this->sign = true;
+	}
+	else
+	{
+		this->sign = true;
+	}
+
+	this->number = "";
+	while (number[i] != 0 && number[i] != '.')
+	{
+		this->number += number[i++];
+	}
+
+	removeZeroPrefix();
+
+	return *this;
 }
 
 const Integer Integer::operator +(const Integer& other) const
@@ -215,6 +258,8 @@ const Integer Integer::operator -(const Integer& other) const
 		newInteger = *this + temp; // "-" + "-"
 	}
 
+	newInteger.removeZeroPrefix();
+
 	return newInteger;
 }
 
@@ -256,6 +301,8 @@ const Integer Integer::operator *(const Integer& other) const
 	}
 
 	delete[] newArr;
+
+	newInteger.removeZeroPrefix();
 
 	return newInteger;
 }
@@ -353,6 +400,8 @@ const Integer Integer::operator /(const Integer& other) const
 		newInteger.sign = false;
 	}
 
+	newInteger.removeZeroPrefix();
+
 	return newInteger;
 }
 
@@ -362,46 +411,9 @@ const Integer Integer::operator %(const Integer& other) const
 	temp = *this / other;
 	newInteger = *this - (temp*other);
 
+	newInteger.removeZeroPrefix();
+
 	return newInteger;
-}
-
-const Integer& Integer::operator =(const Integer& other)
-{
-	this->errorFlag = other.errorFlag;
-	this->sign = other.sign;
-	this->number = other.number;
-
-	return *this;
-}
-
-const Integer& Integer::operator =(const string& number)
-{
-	int i = 0;
-
-	this->errorFlag = 0;
-
-	if (number[i] == '-')
-	{
-		++i;
-		this->sign = false;
-	}
-	else if (number[i] == '+')
-	{
-		++i;
-		this->sign = true;
-	}
-	else
-	{
-		this->sign = true;
-	}
-
-	this->number = "";
-	while (number[i])
-	{
-		this->number += number[i++];
-	}
-
-	return *this;
 }
 
 const bool Integer::operator >(const Integer& other) const
@@ -610,6 +622,68 @@ istream& operator >>(istream& input, Integer& integer)
 	return input;
 }
 
+const Integer Integer::power(const Integer& other) const
+{
+	Integer newInteger = "1";
+	Integer temp = other;
+	Integer one = "1";
+	Integer zero = "0";
+
+	// If case like 2^(-5), the result must small than 0.
+	// Because the value returning is Integer, so it will be 0 (Decimal 0.xxxxxx ==> Integer 0)
+	if (!other.getSign())
+	{
+		return zero;
+	}
+
+	while (temp != zero)
+	{
+		newInteger = newInteger * (*this);
+		temp = temp - one;
+	}
+
+	return newInteger;
+}
+
+const Integer Integer::factorial()
+{
+	Integer newInteger = "1";
+	Integer temp = *this;
+	Integer zero = "0";
+	Integer one = "1";
+
+	// Not allow for (-87)!
+	if (!this->sign)
+	{
+		newInteger.setError(ERROR_FACTORIAL);
+		return newInteger;
+	}
+
+	while (temp != zero)
+	{
+		newInteger = newInteger * temp;
+		temp = temp - one;
+	}
+
+	return newInteger;
+}
+
+const string Integer::getOutput() const
+{
+	if (*this == Integer("0"))
+		return "0";
+	else
+		return sign == true ? (number) : (string("-") + number);
+}
+
+void Integer::removeZeroPrefix()
+{
+	while (number.size() > 1 && number[0] == '0')
+	{
+		number.erase(0, 1);
+	}
+}
+
 string Integer::invertToString(char * target, int size) const
 {
 	// Output to string of newInteger "number"
@@ -636,58 +710,4 @@ string Integer::invertToString(char * target, int size) const
 		}
 	}
 	return number;
-}
-
-const Integer Integer::factorial()
-{
-	Integer newInteger = "1";
-	Integer temp = *this;
-	Integer zero = "0";
-	Integer one = "1";
-
-	// Not allow for (-87)!
-	if (!this->sign)
-	{
-		newInteger.setError(ERROR_FACTORIAL);
-		return newInteger;
-	}
-
-	while (temp != zero)
-	{
-		newInteger = newInteger * temp;
-		temp = temp - one;
-	}
-
-	return newInteger;
-}
-
-const Integer Integer::power(const Integer& other) const
-{
-	Integer newInteger = "1";
-	Integer temp = other;
-	Integer one = "1";
-	Integer zero = "0";
-
-	// If case like 2^(-5), the result must small than 0.
-	// Because the value returning is Integer, so it will be 0 (Decimal 0.xxxxxx ==> Integer 0)
-	if (!other.getSign())
-	{
-		return zero;
-	}
-
-	while (temp != zero)
-	{
-		newInteger = newInteger * (*this);
-		temp = temp - one;
-	}
-
-	return newInteger;
-}
-
-const string Integer::getOutput() const
-{
-	if (*this == Integer("0"))
-		return "0";
-	else
-		return sign == true ? (number) : (string("-") + number);
 }
