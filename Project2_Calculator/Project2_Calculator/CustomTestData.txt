@@ -33,6 +33,8 @@ set integer g8 = 99
 g8
 set integer a = 2/0
 a
+123a
+
 
 // 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 

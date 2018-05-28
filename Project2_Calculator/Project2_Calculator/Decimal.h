@@ -32,17 +32,6 @@ public:
 	const Decimal operator *(const Decimal& other) const;
 	const Decimal operator /(const Decimal& other) const;
 
-	const bool operator >(const Decimal& other) const;
-	const bool operator >(const Integer& other) const;
-	const bool operator >=(const Decimal& other) const;
-	const bool operator >=(const Integer& other) const;
-	const bool operator <(const Decimal& other) const;
-	const bool operator <(const Integer& other) const;
-	const bool operator <=(const Decimal& other) const;
-	const bool operator <=(const Integer& other) const;
-	const bool operator ==(const Decimal& other) const;
-	const bool operator ==(const Integer& other) const;
-
 	friend Decimal operator + (const Integer& lva, const Decimal& rva);
 	friend Decimal operator - (const Integer& lva, const Decimal& rva);
 	friend Decimal operator * (const Integer& lva, const Decimal& rva);

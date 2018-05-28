@@ -321,6 +321,14 @@ bool Calculator::preProcess(string& strFormula)
 			{
 				variable += strFormula[i];
 			}
+			else
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "There are some wrong like \"23a123\"\n";
+#endif
+				break;
+			}
 		}
 		/*判斷括號有無對稱*/
 		else if (strFormula[i] == '(')
