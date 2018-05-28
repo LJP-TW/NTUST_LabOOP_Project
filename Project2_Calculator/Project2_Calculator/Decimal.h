@@ -66,7 +66,7 @@ public:
 	// Allow (3.0)!
 	// Not allow (3.5)!
 	// factorial() always returns Integer
-	const Integer factorial();
+	const Decimal factorial() const;
 
 	// Convert Decimal to Integer
 	const Integer dtoi() const;

@@ -228,9 +228,6 @@ bool Calculator::preProcess(string& strFormula)
 	int number_Of_Dot = 0;	/*耞.虫い瞷碭Ω*/
 	bool isSign = false;	/*耞琌タ璽*/
 	bool meetParentheses = false;
-	/*耴箂笿フ㎝传虫 絋粄经ノ*/
-	bool meetPower = false;
-	int checkPower = 0;
 	string variable = "";	/*跑计嘿*/
 
 							/*璣ゅ3/operator2/计1/珹腹4*/
@@ -267,8 +264,6 @@ bool Calculator::preProcess(string& strFormula)
 				i -= 1;
 			}
 			number_Of_Dot = 0;
-			checkPower = 0;
-			meetPower = false;
 			continue;
 		}
 		/*计*/
@@ -313,7 +308,7 @@ bool Calculator::preProcess(string& strFormula)
 		{
 			number_Of_Dot++;
 			/*耞1.5.3 ㎝ 2 ^ 0.5薄猵*/
-			if ((meetPower && (strFormula[i + 1] != '5' && strFormula[i + 1] != '0')) || number_Of_Dot > 1)
+			if (number_Of_Dot > 1)
 			{
 				illegal = true;
 				cout << "Dot repeat or power error\n";
@@ -383,8 +378,6 @@ bool Calculator::preProcess(string& strFormula)
 		if (now != pre)
 		{
 			isSign = false;
-			meetPower = false;
-			checkPower = 0;
 			/*传虫*/
 			if (strFormula[i - 1] != ' ')
 			{
@@ -420,20 +413,20 @@ bool Calculator::preProcess(string& strFormula)
 		/*硈尿operatorcフ 耞 '(' 材ぃノ暗 玡璝顶糷Τㄒ*/
 		if (now == 2 && i != 0 && (pre == 2 || (i >= 2 && strFormula[i - 2] == '(')))
 		{
-			if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i - 1] == '!')
+			if (strFormula[i - 1] != ' ')
 			{
-				if (strFormula[i - 1] == '!')
+				strFormula.insert(i, " ");
+				i++;
+			}
+			if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i - 2] == '!')
+			{
+				if (strFormula[i - 2] == '!')
 				{
 					isSign = false;
 				}
 				else
 				{
 					isSign = true;
-				}
-				if (strFormula[i - 1] != ' ')
-				{
-					strFormula.insert(i, " ");
-					i++;
 				}
 			}
 			/*耞ぃ猭*/
@@ -444,6 +437,7 @@ bool Calculator::preProcess(string& strFormula)
 				break;
 			}
 		}
+
 		/*タ璽才腹传PN*/
 		if (isSign)
 		{
@@ -465,27 +459,6 @@ bool Calculator::preProcess(string& strFormula)
 				illegal = true;
 				cout << "can't continuous input variable or number\n";
 				break;
-			}
-		}
-
-		/*耞琌笿^ */
-		if (now == 1 && i >= 2 && strFormula[i - 2] == '^')
-		{
-			meetPower = true;
-		}
-		/*经璝Τ计琌0.5俱计 笿经笿计翴*/
-		if (meetPower && number_Of_Dot == 1)
-		{
-			if (checkPower > 1)
-			{
-				cout << checkPower << endl;
-				illegal = true;
-				cout << "error power input\n";
-				break;
-			}
-			else
-			{
-				checkPower++;
 			}
 		}
 
@@ -576,7 +549,13 @@ NumObject* Calculator::calculate(stringstream& formula)
 				}
 				else
 				{
-					(*(Integer*)pt) = ((Decimal*)pt)->factorial();
+					Decimal decimalTemp = ((Decimal*)pt)->factorial();
+
+					delete pt;
+					numStack.pop();
+					numStack.push(new Decimal(decimalTemp));
+
+					pt = numStack.top();
 				}
 
 				// Error checking

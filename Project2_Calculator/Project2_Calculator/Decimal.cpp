@@ -182,6 +182,8 @@ const Decimal Decimal::operator +(const Decimal& other) const
 	newDecimal.sign = newDecimal.numerator.getSign();
 	newDecimal.numerator.setSign(true);
 
+	newDecimal.reduceFraction();
+
 	return newDecimal;
 }
 
@@ -201,6 +203,8 @@ const Decimal Decimal::operator -(const Decimal& other) const
 	newDecimal.sign = newDecimal.numerator.getSign();
 	newDecimal.numerator.setSign(true);
 
+	newDecimal.reduceFraction();
+
 	return newDecimal;
 }
 
@@ -213,6 +217,8 @@ const Decimal Decimal::operator *(const Decimal& other) const
 
 	newDecimal.sign = !(this->getSign() ^ other.getSign());
 
+	newDecimal.reduceFraction();
+
 	return newDecimal;
 }
 
@@ -224,6 +230,8 @@ const Decimal Decimal::operator /(const Decimal& other) const
 	newDecimal.denominator = this->denominator * other.numerator;
 
 	newDecimal.sign = !(this->getSign() ^ other.getSign());
+
+	newDecimal.reduceFraction();
 
 	return newDecimal;
 }
@@ -245,9 +253,9 @@ istream& operator >>(istream& input, Decimal& decimal)
 	return input;
 }
 
-const Integer Decimal::factorial()
+const Decimal Decimal::factorial() const
 {
-	Integer newInteger = "1";
+	Decimal newDecimal = "1";
 	Integer temp = numerator;
 	Integer zero = "0";
 	Integer one = "1";
@@ -255,17 +263,17 @@ const Integer Decimal::factorial()
 	// Not allow for nagetive decimal or denominator != 1
 	if (!this->sign || this->denominator != one)
 	{
-		newInteger.setError(ERROR_FACTORIAL);
-		return newInteger;
+		newDecimal.setError(ERROR_FACTORIAL);
+		return newDecimal;
 	}
 
 	while (temp != zero)
 	{
-		newInteger = newInteger * temp;
+		newDecimal.numerator = newDecimal.numerator * temp;
 		temp = temp - one;
 	}
 
-	return newInteger;
+	return newDecimal;
 }
 
 const string Decimal::getOutput() const
@@ -314,7 +322,7 @@ const Decimal Decimal::power(const Decimal& other) const
 
 	while (powerTimes != zero)
 	{
-		newDecimal = newDecimal * (*this);
+		newDecimal = newDecimal * temp;
 		powerTimes = powerTimes - one;
 	}
 
@@ -322,6 +330,8 @@ const Decimal Decimal::power(const Decimal& other) const
 	{
 		newDecimal = squareRoot(newDecimal.getOutput());
 	}
+
+	newDecimal.reduceFraction();
 
 	return newDecimal;
 }
@@ -398,26 +408,14 @@ Decimal Decimal::squareRoot(string target) const
 
 		// Find the correct divisor
 		strNowDivisor = divisor.getNumber();
-		for (char i = '0'; i <= '9'; ++i)
+		for (char i = '9'; i >= '0'; --i)
 		{
-			bool foundDivisor = false;
 			divisor.setNumber(strNowDivisor + i);
 
-			string strTemp = "" + i;
+			string strTemp = string(1, i);
 			Integer integerTemp = divisor * Integer(strTemp);
 
-			if (integerTemp >= dividend)
-			{
-				foundDivisor = true;
-
-				--i;
-				divisor.setNumber(strNowDivisor + i);
-
-				strTemp = "" + i;
-				integerTemp = divisor * Integer(strTemp);
-			}
-
-			if (foundDivisor || i == '9')
+			if (integerTemp <= dividend)
 			{
 				dividend = dividend - integerTemp;
 				divisor = divisor + Integer(strTemp);
@@ -484,4 +482,45 @@ Integer Decimal::getGCD(Integer a, Integer b) const
 			b = b % a;
 		}
 	}
+}
+
+const Integer Decimal::dtoi() const
+{
+	Integer newInteger;
+
+	newInteger = numerator / denominator;
+
+	return newInteger;
+}
+
+Decimal operator+(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva + rva;
+
+	return newDecimal;
+}
+
+Decimal operator-(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva - rva;
+
+	return newDecimal;
+}
+
+Decimal operator*(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva * rva;
+
+	return newDecimal;
+}
+
+Decimal operator/(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva / rva;
+
+	return newDecimal;
 }

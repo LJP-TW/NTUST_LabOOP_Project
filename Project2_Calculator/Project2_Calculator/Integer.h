@@ -51,7 +51,7 @@ public:
 	// Doesn't handle cases like 2^(3.5)
 	const Integer power(const Integer& other) const;
 
-	const Integer factorial();
+	const Integer factorial() const;
 
 	virtual const string getOutput() const;
 

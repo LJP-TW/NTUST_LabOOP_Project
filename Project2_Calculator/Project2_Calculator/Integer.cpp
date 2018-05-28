@@ -645,7 +645,7 @@ const Integer Integer::power(const Integer& other) const
 	return newInteger;
 }
 
-const Integer Integer::factorial()
+const Integer Integer::factorial() const
 {
 	Integer newInteger = "1";
 	Integer temp = *this;
