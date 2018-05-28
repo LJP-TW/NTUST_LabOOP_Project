@@ -2,6 +2,7 @@
 // Date: April 6, 2018
 // Last Update: April 7, 2018
 // Problem statement: This C++ header to implement class .
+#include "Calculator.h"
 #include "Decimal.h"
 #define OUTPUT_DIGITS 100
 
@@ -9,8 +10,9 @@ namespace
 {
 	enum ErrorType
 	{
-		ERROR_FACTORIAL = 0b00000001,
-		ERROR_POWER = 0b00000010,
+		ERROR_CONSTRUCT = 0b00000001,
+		ERROR_FACTORIAL = 0b00000010,
+		ERROR_POWER = 0b00000100,
 	};
 }
 
@@ -19,6 +21,24 @@ Decimal::Decimal() : errorFlag(0), sign(true), numerator(string("0")), denominat
 }
 
 Decimal::Decimal(const string& number)
+{
+	Calculator calculator;
+	string processedNum = calculator.process(number);
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		*this = Decimal(processedNum, 0);
+	}
+	else
+	{
+		this->errorFlag = ERROR_CONSTRUCT;
+		this->sign = true;
+		this->numerator = "1";
+		this->denominator = "1";
+	}
+}
+
+Decimal::Decimal(const string& number, int)
 {
 	int i = 0;
 
@@ -193,6 +213,8 @@ const Decimal Decimal::operator +(const Decimal& other) const
 
 	newDecimal.reduceFraction();
 
+	newDecimal.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newDecimal;
 }
 
@@ -214,6 +236,8 @@ const Decimal Decimal::operator -(const Decimal& other) const
 
 	newDecimal.reduceFraction();
 
+	newDecimal.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newDecimal;
 }
 
@@ -227,6 +251,8 @@ const Decimal Decimal::operator *(const Decimal& other) const
 	newDecimal.sign = !(this->getSign() ^ other.getSign());
 
 	newDecimal.reduceFraction();
+
+	newDecimal.errorFlag = (this->errorFlag | other.errorFlag);
 
 	return newDecimal;
 }
@@ -242,6 +268,40 @@ const Decimal Decimal::operator /(const Decimal& other) const
 
 	newDecimal.reduceFraction();
 
+	newDecimal.errorFlag = (this->errorFlag | other.errorFlag);
+
+	return newDecimal;
+}
+
+Decimal operator+(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva + rva;
+
+	return newDecimal;
+}
+
+Decimal operator-(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva - rva;
+
+	return newDecimal;
+}
+
+Decimal operator*(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva * rva;
+
+	return newDecimal;
+}
+
+Decimal operator/(const Integer & lva, const Decimal & rva)
+{
+	Decimal d_lva(lva);
+	Decimal newDecimal = d_lva / rva;
+
 	return newDecimal;
 }
 
@@ -255,54 +315,31 @@ ostream& operator <<(ostream& output, const Decimal& decimal)
 
 istream& operator >>(istream& input, Decimal& decimal)
 {
-	string number;
+	string number, processedNum;
+	Calculator calculator;
+
 	input >> number;
-	decimal = number;
+	processedNum = calculator.process(number);
+
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		decimal = Decimal(processedNum, 0);
+	}
+	else
+	{
+		decimal.errorFlag = ERROR_CONSTRUCT;
+		decimal.sign = true;
+		decimal.numerator = "1";
+		decimal.denominator = "1";
+	}
 
 	return input;
 }
 
-const Decimal Decimal::factorial() const
-{
-	Decimal newDecimal = "1";
-	Integer temp = numerator;
-	Integer zero("0", 0);
-	Integer one("1", 0);
-
-	// Not allow for nagetive decimal or denominator != 1
-	if (!this->sign || this->denominator != one)
-	{
-		newDecimal.setError(ERROR_FACTORIAL);
-		return newDecimal;
-	}
-
-	while (temp != zero)
-	{
-		newDecimal.numerator = newDecimal.numerator * temp;
-		temp = temp - one;
-	}
-
-	return newDecimal;
-}
-
-const string Decimal::getOutput() const
-{
-	Integer integerPart = this->numerator / this->denominator;
-	Integer remainder = this->numerator % this->denominator;
-
-	string strPostfix(100, '0');
-	remainder.setNumber(remainder.getNumber() + strPostfix);
-
-	remainder = remainder / this->denominator;
-
-	string strPrefix(100 - remainder.getNumber().length(), '0');
-	string sign = this->sign ? "" : "-";
-	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
-}
-
 const Decimal Decimal::power(const Decimal& other) const
 {
-	Decimal newDecimal = "1";
+	Decimal newDecimal("1", 0);
 	Decimal temp = *this;
 	Integer powerTimes = other.numerator;
 	Integer one("1", 0);
@@ -343,6 +380,103 @@ const Decimal Decimal::power(const Decimal& other) const
 	newDecimal.reduceFraction();
 
 	return newDecimal;
+}
+
+const Decimal Decimal::factorial() const
+{
+	Decimal newDecimal("1", 0);
+	Integer temp = numerator;
+	Integer zero("0", 0);
+	Integer one("1", 0);
+
+	// Not allow for nagetive decimal or denominator != 1
+	if (!this->sign || this->denominator != one)
+	{
+		newDecimal.setError(ERROR_FACTORIAL);
+		return newDecimal;
+	}
+
+	while (temp != zero)
+	{
+		newDecimal.numerator = newDecimal.numerator * temp;
+		temp = temp - one;
+	}
+
+	return newDecimal;
+}
+
+const Integer Decimal::dtoi() const
+{
+	Integer newInteger;
+
+	newInteger = numerator / denominator;
+
+	return newInteger;
+}
+
+const string Decimal::getOutput() const
+{
+	Integer integerPart = this->numerator / this->denominator;
+	Integer remainder = this->numerator % this->denominator;
+
+	string strPostfix(100, '0');
+	remainder.setNumber(remainder.getNumber() + strPostfix);
+
+	remainder = remainder / this->denominator;
+
+	string strPrefix(100 - remainder.getNumber().length(), '0');
+	string sign = this->sign ? "" : "-";
+	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
+}
+
+void Decimal::reduceFraction()
+{
+	Integer GCD = getGCD(numerator, denominator);
+	Integer notExist("-1", 0);
+
+	if (GCD != notExist)
+	{
+		numerator = numerator / GCD;
+		denominator = denominator / GCD;
+	}
+
+}
+
+Integer Decimal::getGCD(Integer a, Integer b) const
+{
+	/* a == numerator, b == denominator */
+	Integer zero("0", 0);
+	Integer one("1", 0);
+	Integer GCD_notExist("-1", 0);
+
+	while (1)
+	{
+		if (a == one || b == one)
+		{
+			return GCD_notExist;
+		}
+		if (a == zero)
+		{
+			return b;
+		}
+		if (b == zero)
+		{
+			return a;
+		}
+
+		if (a > b)
+		{
+			a = a % b;
+		}
+		else if (a == b)
+		{
+			return a;
+		}
+		else
+		{
+			b = b % a;
+		}
+	}
 }
 
 Decimal Decimal::squareRoot(string target) const
@@ -440,96 +574,5 @@ Decimal Decimal::squareRoot(string target) const
 		}
 	}
 
-	return Decimal(quotient);
-}
-
-void Decimal::reduceFraction()
-{
-	Integer GCD = getGCD(numerator, denominator);
-	Integer notExist("-1", 0);
-
-	if (GCD != notExist)
-	{
-		numerator = numerator / GCD;
-		denominator = denominator / GCD;
-	}
-
-}
-
-Integer Decimal::getGCD(Integer a, Integer b) const
-{
-	/* a == numerator, b == denominator */
-	Integer zero("0", 0);
-	Integer one("1", 0);
-	Integer GCD_notExist("-1", 0);
-
-	while (1)
-	{
-		if (a == one || b == one)
-		{
-			return GCD_notExist;
-		}
-		if (a == zero)
-		{
-			return b;
-		}
-		if (b == zero)
-		{
-			return a;
-		}
-
-		if (a > b)
-		{
-			a = a % b;
-		}
-		else if (a == b)
-		{
-			return a;
-		}
-		else
-		{
-			b = b % a;
-		}
-	}
-}
-
-const Integer Decimal::dtoi() const
-{
-	Integer newInteger;
-
-	newInteger = numerator / denominator;
-
-	return newInteger;
-}
-
-Decimal operator+(const Integer & lva, const Decimal & rva)
-{
-	Decimal d_lva(lva);
-	Decimal newDecimal = d_lva + rva;
-
-	return newDecimal;
-}
-
-Decimal operator-(const Integer & lva, const Decimal & rva)
-{
-	Decimal d_lva(lva);
-	Decimal newDecimal = d_lva - rva;
-
-	return newDecimal;
-}
-
-Decimal operator*(const Integer & lva, const Decimal & rva)
-{
-	Decimal d_lva(lva);
-	Decimal newDecimal = d_lva * rva;
-
-	return newDecimal;
-}
-
-Decimal operator/(const Integer & lva, const Decimal & rva)
-{
-	Decimal d_lva(lva);
-	Decimal newDecimal = d_lva / rva;
-
-	return newDecimal;
+	return Decimal(quotient, 0);
 }

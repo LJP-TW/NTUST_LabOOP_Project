@@ -12,8 +12,13 @@ public:
 	// Default set sign to positive, 0/1
 	Decimal();
 
-	// Allow 1234 or 1234.5678 or -1234 or -1234.5678
+	// Allow "1234" or "-1234" or "1234.5678"
+	// also "123 + 456"
 	Decimal(const string& number);
+
+	// Allow "1234" or "-1234" or "1234.5678"
+	// but don't allow "123 + 456"
+	Decimal(const string& number, int);
 	Decimal(const Integer& other);
 	Decimal(const Decimal& other);
 	virtual ~Decimal();

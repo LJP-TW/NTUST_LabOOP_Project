@@ -12,7 +12,7 @@
 #include "Decimal.h"
 #include "Calculator.h"
 
-#define API_TESTING
+//#define API_TESTING
 
 using namespace std;
 
@@ -26,11 +26,10 @@ int main()
 	/* API Testing */
 	// Constructor
 	Integer i = "(-1 0)";
-	Decimal d;
-	//Decimal d = "0.3 * 3";
+	Decimal d = "2.0+5";
 
 	cout << i << endl;
-	//cout << d << endl;
+	cout << d << endl;
 
 	while (cin >> i >> d)
 	{

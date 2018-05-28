@@ -530,7 +530,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 			// If temp is a decimal
 			if (temp.find('.') != string::npos)
 			{
-				numStack.push(new Decimal(temp));
+				numStack.push(new Decimal(temp, 0));
 			}
 			else
 			{
