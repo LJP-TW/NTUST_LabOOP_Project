@@ -228,6 +228,8 @@ bool Calculator::preProcess(string& strFormula)
 	int number_Of_Dot = 0;	/*判斷.在一單位中出現幾次*/
 	bool isSign = false;	/*判斷是否為正負*/
 	bool meetParentheses = false;
+	/*歸零在遇空白和換單位 確認乘冪用*/
+	bool meetPower = false;
 	string variable = "";	/*變數名稱*/
 
 							/*英文3/operator2/數字1/括號4*/
@@ -264,6 +266,7 @@ bool Calculator::preProcess(string& strFormula)
 				i -= 1;
 			}
 			number_Of_Dot = 0;
+			meetPower = false;
 			continue;
 		}
 		/*數字*/
@@ -308,7 +311,7 @@ bool Calculator::preProcess(string& strFormula)
 		{
 			number_Of_Dot++;
 			/*判斷1.5.3 和 2 ^ 0.5的情況*/
-			if (number_Of_Dot > 1)
+			if ((meetPower && strFormula[i + 1] != '5') || number_Of_Dot > 1)
 			{
 				illegal = true;
 				cout << "Dot repeat or power error\n";
@@ -333,7 +336,7 @@ bool Calculator::preProcess(string& strFormula)
 				strFormula.insert(i, " ");
 				i++;
 			}
-			/*運算子後不可接 ' ) '*/
+			/*' ) '前不可接運算子*/
 			if (i >= 2 && strFormula[i] == ')' && (pre == 2 && strFormula[i - 2] != '!' || strFormula[i - 2] == '('))
 			{
 				illegal = true;
@@ -378,6 +381,7 @@ bool Calculator::preProcess(string& strFormula)
 		if (now != pre)
 		{
 			isSign = false;
+			meetPower = false;
 			/*換單位*/
 			if (strFormula[i - 1] != ' ')
 			{
@@ -420,6 +424,12 @@ bool Calculator::preProcess(string& strFormula)
 			}
 			if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i - 2] == '!')
 			{
+				if (strFormula[i - 2] == '^')
+				{
+					illegal = true;
+					cout << "can't continuous intput operator\n";
+					break;
+				}
 				if (strFormula[i - 2] == '!')
 				{
 					isSign = false;
@@ -437,8 +447,7 @@ bool Calculator::preProcess(string& strFormula)
 				break;
 			}
 		}
-
-		/*正負符號換PN*/
+		/*正負符號換@#*/
 		if (isSign)
 		{
 			if (strFormula[i] == '+')
@@ -461,6 +470,13 @@ bool Calculator::preProcess(string& strFormula)
 				break;
 			}
 		}
+
+		/*判斷是否遇到^ */
+		if (now == 1 && i >= 2 && strFormula[i - 2] == '^')
+		{
+			meetPower = true;
+		}
+
 
 		/*now換pre*/
 		switch (now)
@@ -518,7 +534,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 			}
 			else
 			{
-				numStack.push(new Integer(temp));
+				numStack.push(new Integer(temp, 0));
 			}
 		}
 

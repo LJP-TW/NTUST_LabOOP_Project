@@ -11,8 +11,13 @@ public:
 	// Default set sign to positive, 0
 	Integer();
 
-	// Allow 1234 or -1234 or 1234.5678 (will save as 1234)
+	// Allow "1234" or "-1234" or "1234.5678" (will save as "1234")
+	// also "123 + 456"
 	Integer(const string& number);
+
+	// Allow "1234" or "-1234" or "1234.5678" (will save as "1234")
+	// but don't allow "123 + 456"
+	Integer(const string& number, int);
 	Integer(const Integer& other);
 	virtual ~Integer();
 
@@ -61,12 +66,6 @@ protected:
 	virtual const string getType() const { return "Integer"; };
 
 private:
-	enum ErrorType
-	{
-		ERROR_FACTORIAL = 0b00000001,
-		ERROR_DIVISION	= 0b00000010,
-	};
-
 	char errorFlag;
 
 	// true  : positive

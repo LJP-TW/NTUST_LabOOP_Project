@@ -2,8 +2,19 @@
 // Date: April 6, 2018
 // Last Update: April 7, 2018
 // Problem statement: This C++ header to implement class .
+#include "Calculator.h"
 #include "Integer.h"
 #define ASCII_BASE 48
+
+namespace
+{
+	enum ErrorType
+	{
+		ERROR_CONSTRUCT = 0b00000001,
+		ERROR_FACTORIAL = 0b00000010,
+		ERROR_DIVISION = 0b00000100,
+	};
+}
 
 Integer::Integer() : errorFlag(0), sign(true), number("0")
 {
@@ -11,10 +22,29 @@ Integer::Integer() : errorFlag(0), sign(true), number("0")
 
 Integer::Integer(const string& number)
 {
+	Calculator calculator;
+	string processedNum = calculator.process(number);
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		*this = Integer(processedNum, 0);
+	}
+	else
+	{
+		this->errorFlag = ERROR_CONSTRUCT;
+		this->sign = true;
+		this->number = "1";
+	}
+}
+
+Integer::Integer(const string & number, int)
+{
 	int i = 0;
 
+	// Handling errorFlag
 	this->errorFlag = 0;
 
+	// Handling sign
 	if (number[i] == '-')
 	{
 		++i;
@@ -30,6 +60,7 @@ Integer::Integer(const string& number)
 		this->sign = true;
 	}
 
+	// Handling number
 	this->number = "";
 	while (number[i] != 0 && number[i] != '.')
 	{
@@ -173,6 +204,8 @@ const Integer Integer::operator +(const Integer& other) const
 		newInteger = other - temp; // "+" - "+"
 	}
 
+	newInteger.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newInteger;
 }
 
@@ -260,6 +293,8 @@ const Integer Integer::operator -(const Integer& other) const
 
 	newInteger.removeZeroPrefix();
 
+	newInteger.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newInteger;
 }
 
@@ -304,6 +339,8 @@ const Integer Integer::operator *(const Integer& other) const
 
 	newInteger.removeZeroPrefix();
 
+	newInteger.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newInteger;
 }
 
@@ -312,7 +349,7 @@ const Integer Integer::operator /(const Integer& other) const
 	Integer newInteger;
 
 	// Initial zero Integer
-	Integer zero = "0";
+	Integer zero("0", 0);
 
 	// At first to check legal or zero
 	if (other == zero)
@@ -333,7 +370,7 @@ const Integer Integer::operator /(const Integer& other) const
 		if (!i)
 		{
 			string zero = "0";
-			BN[i] = Integer(zero);
+			BN[i] = Integer(zero, 0);
 		}
 		else
 		{
@@ -402,6 +439,8 @@ const Integer Integer::operator /(const Integer& other) const
 
 	newInteger.removeZeroPrefix();
 
+	newInteger.errorFlag = (this->errorFlag | other.errorFlag);
+
 	return newInteger;
 }
 
@@ -412,6 +451,8 @@ const Integer Integer::operator %(const Integer& other) const
 	newInteger = *this - (temp*other);
 
 	newInteger.removeZeroPrefix();
+
+	newInteger.errorFlag = (this->errorFlag | other.errorFlag);
 
 	return newInteger;
 }
@@ -603,6 +644,27 @@ const bool Integer::operator !=(const Integer& other) const
 
 ostream& operator <<(ostream& output, const Integer& integer)
 {
+	if (integer.getError())
+	{
+		switch (integer.getError())
+		{
+		case ERROR_CONSTRUCT:
+			output << "ERROR_CONSTRUCT";
+			break;
+		case ERROR_FACTORIAL:
+			output << "ERROR_FACTORIAL";
+			break;
+		case ERROR_DIVISION:
+			output << "ERROR_DIVISION";
+			break;
+		default:
+			output << "ERROR_INTEGER_UNKNOWN_ERROR";
+			break;
+		}
+
+		return output;
+	}
+
 	if (!integer.sign)
 	{
 		output << '-';
@@ -615,19 +677,33 @@ ostream& operator <<(ostream& output, const Integer& integer)
 
 istream& operator >>(istream& input, Integer& integer)
 {
-	string number;
+	string number, processedNum;
+	Calculator calculator;
+
 	input >> number;
-	integer = number;
+	processedNum = calculator.process(number);
+	
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		integer = Integer(processedNum, 0);
+	}
+	else
+	{
+		integer.errorFlag = ERROR_CONSTRUCT;
+		integer.sign = true;
+		integer.number = "1";
+	}
 
 	return input;
 }
 
 const Integer Integer::power(const Integer& other) const
 {
-	Integer newInteger = "1";
+	Integer newInteger("1", 0);
 	Integer temp = other;
-	Integer one = "1";
-	Integer zero = "0";
+	Integer one("1", 0);
+	Integer zero("0", 0);
 
 	// If case like 2^(-5), the result must small than 0.
 	// Because the value returning is Integer, so it will be 0 (Decimal 0.xxxxxx ==> Integer 0)
@@ -647,10 +723,10 @@ const Integer Integer::power(const Integer& other) const
 
 const Integer Integer::factorial() const
 {
-	Integer newInteger = "1";
+	Integer newInteger("1", 0);
 	Integer temp = *this;
-	Integer zero = "0";
-	Integer one = "1";
+	Integer zero("0", 0);
+	Integer one("1", 0);
 
 	// Not allow for (-87)!
 	if (!this->sign)
@@ -670,7 +746,7 @@ const Integer Integer::factorial() const
 
 const string Integer::getOutput() const
 {
-	if (*this == Integer("0"))
+	if (*this == Integer("0", 0))
 		return "0";
 	else
 		return sign == true ? (number) : (string("-") + number);

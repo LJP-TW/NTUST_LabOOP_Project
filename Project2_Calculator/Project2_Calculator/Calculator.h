@@ -6,8 +6,7 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "Integer.h"
-#include "Decimal.h"
+#include "NumObject.h"
 
 using namespace std;
 
@@ -48,3 +47,6 @@ private:
 	// message function
 	string message(string errorMessage) { return errorMessage; };
 };
+
+#include "Integer.h"
+#include "Decimal.h"

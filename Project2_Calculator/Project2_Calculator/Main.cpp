@@ -24,24 +24,41 @@ int main()
 
 #ifdef API_TESTING
 	/* API Testing */
-	Integer i;
+	// Constructor
+	Integer i = "(-1 0)";
 	Decimal d;
+	//Decimal d = "0.3 * 3";
+
+	cout << i << endl;
+	//cout << d << endl;
+
 	while (cin >> i >> d)
 	{
+		cout << i << endl;
+		cout << d << endl;
+
+		cout << endl;
+
 		cout << i + i << endl;
 		cout << i + d << endl;
 		cout << d + i << endl;
 		cout << d + d << endl;
+
+		cout << endl;
 
 		cout << i - i << endl;
 		cout << i - d << endl;
 		cout << d - i << endl;
 		cout << d - d << endl;
 
+		cout << endl;
+
 		cout << i * i << endl;
 		cout << i * d << endl;
 		cout << d * i << endl;
 		cout << d * d << endl;
+
+		cout << endl;
 
 		cout << i / i << endl;
 		cout << i / d << endl;

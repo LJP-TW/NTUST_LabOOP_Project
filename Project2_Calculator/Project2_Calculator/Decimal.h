@@ -79,12 +79,6 @@ protected:
 	virtual const string getType() const { return "Decimal"; };
 
 private:
-	enum ErrorType
-	{
-		ERROR_FACTORIAL = 0b00000001,
-		ERROR_POWER		= 0b00000010,
-	};
-
 	char errorFlag;
 
 	// true  : positive

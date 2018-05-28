@@ -5,6 +5,15 @@
 #include "Decimal.h"
 #define OUTPUT_DIGITS 100
 
+namespace 
+{
+	enum ErrorType
+	{
+		ERROR_FACTORIAL = 0b00000001,
+		ERROR_POWER = 0b00000010,
+	};
+}
+
 Decimal::Decimal() : errorFlag(0), sign(true), numerator(string("0")), denominator(string("1"))
 {
 }
@@ -257,8 +266,8 @@ const Decimal Decimal::factorial() const
 {
 	Decimal newDecimal = "1";
 	Integer temp = numerator;
-	Integer zero = "0";
-	Integer one = "1";
+	Integer zero("0", 0);
+	Integer one("1", 0);
 
 	// Not allow for nagetive decimal or denominator != 1
 	if (!this->sign || this->denominator != one)
@@ -296,17 +305,17 @@ const Decimal Decimal::power(const Decimal& other) const
 	Decimal newDecimal = "1";
 	Decimal temp = *this;
 	Integer powerTimes = other.numerator;
-	Integer one = "1";
-	Integer zero = "0";
+	Integer one("1", 0);
+	Integer zero("0", 0);
 	bool needRoot = false;
 
-	if (other.denominator == Integer("2"))
+	if (other.denominator == Integer("2", 0))
 	{
 		needRoot = true;
 	}
 
 	// Only can handle case which is powered by multiple of 0.5
-	if (other.denominator != Integer("1") && !needRoot)
+	if (other.denominator != Integer("1", 0) && !needRoot)
 	{
 		newDecimal.setError(ERROR_POWER);
 		return newDecimal;
@@ -413,12 +422,12 @@ Decimal Decimal::squareRoot(string target) const
 			divisor.setNumber(strNowDivisor + i);
 
 			string strTemp = string(1, i);
-			Integer integerTemp = divisor * Integer(strTemp);
+			Integer integerTemp = divisor * Integer(strTemp, 0);
 
 			if (integerTemp <= dividend)
 			{
 				dividend = dividend - integerTemp;
-				divisor = divisor + Integer(strTemp);
+				divisor = divisor + Integer(strTemp, 0);
 
 				quotient += i;
 				++nowPos;
@@ -437,7 +446,7 @@ Decimal Decimal::squareRoot(string target) const
 void Decimal::reduceFraction()
 {
 	Integer GCD = getGCD(numerator, denominator);
-	Integer notExist = "-1";
+	Integer notExist("-1", 0);
 
 	if (GCD != notExist)
 	{
@@ -450,9 +459,9 @@ void Decimal::reduceFraction()
 Integer Decimal::getGCD(Integer a, Integer b) const
 {
 	/* a == numerator, b == denominator */
-	Integer zero = "0";
-	Integer one = "1";
-	Integer GCD_notExist = "-1";
+	Integer zero("0", 0);
+	Integer one("1", 0);
+	Integer GCD_notExist("-1", 0);
 
 	while (1)
 	{
