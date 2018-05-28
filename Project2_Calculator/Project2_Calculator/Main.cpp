@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <Windows.h>
 
 #include "NumObject.h"
 #include "Integer.h"
@@ -16,8 +17,12 @@
 
 using namespace std;
 
+extern HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
 int main()
 {
+	SetConsoleTextAttribute(hConsole, 10);
+
 	Calculator calculator;
 	string strFormula;
 	string result;
@@ -70,6 +75,8 @@ int main()
 	{
 		result = calculator.process(strFormula);
 		cout << result << endl;
+
+		SetConsoleTextAttribute(hConsole, 10);
 	}
 
 #endif

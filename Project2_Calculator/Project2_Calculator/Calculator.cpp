@@ -2,10 +2,13 @@
 // Date: April 6, 2018
 // Last Update: April 7, 2018
 // Problem statement: This C++ header to implement class .
+#include <Windows.h>
 #include <stack>
 #include "Calculator.h"
 #define PRIORITY_LAYER 6
 //#define ERROR_MSG
+
+extern HANDLE hConsole;
 
 Calculator::Calculator()
 {
@@ -22,6 +25,8 @@ Calculator::~Calculator()
 
 string Calculator::process(string strFormula)
 {
+	SetConsoleTextAttribute(hConsole, 10);
+
 	// Make sure that '=' are covered by ' '
 	auto found = strFormula.find('=');
 	if (found != string::npos)
@@ -53,6 +58,7 @@ string Calculator::process(string strFormula)
 
 		if (assign != "=")
 		{
+			SetConsoleTextAttribute(hConsole, 12);
 			return message("COMMAND NOT DEFINED!");
 		}
 		// Set Integer Variable
@@ -65,6 +71,7 @@ string Calculator::process(string strFormula)
 			// preProcess formula
 			if (!preProcess(pureFormula))
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("EXPRESSION ERROR");
 			}
 
@@ -74,6 +81,7 @@ string Calculator::process(string strFormula)
 
 			if (pt == nullptr)
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("FAIL SET VARIABLE");
 			}
 
@@ -97,6 +105,7 @@ string Calculator::process(string strFormula)
 			// preProcess formula
 			if (!preProcess(pureFormula))
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("EXPRESSION ERROR");
 			}
 
@@ -106,6 +115,7 @@ string Calculator::process(string strFormula)
 
 			if (pt == nullptr)
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("FAIL SET VARIABLE");
 			}
 
@@ -122,6 +132,7 @@ string Calculator::process(string strFormula)
 		// Type not defined
 		else
 		{
+			SetConsoleTextAttribute(hConsole, 12);
 			return message("TYPE NOT DEFINED");
 		}
 	}
@@ -153,6 +164,7 @@ string Calculator::process(string strFormula)
 				// preProcess formula
 				if (!preProcess(pureFormula))
 				{
+					SetConsoleTextAttribute(hConsole, 12);
 					return message("EXPRESSION ERROR");
 				}
 
@@ -169,6 +181,7 @@ string Calculator::process(string strFormula)
 
 				if (pt == nullptr)
 				{
+					SetConsoleTextAttribute(hConsole, 12);
 					return message("CALCULATION ERROR");
 				}
 
@@ -182,6 +195,7 @@ string Calculator::process(string strFormula)
 			// Variable not exist
 			else
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("VARIABLE NOT EXIST");
 			}
 		}
@@ -195,6 +209,7 @@ string Calculator::process(string strFormula)
 			// preProcess formula
 			if (!preProcess(strFormula))
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("EXPRESSION ERROR");
 			}
 
@@ -204,6 +219,7 @@ string Calculator::process(string strFormula)
 
 			if (pt == nullptr)
 			{
+				SetConsoleTextAttribute(hConsole, 12);
 				return message("CALCULATION ERROR");
 			}
 
