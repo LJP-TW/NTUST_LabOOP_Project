@@ -26,6 +26,15 @@ a
 
 1.0/(2.0-2)
 2.0^3.0
+2.0/0
+5.
+
+set integer g8 = 99
+g8
+set integer a = 2/0
+a
+
+// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 
 //API Testing
 3+2 0

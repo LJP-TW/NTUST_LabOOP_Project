@@ -5,6 +5,7 @@
 #include <stack>
 #include "Calculator.h"
 #define PRIORITY_LAYER 6
+//#define ERROR_MSG
 
 Calculator::Calculator()
 {
@@ -47,6 +48,7 @@ string Calculator::process(string strFormula)
 	if (strBegin == "Set" || strBegin == "set") // Set A = 1 + 2 + B
 	{
 		string varType, varName, assign;
+		// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 		ssCommand >> varType >> varName >> assign;
 
 		if (assign != "=")
@@ -72,7 +74,7 @@ string Calculator::process(string strFormula)
 
 			if (pt == nullptr)
 			{
-				return message("CALCULATION ERROR");
+				return message("FAIL SET VARIABLE");
 			}
 
 			// If there is a object, delete it and then put a new pointer to replace it.
@@ -104,7 +106,7 @@ string Calculator::process(string strFormula)
 
 			if (pt == nullptr)
 			{
-				return message("CALCULATION ERROR");
+				return message("FAIL SET VARIABLE");
 			}
 
 			// If there is a object, delete it and then put a new pointer to replace it.
@@ -146,6 +148,7 @@ string Calculator::process(string strFormula)
 				string pureFormula;
 				getline(ssCommand, pureFormula);
 				pureFormula.erase(pureFormula.begin());
+				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 
 				// preProcess formula
 				if (!preProcess(pureFormula))
@@ -215,24 +218,26 @@ string Calculator::process(string strFormula)
 bool Calculator::preProcess(string& strFormula)
 {
 	// 規則:
-	// 不能出現除了字母, 數字, 運算子 的字		[complete]
-	// 變數不能相鄰								[complete]
-	// 運算子不能相鄰(正負號前可遇到運算子)		[complete]
-	// 特定運算子要符合特定位置有出現數字		[complete]
-	// 運算子後面可以接 正號 負號 數字			[complete]
-	// 小數不能像 .xxxx , 一定要 yyyy.xxxx		[complete]
-	// 括號要對									[complete]
-	// 正負回傳 P,N								[complete]
+	// 不能出現除了字母, 數字, 運算子 的字        [complete]
+	// 變數不能相鄰                                [complete]
+	// 運算子不能相鄰(正負號前可遇到運算子)        [complete]
+	// 特定運算子要符合特定位置有出現數字        [complete]
+	// 運算子後面可以接 正號 負號 數字            [complete]
+	// 小數不能像 .xxxx , 一定要 yyyy.xxxx        [complete]
+	// 括號要對                                    [complete]
+	// 正負回傳 P,N                                [complete]
+	// 其實還有更多 想不到吧
 
-	bool illegal = false;	/*檢查不合法*/
-	int number_Of_Dot = 0;	/*判斷.在一單位中出現幾次*/
-	bool isSign = false;	/*判斷是否為正負*/
+	bool illegal = false;    /*檢查不合法*/
+	int number_Of_Dot = 0;    /*判斷.在一單位中出現幾次*/
+	bool isSign = false;    /*判斷是否為正負*/
+	bool isVariable = false; /*判斷是否為變數*/
 	bool meetParentheses = false;
 	/*歸零在遇空白和換單位 確認乘冪用*/
 	bool meetPower = false;
-	string variable = "";	/*變數名稱*/
+	string variable = "";    /*變數名稱*/
 
-							/*英文3/operator2/數字1/括號4*/
+							 /*英文3/operator2/數字1/括號4*/
 	int pre = 0;
 	/*英文3/operator2/數字1/括號4*/
 	int now = 0;
@@ -241,17 +246,10 @@ bool Calculator::preProcess(string& strFormula)
 	stack<char>parentheses;
 
 	/*拿掉字串最前面的空白 (ex:    5)*/
-	for (int i = 0; i < strFormula.size(); i++)
+	while (strFormula[0] == ' ')
 	{
-		if (i == 0 && strFormula[i] == ' ')
-		{
-			strFormula.erase(i, 1);
-			i -= 1;
-		}
-		else
-		{
-			break;
-		}
+		// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
+		strFormula.erase(0, 1);
 	}
 
 	for (int i = 0; i < strFormula.size(); i++)
@@ -259,6 +257,16 @@ bool Calculator::preProcess(string& strFormula)
 		/*空白*/
 		if (strFormula[i] == ' ')
 		{
+			/*前面如果是點點, 幹他媽*/
+			if (strFormula[i - 1] == '.')
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "remind your fucking dotttttttttt son of bitttch.\n";
+#endif
+				break;
+			}
+
 			/*只留一個空白*/
 			if (strFormula[i - 1] == ' ')
 			{
@@ -273,6 +281,11 @@ bool Calculator::preProcess(string& strFormula)
 		else if (strFormula[i] <= '9' && strFormula[i] >= '0')
 		{
 			now = 1;
+
+			if (isVariable)
+			{
+				variable += strFormula[i];
+			}
 		}
 		/*operator*/
 		else if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i] == '*' || strFormula[i] == '/' || strFormula[i] == '^' || strFormula[i] == '!')
@@ -282,8 +295,16 @@ bool Calculator::preProcess(string& strFormula)
 		/*字母*/
 		else if (strFormula[i] >= 'a' && strFormula[i] <= 'z' || strFormula[i] >= 'A' && strFormula[i] <= 'Z')
 		{
-			variable += strFormula[i];
-			now = 3;
+			now = 1;
+			if (i == 0 || (i >= 1 && strFormula[i - 1] == ' '))
+			{
+				isVariable = true;
+			}
+
+			if (isVariable)
+			{
+				variable += strFormula[i];
+			}
 		}
 		/*判斷括號有無對稱*/
 		else if (strFormula[i] == '(')
@@ -298,7 +319,9 @@ bool Calculator::preProcess(string& strFormula)
 			if (parentheses.size() == 0)
 			{
 				illegal = true;
+#ifdef ERROR_MSG
 				cout << "remind your fucking parentheses\n";
+#endif
 				break;
 			}
 			else
@@ -306,15 +329,26 @@ bool Calculator::preProcess(string& strFormula)
 				parentheses.pop();
 			}
 		}
-		/*判斷'.'有無重複*/
+		/*判斷'.'*/
 		else if (strFormula[i] == '.')
 		{
 			number_Of_Dot++;
 			/*判斷1.5.3 和 2 ^ 0.5的情況*/
-			if ((meetPower && strFormula[i + 1] != '5') || number_Of_Dot > 1)
+			if ((meetPower && strFormula[i + 1] != '5' && strFormula[i + 1] != '0') || number_Of_Dot > 1)
 			{
 				illegal = true;
+#ifdef ERROR_MSG
 				cout << "Dot repeat or power error\n";
+#endif
+				break;
+			}
+			if (pre != 1 || isVariable)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "DOT ERROR\n";
+#endif
+				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 				break;
 			}
 		}
@@ -322,7 +356,9 @@ bool Calculator::preProcess(string& strFormula)
 		else
 		{
 			illegal = true;
-			cout << "word not included\n";
+#ifdef ERROR_MSG
+			cout << "Words not included\n";
+#endif
 			break;
 		}
 
@@ -337,26 +373,31 @@ bool Calculator::preProcess(string& strFormula)
 				i++;
 			}
 			/*' ) '前不可接運算子*/
-			if (i >= 2 && strFormula[i] == ')' && (pre == 2 && strFormula[i - 2] != '!' || strFormula[i - 2] == '('))
+			if (i >= 2 && strFormula[i] == ')' && (pre == 2 && strFormula[i - 2] != '!' || strFormula[i - 2] == '(' || strFormula[i - 2] == '.'))
 			{
 				illegal = true;
-				cout << "remind your fucking parentheses\n";
+#ifdef ERROR_MSG
+				cout << "Parentheses ERROR\n";
+#endif
 				break;
 			}
-			if (strFormula[i] == '(' && ((pre == 3 || pre == 1) || (i >= 2 && strFormula[i - 2] == '!')))
+			if (strFormula[i] == '(' && (pre == 1 || (i >= 2 && strFormula[i - 2] == '!')))
 			{
 				illegal = true;
-				cout << "remind your fucking parentheses\n";
+#ifdef ERROR_MSG
+				cout << "Parentheses ERROR\n";
+#endif
 				break;
 			}
-
 		}
 
 		/*運算子後面沒接東西 (發生在字串尾)*/
-		if ((i == strFormula.size() - 1) && now == 2 && strFormula[i] != '!')
+		if ((i == strFormula.size() - 1) && ((now == 2 && strFormula[i] != '!') || strFormula[i] == '.'))
 		{
 			illegal = true;
-			cout << "need number or variable after operator\n";
+#ifdef ERROR_MSG
+			cout << "Need number or variable after operator\n";
+#endif
 			break;
 		}
 
@@ -368,7 +409,9 @@ bool Calculator::preProcess(string& strFormula)
 			if (strFormula[i] == '^' || strFormula[i] == '/' || strFormula[i] == '*' || strFormula[i] == '!' || strFormula[i] == '.')
 			{
 				illegal = true;
-				cout << "operator cna't be the first character\n";
+#ifdef ERROR_MSG
+				cout << "Operator cna't be the first character\n";
+#endif
 				break;
 			}
 			else if (strFormula[i] == '+' || strFormula[i] == '-')
@@ -390,19 +433,32 @@ bool Calculator::preProcess(string& strFormula)
 				i++;
 			}
 
-			/* 如果 pre 是變數時 */
-			if (pre == 3)
+			// For case liek "1.!"
+			if (now == 2 && pre == 1 && i >= 2 && strFormula[i - 2] == '.')
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "Fuck You\n";
+#endif
+				break;
+			}
+
+			/* 如果是變數時 */ 
+			if (isVariable)
 			{
 				/*檢查變數是否存在*/
 				auto find = varList.find(variable);
+				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 				if (find == varList.end())
 				{
-					illegal = true;
+					illegal = true; 
+#ifdef ERROR_MSG
 					cout << "Variable doesn't exist!" << endl;
+#endif
 					break;
 				}
-
 				variable = "";
+				isVariable = false;
 			}
 		}
 
@@ -410,7 +466,9 @@ bool Calculator::preProcess(string& strFormula)
 		if (i >= 2 && strFormula[i - 2] == ')' && now == 1)
 		{
 			illegal = true;
-			cout << "remind your fucking parentheses\n";
+#ifdef ERROR_MSG
+			cout << "Parentheses ERROR\n";
+#endif
 			break;
 		}
 
@@ -427,7 +485,9 @@ bool Calculator::preProcess(string& strFormula)
 				if (strFormula[i - 2] == '^')
 				{
 					illegal = true;
-					cout << "can't continuous intput operator\n";
+#ifdef ERROR_MSG
+					cout << "Can't continuous intput operator\n";
+#endif
 					break;
 				}
 				if (strFormula[i - 2] == '!')
@@ -443,7 +503,9 @@ bool Calculator::preProcess(string& strFormula)
 			else
 			{
 				illegal = true;
-				cout << "can't continuous intput operator\n";
+#ifdef ERROR_MSG
+				cout << "Can't continuous intput operator\n";
+#endif
 				break;
 			}
 		}
@@ -463,10 +525,12 @@ bool Calculator::preProcess(string& strFormula)
 		/*判斷是否合法 (Ex a a + 5) 第一個不判斷 ||後面判斷階層特殊案例*/
 		if (i != 0 && strFormula[i - 1] == ' ' && now != 2 && now != 4)
 		{
-			if ((pre != 2 && pre != 4) || (strFormula[i - 2] == '!' && i > 1))
+			if ((pre != 2 && pre != 4) || (i >= 2 && strFormula[i - 2] == '!'))
 			{
 				illegal = true;
-				cout << "can't continuous input variable or number\n";
+#ifdef ERROR_MSG
+				cout << "Can't continuous input variable or number\n";
+#endif
 				break;
 			}
 		}
@@ -477,6 +541,23 @@ bool Calculator::preProcess(string& strFormula)
 			meetPower = true;
 		}
 
+		/*先有空再有研究, QQQ*/
+		if (i == strFormula.size() - 1 && isVariable)
+		{
+			/*檢查變數是否存在*/
+			auto find = varList.find(variable);
+			if (find == varList.end())
+			{
+				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "Variable doesn't exist!" << endl;
+#endif
+				break;
+			}
+			variable = "";
+			isVariable = false;
+		}
 
 		/*now換pre*/
 		switch (now)
@@ -501,13 +582,12 @@ bool Calculator::preProcess(string& strFormula)
 	if (parentheses.size() > 0 && illegal == false)
 	{
 		illegal = true;
-		cout << "remind your fucking parentheses\n";
+#ifdef ERROR_MSG
+		cout << "Parentheses ERROR\n";
+#endif
 	}
-	if (illegal)
-	{
-		return false;
-	}
-	return true;
+
+	return illegal ? false : true;
 }
 
 NumObject* Calculator::calculate(stringstream& formula)
@@ -568,6 +648,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 					Decimal decimalTemp = ((Decimal*)pt)->factorial();
 
 					delete pt;
+					// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 					numStack.pop();
 					numStack.push(new Decimal(decimalTemp));
 
@@ -667,6 +748,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 				NumObject* pt = numStack.top();
 				NumObject* rvalue;
 				if (pt->getType() == "Integer")
+					// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 				{
 					rvalue = new Integer(*(Integer*)pt);
 				}
@@ -766,6 +848,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 
 						(*(Decimal *)pt) = (*(Decimal *)pt) / newDecimal;
 					}
+					// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 
 					// Decimal / Decimal
 					else
@@ -865,6 +948,7 @@ NumObject* Calculator::calculate(stringstream& formula)
 					}
 
 					// Integer - Decimal
+					// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 					else
 					{
 						// Make a new decimal, pop old data, push new data
@@ -919,6 +1003,11 @@ NumObject* Calculator::calculate(stringstream& formula, int mode)
 	NumObject* pt = calculate(formula);
 	NumObject* temp = pt;
 
+	if (pt == nullptr)
+	{
+		return pt;
+	}
+
 	// If mode == 0, return Integer
 	if (mode == 0 && pt->getType() == "Decimal")
 	{
@@ -959,7 +1048,7 @@ string Calculator::toPostfixExpression(stringstream& formula)
 			postfixExpression += temp;
 			postfixExpression += ' ';
 		}
-
+		// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 		// Or temp is a operator
 		else
 		{
@@ -1054,3 +1143,9 @@ int Calculator::getOpPriority(char op)
 
 	return -1;
 }
+
+
+
+
+
+// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網

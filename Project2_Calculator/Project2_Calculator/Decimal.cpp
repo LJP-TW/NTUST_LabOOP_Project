@@ -12,7 +12,8 @@ namespace
 	{
 		ERROR_CONSTRUCT = 0b00000001,
 		ERROR_FACTORIAL = 0b00000010,
-		ERROR_POWER = 0b00000100,
+		ERROR_DIVISION	= 0b00000100,
+		ERROR_POWER		= 0b00001000,
 	};
 }
 
@@ -264,6 +265,12 @@ const Decimal Decimal::operator /(const Decimal& other) const
 	newDecimal.numerator = this->numerator * other.denominator;
 	newDecimal.denominator = this->denominator * other.numerator;
 
+	if (newDecimal.denominator == Integer("0", 0))
+	{
+		newDecimal.errorFlag = ERROR_DIVISION;
+		return newDecimal;
+	}
+
 	newDecimal.sign = !(this->getSign() ^ other.getSign());
 
 	newDecimal.reduceFraction();
@@ -307,6 +314,27 @@ Decimal operator/(const Integer & lva, const Decimal & rva)
 
 ostream& operator <<(ostream& output, const Decimal& decimal)
 {
+	if (decimal.getError())
+	{
+		switch (decimal.getError())
+		{
+		case ERROR_CONSTRUCT:
+			output << "ERROR_CONSTRUCT";
+			break;
+		case ERROR_FACTORIAL:
+			output << "ERROR_FACTORIAL";
+			break;
+		case ERROR_DIVISION:
+			output << "ERROR_DIVISION";
+			break;
+		default:
+			output << "ERROR_INTEGER_UNKNOWN_ERROR";
+			break;
+		}
+
+		return output;
+	}
+
 	// Output to 100 decimal digit
 	output << decimal.getOutput();
 
