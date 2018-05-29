@@ -356,6 +356,11 @@ bool Calculator::preProcess(string& strFormula)
 				}
 			}
 			
+			if (illegal)
+			{
+				break;
+			}
+
 			if (meetDot)
 			{
 				illegal = true;
