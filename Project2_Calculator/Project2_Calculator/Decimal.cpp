@@ -447,12 +447,17 @@ const string Decimal::getOutput() const
 	Integer integerPart = this->numerator / this->denominator;
 	Integer remainder = this->numerator % this->denominator;
 
-	string strPostfix(100, '0');
+	string strPostfix(OUTPUT_DIGITS, '0');
 	remainder.setNumber(remainder.getNumber() + strPostfix);
 
 	remainder = remainder / this->denominator;
 
-	string strPrefix(100 - remainder.getNumber().length(), '0');
+	if (this->numerator == Integer("0", 0))
+	{
+		return "0." + strPostfix;
+	}
+	
+	string strPrefix(OUTPUT_DIGITS - remainder.getNumber().length(), '0');
 	string sign = this->sign ? "" : "-";
 	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
 }

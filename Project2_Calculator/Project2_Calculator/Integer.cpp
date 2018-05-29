@@ -728,6 +728,12 @@ const Integer Integer::factorial() const
 	Integer zero("0", 0);
 	Integer one("1", 0);
 
+	// Allow (-0)!
+	if (this->number == "0")
+	{
+		return newInteger;
+	}
+
 	// Not allow for (-87)!
 	if (!this->sign)
 	{

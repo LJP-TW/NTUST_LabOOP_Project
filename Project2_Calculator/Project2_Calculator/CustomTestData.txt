@@ -44,6 +44,8 @@ a
 (-0)!
 2.8^0
 
+-0.0
+
 // 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 
 //API Testing
