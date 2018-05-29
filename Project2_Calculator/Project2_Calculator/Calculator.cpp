@@ -6,9 +6,23 @@
 #include <stack>
 #include "Calculator.h"
 #define PRIORITY_LAYER 6
-//#define ERROR_MSG
+#define ERROR_MSG
 
 extern HANDLE hConsole;
+
+namespace
+{
+	enum
+	{
+		CONSTANT = 0,
+		VARIABLE,
+		PARENTHESES,
+		FACTORIAL,
+		POWER,
+		OPERATOR,
+		SIGN
+	};
+}
 
 Calculator::Calculator()
 {
@@ -233,381 +247,470 @@ string Calculator::process(string strFormula)
 
 bool Calculator::preProcess(string& strFormula)
 {
-	// 規則:
-	// 不能出現除了字母, 數字, 運算子 的字        [complete]
-	// 變數不能相鄰                                [complete]
-	// 運算子不能相鄰(正負號前可遇到運算子)        [complete]
-	// 特定運算子要符合特定位置有出現數字        [complete]
-	// 運算子後面可以接 正號 負號 數字            [complete]
-	// 小數不能像 .xxxx , 一定要 yyyy.xxxx        [complete]
-	// 括號要對                                    [complete]
-	// 正負回傳 P,N                                [complete]
-	// 其實還有更多 想不到吧
+	// 現在處理到第幾個字
+	int i = 0;
 
-	bool illegal = false;    /*檢查不合法*/
-	int number_Of_Dot = 0;    /*判斷.在一單位中出現幾次*/
-	bool isSign = false;    /*判斷是否為正負*/
-	bool isVariable = false; /*判斷是否為變數*/
-	bool meetParentheses = false;
-	/*歸零在遇空白和換單位 確認乘冪用*/
-	bool meetPower = false;
-	string variable = "";    /*變數名稱*/
+	// 最後一個咚咚是啥東
+	int lastStuff = -1;
 
-							 /*英文3/operator2/數字1/括號4*/
-	int pre = 0;
-	/*英文3/operator2/數字1/括號4*/
-	int now = 0;
+	// 幾個括號, 每一個左括號會加一, 右括號會減一, 每次減一都要先確定此值非0, 字串處理結束後也要check此值為0
+	int parenthesesNum = 0;
 
-	/*判斷括號用*/
-	stack<char>parentheses;
+	// 是否合法
+	bool illegal = false;
+	
+	// 是否是正負號
+	bool isSign = true;
 
-	/*拿掉字串最前面的空白 (ex:    5)*/
+	// 是否是多餘的空格
+	bool isExcessBlank = true;
+
+	// 後續可以接什麼
+	bool canConstant = true;
+	bool canVariable = true;
+	bool canLeftParentheses = true;
+	bool canRightParentheses = false;
+	bool canFactorial = false;
+	bool canPower = false;
+	bool canOperator = false;
+	bool canSign = true;
+
+	// 消除開頭的0
 	while (strFormula[0] == ' ')
 	{
-		// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
 		strFormula.erase(0, 1);
 	}
 
-	for (int i = 0; i < strFormula.size(); i++)
+	// preProcess every char in strFormula
+	while (strFormula[i])
 	{
-		/*空白*/
-		if (strFormula[i] == ' ')
+		// If it is a dot
+		if (strFormula[i] == '.')
 		{
-			/*前面如果是點點, 幹他媽*/
-			if (strFormula[i - 1] == '.')
-			{
-				illegal = true;
+			illegal = true;
 #ifdef ERROR_MSG
-				cout << "remind your fucking dotttttttttt son of bitttch.\n";
+			cout << "PREPROCESS : BUG SUCH LIKE \".\", \"54 .87\", \"54 * .87\"" << endl;
 #endif
-				break;
-			}
-
-			/*只留一個空白*/
-			if (strFormula[i - 1] == ' ')
-			{
-				strFormula.erase(i - 1, 1);
-				i -= 1;
-			}
-			number_Of_Dot = 0;
-			meetPower = false;
-			continue;
+			break;
 		}
-		/*數字*/
-		else if (strFormula[i] <= '9' && strFormula[i] >= '0')
-		{
-			now = 1;
 
-			if (isVariable)
-			{
-				variable += strFormula[i];
-			}
-		}
-		/*operator*/
-		else if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i] == '*' || strFormula[i] == '/' || strFormula[i] == '^' || strFormula[i] == '!')
+		// If it is a blank
+		else if (strFormula[i] == ' ')
 		{
-			now = 2;
-		}
-		/*字母*/
-		else if (strFormula[i] >= 'a' && strFormula[i] <= 'z' || strFormula[i] >= 'A' && strFormula[i] <= 'Z')
-		{
-			now = 1;
-			if (i == 0 || (i >= 1 && strFormula[i - 1] == ' '))
+			if (isExcessBlank)
 			{
-				isVariable = true;
-			}
-
-			if (isVariable)
-			{
-				variable += strFormula[i];
+				strFormula.erase(i, 1);
 			}
 			else
 			{
+				isExcessBlank = true;
+				++i;
+			}
+		}
+
+		// Else if it is a constant
+		else if (strFormula[i] >= '0' && strFormula[i] <= '9')
+		{
+			if (!canConstant)
+			{
 				illegal = true;
 #ifdef ERROR_MSG
-				cout << "There are some wrong like \"23a123\"\n";
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE CONSTANT" << endl;
 #endif
 				break;
 			}
+
+			bool meetDot = false;
+			int dotNum = 0;
+			char c;
+
+			while (++i < strFormula.size())
+			{
+				c = strFormula[i];
+				if (c >= '0' && c <= '9')
+				{
+					meetDot = false;
+					continue;
+				}
+				else if (c == '.')
+				{
+					meetDot = true;
+
+					if (++dotNum > 1)
+					{
+						illegal = true;
+#ifdef ERROR_MSG
+						cout << "PREPROCESS : BUG SUCH LIKE \"54.8.7\"" << endl;
+#endif
+						break;
+					}
+				}
+				else if (c == ' ')
+				{
+					break;
+				}
+				else
+				{
+					strFormula.insert(i, " ");
+					break;
+				}
+			}
+			
+			if (meetDot)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : BUG SUCH LIKE \"54. \", \"54.*2\"" << endl;
+#endif
+				break;
+			}
+
+			// Setting Flag
+			canConstant = false;
+			canVariable = false;
+			canLeftParentheses = false;
+			canRightParentheses = true;
+			canFactorial = true;
+			canPower = true;
+			canOperator = true;
+			canSign = false;
+			
+			// '+' '-' behind a constant represent addition/subtraction but not positive/nagetive
+			isSign = false;
+
+			isExcessBlank = false;
+
+			lastStuff = CONSTANT;
 		}
-		/*判斷括號有無對稱*/
+
+		// Else if it is a variable
+		else if ((strFormula[i] >= 'a' && strFormula[i] <= 'z') ||
+			(strFormula[i] >= 'A' && strFormula[i] <= 'Z'))
+		{
+			if (!canVariable)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE VARIABLE" << endl;
+#endif
+				break;
+			}
+
+			string variable = "";
+			char c;
+
+			variable += strFormula[i];
+
+			while (++i < strFormula.size())
+			{
+				c = strFormula[i];
+				if ((c >= '0' && c <= '9') ||
+					(c >= 'a' && c <= 'z') ||
+					(c >= 'A' && c <= 'Z'))
+				{
+					variable += c;
+					continue;
+				}
+				else if (c == ' ')
+				{
+					break;
+				}
+				else
+				{
+					strFormula.insert(i, " ");
+					break;
+				}
+			}
+
+			// Check whether variable exist
+			auto find = varList.find(variable);
+			if (find == varList.end())
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : VARIABLE NOT EXIST" << endl;
+#endif
+				break;
+			}
+
+			// Setting Flag
+			canConstant = false;
+			canVariable = false;
+			canLeftParentheses = false;
+			canRightParentheses = true;
+			canFactorial = true;
+			canPower = true;
+			canOperator = true;
+			canSign = false;
+
+			// '+' '-' behind a variable represent addition/subtraction but not positive/nagetive
+			isSign = false;
+
+			isExcessBlank = false;
+
+			lastStuff = VARIABLE;
+		}
+
+		// Else if it is a left parenthes
 		else if (strFormula[i] == '(')
 		{
-			now = 4;
-			parentheses.push(strFormula[i]);
+			if (!canLeftParentheses)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE (" << endl;
+#endif
+				break;
+			}
+
+			++parenthesesNum;
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
+			{
+				strFormula.insert(i, " ");
+			}
+			
+			// Setting Flag
+			canConstant = true;
+			canVariable = true;
+			canLeftParentheses = true;
+			canRightParentheses = true;
+			canFactorial = false;
+			canPower = false;
+			canOperator = false;
+			canSign = true;
+
+			// '+' '-' behind '(' represent positive/nagetive but not addition/subtraction
+			isSign = true;
+
+			isExcessBlank = false;
+
+			lastStuff = PARENTHESES;
 		}
+
+		// Else if it is a right parenthes
 		else if (strFormula[i] == ')')
 		{
-			meetParentheses = true;
-			now = 4;
-			if (parentheses.size() == 0)
+			if(!canRightParentheses)
 			{
 				illegal = true;
 #ifdef ERROR_MSG
-				cout << "remind your fucking parentheses\n";
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE )" << endl;
 #endif
 				break;
 			}
-			else
+
+			if (--parenthesesNum < 0) 
 			{
-				parentheses.pop();
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : PARENTHESES ERROR" << endl;
+#endif
+				break;
 			}
+
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
+			{
+				strFormula.insert(i, " ");
+			}
+
+			// Setting Flag
+			canConstant = false;
+			canVariable = false;
+			canLeftParentheses = false;
+			canRightParentheses = true;
+			canFactorial = true;
+			canPower = true;
+			canOperator = true;
+			canSign = false;
+
+			// '+' '-' behind ')' represent addition/subtraction but not positive/nagetive
+			isSign = false;
+
+			isExcessBlank = false;
+
+			lastStuff = PARENTHESES;
 		}
-		/*判斷'.'*/
-		else if (strFormula[i] == '.')
+
+		else if (strFormula[i] == '!')
 		{
-			number_Of_Dot++;
-			/*判斷1.5.3 和 2 ^ 0.5的情況*/
-			if ((meetPower && strFormula[i + 1] != '5' && strFormula[i + 1] != '0') || number_Of_Dot > 1)
+			if (!canFactorial)
 			{
 				illegal = true;
 #ifdef ERROR_MSG
-				cout << "Dot repeat or power error\n";
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE FACTORIAL" << endl;
 #endif
 				break;
 			}
-			if (pre != 1 || isVariable)
+
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
 			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "DOT ERROR\n";
-#endif
-				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
-				break;
+				strFormula.insert(i, " ");
 			}
+
+			// Setting Flag
+			canConstant = false;
+			canVariable = false;
+			canLeftParentheses = false;
+			canRightParentheses = true;
+			canFactorial = true;
+			canPower = true;
+			canOperator = true;
+			canSign = false;
+
+			// '+' '-' behind '!' represent addition/subtraction but not positive/nagetive
+			isSign = false;
+
+			isExcessBlank = false;
+
+			lastStuff = FACTORIAL;
 		}
-		/*非數字運算子字母*/
+
+		else if (strFormula[i] == '^')
+		{
+			if (!canPower)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE POWER" << endl;
+#endif
+				break;
+			}
+
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
+			{
+				strFormula.insert(i, " ");
+			}
+
+			// Setting Flag
+			canConstant = true;
+			canVariable = true;
+			canLeftParentheses = true;
+			canRightParentheses = false;
+			canFactorial = false;
+			canPower = false;
+			canOperator = false;
+			canSign = false;
+
+			// '+' '-' behind '^' turn out error
+			isSign = true;
+
+			isExcessBlank = false;
+
+			lastStuff = POWER;
+		}
+
+		else if (isSign && (strFormula[i] == '+' || strFormula[i] == '-'))
+		{
+			if (!canSign)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE SIGN" << endl;
+#endif
+				break;
+			}
+
+			// Use '@' to represent positive and '#' to represent nagetive
+			strFormula[i] = strFormula[i] == '+' ? '@' : '#';
+			
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
+			{
+				strFormula.insert(i, " ");
+			}
+
+			// Setting Flag
+			canConstant = true;
+			canVariable = true;
+			canLeftParentheses = true;
+			canRightParentheses = false;
+			canFactorial = false;
+			canPower = false;
+			canOperator = false;
+			canSign = true;
+
+			// '+' '-' behind '+' '-' represent  but positive/nagetive not addition/subtraction
+			isSign = true;
+
+			isExcessBlank = false;
+
+			lastStuff = SIGN;
+		}
+
+		else if (strFormula[i] == '*' ||
+			strFormula[i] == '/' ||
+			strFormula[i] == '+' ||
+			strFormula[i] == '-')
+		{
+			if (!canOperator)
+			{
+				illegal = true;
+#ifdef ERROR_MSG
+				cout << "PREPROCESS : THERE ARE SOMETHING WRONG BEFORE OPERATOR" << endl;
+#endif
+				break;
+			}
+
+			++i;
+
+			if (i < strFormula.size() && strFormula[i] != ' ')
+			{
+				strFormula.insert(i, " ");
+			}
+
+			// Setting Flag
+			canConstant = true;
+			canVariable = true;
+			canLeftParentheses = true;
+			canRightParentheses = false;
+			canFactorial = false;
+			canPower = false;
+			canOperator = false;
+			canSign = true;
+
+			// '+' '-' behind '+' '-' '*' '/' represent positive/nagetive but not addition/subtraction
+			isSign = true;
+
+			isExcessBlank = false;
+
+			lastStuff = OPERATOR;
+		}
+
 		else
 		{
 			illegal = true;
 #ifdef ERROR_MSG
-			cout << "Words not included\n";
+			cout << "PREPROCESS : ILLEGAL CHARACTER" << endl;
 #endif
 			break;
 		}
-
-
-		/*括號+空白*/
-		if (strFormula[i] == '(' || strFormula[i] == ')')
-		{
-			if (i != 0 && strFormula[i - 1] != ' ')
-			{
-				number_Of_Dot = 0;
-				strFormula.insert(i, " ");
-				i++;
-			}
-			/*' ) '前不可接運算子*/
-			if (i >= 2 && strFormula[i] == ')' && (pre == 2 && strFormula[i - 2] != '!' || strFormula[i - 2] == '(' || strFormula[i - 2] == '.'))
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Parentheses ERROR\n";
-#endif
-				break;
-			}
-			if (strFormula[i] == '(' && (pre == 1 || (i >= 2 && strFormula[i - 2] == '!')))
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Parentheses ERROR\n";
-#endif
-				break;
-			}
-		}
-
-		/*運算子後面沒接東西 (發生在字串尾)*/
-		if ((i == strFormula.size() - 1) && ((now == 2 && strFormula[i] != '!') || strFormula[i] == '.'))
-		{
-			illegal = true;
-#ifdef ERROR_MSG
-			cout << "Need number or variable after operator\n";
-#endif
-			break;
-		}
-
-
-		/*第一個字元 pre = now 且 判斷第一個字不能為^*!/. 且第一個字為正負符號必為sign */
-		if (i == 0)
-		{
-			pre = now;
-			if (strFormula[i] == '^' || strFormula[i] == '/' || strFormula[i] == '*' || strFormula[i] == '!' || strFormula[i] == '.')
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Operator cna't be the first character\n";
-#endif
-				break;
-			}
-			else if (strFormula[i] == '+' || strFormula[i] == '-')
-			{
-				isSign = true;
-			}
-		}
-
-		/*換單位就+空白 把isSign還原 歸零.的數量*/
-		if (now != pre)
-		{
-			isSign = false;
-			meetPower = false;
-			/*換單位*/
-			if (strFormula[i - 1] != ' ')
-			{
-				strFormula.insert(i, " ");
-				number_Of_Dot = 0;
-				i++;
-			}
-
-			// For case liek "1.!"
-			if (now == 2 && pre == 1 && i >= 2 && strFormula[i - 2] == '.')
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Fuck You\n";
-#endif
-				break;
-			}
-
-			/* 如果是變數時 */ 
-			if (isVariable)
-			{
-				/*檢查變數是否存在*/
-				auto find = varList.find(variable);
-				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
-				if (find == varList.end())
-				{
-					illegal = true; 
-#ifdef ERROR_MSG
-					cout << "Variable doesn't exist!" << endl;
-#endif
-					break;
-				}
-				variable = "";
-				isVariable = false;
-			}
-		}
-
-		/*數字或字母前不能為' ) '*/
-		if (i >= 2 && strFormula[i - 2] == ')' && now == 1)
-		{
-			illegal = true;
-#ifdef ERROR_MSG
-			cout << "Parentheses ERROR\n";
-#endif
-			break;
-		}
-
-		/*連續operatorc加空白 判斷 '(' 第一個不用做 前一個若為階層有例外*/
-		if (now == 2 && i != 0 && (pre == 2 || (i >= 2 && strFormula[i - 2] == '(')))
-		{
-			if (strFormula[i - 1] != ' ')
-			{
-				strFormula.insert(i, " ");
-				i++;
-			}
-			if (strFormula[i] == '+' || strFormula[i] == '-' || strFormula[i - 2] == '!')
-			{
-				if (strFormula[i - 2] == '^')
-				{
-					illegal = true;
-#ifdef ERROR_MSG
-					cout << "Can't continuous intput operator\n";
-#endif
-					break;
-				}
-				if (strFormula[i - 2] == '!')
-				{
-					isSign = false;
-				}
-				else
-				{
-					isSign = true;
-				}
-			}
-			/*判斷合不合法*/
-			else
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Can't continuous intput operator\n";
-#endif
-				break;
-			}
-		}
-		/*正負符號換@#*/
-		if (isSign)
-		{
-			if (strFormula[i] == '+')
-			{
-				strFormula.replace(i, 1, "@");
-			}
-			else if (strFormula[i] == '-')
-			{
-				strFormula.replace(i, 1, "#");
-			}
-		}
-
-		/*判斷是否合法 (Ex a a + 5) 第一個不判斷 ||後面判斷階層特殊案例*/
-		if (i != 0 && strFormula[i - 1] == ' ' && now != 2 && now != 4)
-		{
-			if ((pre != 2 && pre != 4) || (i >= 2 && strFormula[i - 2] == '!'))
-			{
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Can't continuous input variable or number\n";
-#endif
-				break;
-			}
-		}
-
-		/*判斷是否遇到^ */
-		if (now == 1 && i >= 2 && strFormula[i - 2] == '^')
-		{
-			meetPower = true;
-		}
-
-		/*先有空再有研究, QQQ*/
-		if (i == strFormula.size() - 1 && isVariable)
-		{
-			/*檢查變數是否存在*/
-			auto find = varList.find(variable);
-			if (find == varList.end())
-			{
-				// 更多更詳盡程式碼在※ https://github.com/LJP-TW/NTUST_LabOOP_Project/ 雞哈ㄅ摳得網
-				illegal = true;
-#ifdef ERROR_MSG
-				cout << "Variable doesn't exist!" << endl;
-#endif
-				break;
-			}
-			variable = "";
-			isVariable = false;
-		}
-
-		/*now換pre*/
-		switch (now)
-		{
-		case 1:
-			pre = 1;
-			break;
-		case 2:
-			pre = 2;
-			break;
-		case 3:
-			pre = 3;
-			break;
-		case 4:
-			pre = 4;
-			break;
-		}
-
 	}
 
-	/*括號不對稱*/
-	if (parentheses.size() > 0 && illegal == false)
+	if (!illegal &&
+		(lastStuff == POWER ||
+			lastStuff == OPERATOR ||
+			lastStuff == SIGN))
 	{
 		illegal = true;
 #ifdef ERROR_MSG
-		cout << "Parentheses ERROR\n";
+		cout << "PREPROCESS : OPERATOR LACKS OF CONSTANT/VARIABLE" << endl;
+#endif
+	}
+
+	if (!illegal && parenthesesNum != 0)
+	{
+		illegal = true;
+#ifdef ERROR_MSG
+		cout << "PREPROCESS : PARENTHESES SYMMETRY ERROR" << endl;
 #endif
 	}
 
