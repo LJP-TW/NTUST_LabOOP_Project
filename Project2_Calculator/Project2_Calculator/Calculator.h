@@ -1,7 +1,3 @@
-// Student ID: B10615043
-// Date: April 14, 2018
-// Last Update: April 14, 2018
-// Problem statement: This C++ header to declare class .
 #pragma once
 #include <iostream>
 #include <string>

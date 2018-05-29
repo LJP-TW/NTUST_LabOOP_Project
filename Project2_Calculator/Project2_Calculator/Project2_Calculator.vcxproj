@@ -114,17 +114,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="CalculatorUnfinished.cpp" />
     <ClCompile Include="Decimal.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="DecimalUnfinished.cpp" />
     <ClCompile Include="Integer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="IntegerUnfinished.cpp" />
     <ClCompile Include="Main.cpp">
       <SubType>
       </SubType>
