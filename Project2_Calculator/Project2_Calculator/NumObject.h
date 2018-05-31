@@ -17,4 +17,6 @@ public:
 	virtual const bool isError() const = 0;
 	virtual const void setError(char error) = 0;
 	virtual const char getError() const = 0;
+
+	friend ostream& operator << (ostream&, const NumObject&);
 };

@@ -643,39 +643,6 @@ const bool Integer::operator !=(const Integer& other) const
 	return *this == other ? false : true;
 }
 
-ostream& operator <<(ostream& output, const Integer& integer)
-{
-	if (integer.getError())
-	{
-		switch (integer.getError())
-		{
-		case ERROR_CONSTRUCT:
-			output << "ERROR_CONSTRUCT";
-			break;
-		case ERROR_FACTORIAL:
-			output << "ERROR_FACTORIAL";
-			break;
-		case ERROR_DIVISION:
-			output << "ERROR_DIVISION";
-			break;
-		default:
-			output << "ERROR_INTEGER_UNKNOWN_ERROR";
-			break;
-		}
-
-		return output;
-	}
-
-	if (!integer.sign)
-	{
-		output << '-';
-	}
-
-	output << integer.number;
-
-	return output;
-}
-
 istream& operator >>(istream& input, Integer& integer)
 {
 	string number, processedNum;
@@ -765,6 +732,21 @@ const Integer Integer::factorial() const
 
 const string Integer::getOutput() const
 {
+	if (this->isError())
+	{
+		switch (this->getError())
+		{
+		case ERROR_CONSTRUCT:
+			return "ERROR_CONSTRUCT";
+		case ERROR_FACTORIAL:
+			return "ERROR_FACTORIAL";
+		case ERROR_DIVISION:
+			return "ERROR_DIVISION";
+		default:
+			return "ERROR_INTEGER_UNKNOWN_ERROR";
+		}
+	}
+
 	if (*this == Integer("0", 0))
 		return "0";
 	else

@@ -308,35 +308,6 @@ Decimal operator/(const Integer & lva, const Decimal & rva)
 	return newDecimal;
 }
 
-ostream& operator <<(ostream& output, const Decimal& decimal)
-{
-	if (decimal.getError())
-	{
-		switch (decimal.getError())
-		{
-		case ERROR_CONSTRUCT:
-			output << "ERROR_CONSTRUCT";
-			break;
-		case ERROR_FACTORIAL:
-			output << "ERROR_FACTORIAL";
-			break;
-		case ERROR_DIVISION:
-			output << "ERROR_DIVISION";
-			break;
-		default:
-			output << "ERROR_INTEGER_UNKNOWN_ERROR";
-			break;
-		}
-
-		return output;
-	}
-
-	// Output to 100 decimal digit
-	output << decimal.getOutput();
-
-	return output;
-}
-
 istream& operator >>(istream& input, Decimal& decimal)
 {
 	string number, processedNum;
@@ -447,6 +418,21 @@ const Integer Decimal::dtoi() const
 
 const string Decimal::getOutput() const
 {
+	if (this->isError())
+	{
+		switch (this->getError())
+		{
+		case ERROR_CONSTRUCT:
+			return "ERROR_CONSTRUCT";
+		case ERROR_FACTORIAL:
+			return "ERROR_FACTORIAL";
+		case ERROR_DIVISION:
+			return "ERROR_DIVISION";
+		default:
+			return "ERROR_INTEGER_UNKNOWN_ERROR";
+		}
+	}
+
 	Integer integerPart = this->numerator / this->denominator;
 	Integer remainder = this->numerator % this->denominator;
 

@@ -32,7 +32,6 @@ public:
 	friend Decimal operator - (const Integer& lva, const Decimal& rva);
 	friend Decimal operator * (const Integer& lva, const Decimal& rva);
 	friend Decimal operator / (const Integer& lva, const Decimal& rva);
-	friend ostream& operator <<(ostream& output, const Decimal& decimal);
 
 	// Only allow legal input
 	friend istream& operator >>(istream& input, Decimal& decimal);

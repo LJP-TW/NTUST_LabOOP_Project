@@ -33,8 +33,6 @@ public:
 	const bool operator ==(const Integer& other) const;
 	const bool operator !=(const Integer& other) const;
 
-	friend ostream& operator <<(ostream& output, const Integer& integer);
-
 	// Only allow legal input
 	friend istream& operator >>(istream& input, Integer& integer);
 

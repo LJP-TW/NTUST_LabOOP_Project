@@ -44,12 +44,7 @@ int main()
 	nums.push_back(&x);
 	nums.push_back(&y);
 	for (const auto& num : nums)
-	{
-		if (num->getType() == "Integer")
-			cout << *(Integer *)num << endl;
-		else
-			cout << *(Decimal *)num << endl;
-	}
+		cout << *num << endl;
 #else
 	while (getline(cin, strFormula))
 	{
