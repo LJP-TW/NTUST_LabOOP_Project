@@ -71,6 +71,14 @@ string Calculator::process(string strFormula)
 			SetConsoleTextAttribute(hConsole, 12);
 			return message("COMMAND NOT DEFINED!");
 		}
+
+		// Check whether variable is key word
+		if (varName == "Set" || varName == "set")
+		{
+			SetConsoleTextAttribute(hConsole, 12);
+			return message("CAN NOT USE KEY WORD AS VARIABLE NAME");
+		}
+
 		// Set Integer Variable
 		if (varType == "Integer" || varType == "integer")
 		{
