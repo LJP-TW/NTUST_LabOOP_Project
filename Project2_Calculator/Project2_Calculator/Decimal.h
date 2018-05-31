@@ -33,17 +33,14 @@ public:
 	friend Decimal operator * (const Integer& lva, const Decimal& rva);
 	friend Decimal operator / (const Integer& lva, const Decimal& rva);
 
-	// Only allow legal input
-	friend istream& operator >>(istream& input, Decimal& decimal);
-
 	// Accessor
-	virtual const void setError(char error) { errorFlag = error; };
+	virtual const char getErrorFlag() const { return errorFlag; };
 	bool getSign() const { return sign; };
 	Integer getNumerator() const { return numerator; };
 	Integer getDenominator() const { return denominator; };
 
 	// Mutator
-	virtual const char getError() const { return errorFlag; };
+	virtual const void setErrorFlag(char error) { errorFlag = error; };
 	void setSign(bool sign) { this->sign = sign; };
 	void setNumerator(Integer numerator) { this->numerator = numerator; };
 	void setDenominator(Integer denominator) { this->denominator = denominator; };
@@ -61,8 +58,10 @@ public:
 	const Integer dtoi() const;
 
 	virtual const string getOutput() const;
+	virtual const void setInput(string formula);
 
 	virtual const bool isError() const { return errorFlag ? true : false; };
+	virtual const string getErrorString() const;
 
 protected:
 	virtual const string getType() const { return "Decimal"; };

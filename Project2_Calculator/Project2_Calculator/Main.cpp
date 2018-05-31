@@ -26,25 +26,25 @@ int main()
 
 #ifdef API_TESTING
 	/* API Testing */
-	//Integer x;
-	//Decimal y;
+	Integer x;
+	Decimal y;
 
-	//cin >> x; // 輸入 123456789
-	//cin >> y; // 輸入 3.1415926
+	cin >> x; // 輸入 123456789
+	cin >> y; // 輸入 3.1415926
 
-	//cout << x + y << endl;
-	//cout << x - y << endl;
-	//cout << x * y << endl;
-	//cout << x / y << endl;
+	cout << x + y << endl;
+	cout << x - y << endl;
+	cout << x * y << endl;
+	cout << x / y << endl;
 
-	Integer x = "123 * 8 + 456";
-	Decimal y = "-1.0 / 3 - 45 / 13.0";
-
-	vector<NumObject*> nums;
-	nums.push_back(&x);
-	nums.push_back(&y);
-	for (const auto& num : nums)
-		cout << *num << endl;
+	//Integer x = "123 * 8 + 456";
+	//Decimal y = "(-1.0 / 3 - 45 / 13.0)/0";
+	//
+	//vector<NumObject*> nums;
+	//nums.push_back(&x);
+	//nums.push_back(&y);
+	//for (const auto& num : nums)
+	//	cout << *num << endl;
 #else
 	while (getline(cin, strFormula))
 	{

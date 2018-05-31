@@ -356,7 +356,7 @@ const Integer Integer::operator /(const Integer& other) const
 	if (other == zero)
 	{
 		newInteger.number = "0";
-		newInteger.setError(ERROR_DIVISION);
+		newInteger.setErrorFlag(ERROR_DIVISION);
 		return newInteger;
 	}
 	else if (other > *this)
@@ -643,29 +643,6 @@ const bool Integer::operator !=(const Integer& other) const
 	return *this == other ? false : true;
 }
 
-istream& operator >>(istream& input, Integer& integer)
-{
-	string number, processedNum;
-	Calculator calculator;
-
-	input >> number;
-	processedNum = calculator.process(number);
-	
-	// If the return is a number
-	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
-	{
-		integer = Integer(processedNum, 0);
-	}
-	else
-	{
-		integer.errorFlag = ERROR_CONSTRUCT;
-		integer.sign = true;
-		integer.number = "1";
-	}
-
-	return input;
-}
-
 const Integer Integer::power(const Integer& other) const
 {
 	Integer newInteger("1", 0);
@@ -683,7 +660,7 @@ const Integer Integer::power(const Integer& other) const
 
 	if (tempThis.isError())
 	{
-		newInteger.setError(ERROR_POWER);
+		newInteger.setErrorFlag(ERROR_POWER);
 		return newInteger;
 	}
 
@@ -717,7 +694,7 @@ const Integer Integer::factorial() const
 	// Not allow for (-87)!
 	if (!this->sign)
 	{
-		newInteger.setError(ERROR_FACTORIAL);
+		newInteger.setErrorFlag(ERROR_FACTORIAL);
 		return newInteger;
 	}
 
@@ -732,9 +709,37 @@ const Integer Integer::factorial() const
 
 const string Integer::getOutput() const
 {
+	if (*this == Integer("0", 0))
+		return "0";
+	else
+		return sign == true ? (number) : (string("-") + number);
+}
+
+const void Integer::setInput(string formula)
+{
+	string processedNum;
+	Calculator calculator;
+
+	processedNum = calculator.process(formula);
+
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		*this = Integer(processedNum, 0);
+	}
+	else
+	{
+		this->errorFlag = ERROR_CONSTRUCT;
+		this->sign = true;
+		this->number = "1";
+	}
+}
+
+const string Integer::getErrorString() const
+{
 	if (this->isError())
 	{
-		switch (this->getError())
+		switch (this->getErrorFlag())
 		{
 		case ERROR_CONSTRUCT:
 			return "ERROR_CONSTRUCT";
@@ -747,10 +752,7 @@ const string Integer::getOutput() const
 		}
 	}
 
-	if (*this == Integer("0", 0))
-		return "0";
-	else
-		return sign == true ? (number) : (string("-") + number);
+	return "";
 }
 
 void Integer::removeZeroPrefix()

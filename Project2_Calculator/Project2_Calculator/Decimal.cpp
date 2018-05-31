@@ -92,8 +92,7 @@ Decimal::Decimal(const string& number, int)
 
 Decimal::Decimal(const Integer& other)
 {
-	const NumObject* pt = &other;
-	this->errorFlag = pt->getError();
+	this->errorFlag = other.getErrorFlag();
 	this->sign = other.getSign();
 	this->numerator = other.getNumber();
 	this->numerator.setSign(true);
@@ -126,8 +125,7 @@ const Decimal& Decimal::operator =(const Decimal& other)
 
 const Decimal& Decimal::operator =(const Integer& other)
 {
-	const NumObject* pt = &other;
-	this->errorFlag = pt->getError();
+	this->errorFlag = other.getErrorFlag();
 	this->sign = other.getSign();
 	this->numerator = other;
 	this->numerator.setSign(true);
@@ -308,30 +306,6 @@ Decimal operator/(const Integer & lva, const Decimal & rva)
 	return newDecimal;
 }
 
-istream& operator >>(istream& input, Decimal& decimal)
-{
-	string number, processedNum;
-	Calculator calculator;
-
-	input >> number;
-	processedNum = calculator.process(number);
-
-	// If the return is a number
-	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
-	{
-		decimal = Decimal(processedNum, 0);
-	}
-	else
-	{
-		decimal.errorFlag = ERROR_CONSTRUCT;
-		decimal.sign = true;
-		decimal.numerator = "1";
-		decimal.denominator = "1";
-	}
-
-	return input;
-}
-
 const Decimal Decimal::power(const Decimal& other) const
 {
 	Decimal newDecimal("1", 0);
@@ -349,14 +323,14 @@ const Decimal Decimal::power(const Decimal& other) const
 	// Only can handle case which is powered by multiple of 0.5
 	if (other.denominator != Integer("1", 0) && !needRoot)
 	{
-		newDecimal.setError(ERROR_POWER);
+		newDecimal.setErrorFlag(ERROR_POWER);
 		return newDecimal;
 	}
 
 	// If something like (-1)^0.5
 	if (!temp.sign && needRoot)
 	{
-		newDecimal.setError(ERROR_POWER);
+		newDecimal.setErrorFlag(ERROR_POWER);
 		return newDecimal;
 	}
 
@@ -394,7 +368,7 @@ const Decimal Decimal::factorial() const
 	// Not allow for nagetive decimal or denominator != 1
 	if (!this->sign || this->denominator != one)
 	{
-		newDecimal.setError(ERROR_FACTORIAL);
+		newDecimal.setErrorFlag(ERROR_FACTORIAL);
 		return newDecimal;
 	}
 
@@ -418,21 +392,6 @@ const Integer Decimal::dtoi() const
 
 const string Decimal::getOutput() const
 {
-	if (this->isError())
-	{
-		switch (this->getError())
-		{
-		case ERROR_CONSTRUCT:
-			return "ERROR_CONSTRUCT";
-		case ERROR_FACTORIAL:
-			return "ERROR_FACTORIAL";
-		case ERROR_DIVISION:
-			return "ERROR_DIVISION";
-		default:
-			return "ERROR_INTEGER_UNKNOWN_ERROR";
-		}
-	}
-
 	Integer integerPart = this->numerator / this->denominator;
 	Integer remainder = this->numerator % this->denominator;
 
@@ -451,6 +410,47 @@ const string Decimal::getOutput() const
 	return sign + integerPart.getOutput() + '.' + strPrefix + remainder.getOutput();
 }
 
+const void Decimal::setInput(string formula)
+{
+	string processedNum;
+	Calculator calculator;
+
+	processedNum = calculator.process(formula);
+
+	// If the return is a number
+	if (processedNum[0] == '-' || (processedNum[0] >= '0' && processedNum[0] <= '9'))
+	{
+		*this = Decimal(processedNum, 0);
+	}
+	else
+	{
+		this->errorFlag = ERROR_CONSTRUCT;
+		this->sign = true;
+		this->numerator = "1";
+		this->denominator = "1";
+	}
+}
+
+const string Decimal::getErrorString() const
+{
+	if (this->isError())
+	{
+		switch (this->getErrorFlag())
+		{
+		case ERROR_CONSTRUCT:
+			return "ERROR_CONSTRUCT";
+		case ERROR_FACTORIAL:
+			return "ERROR_FACTORIAL";
+		case ERROR_DIVISION:
+			return "ERROR_DIVISION";
+		default:
+			return "ERROR_INTEGER_UNKNOWN_ERROR";
+		}
+	}
+
+	return "";
+}
+
 void Decimal::reduceFraction()
 {
 	Integer GCD = getGCD(numerator, denominator);
@@ -461,7 +461,6 @@ void Decimal::reduceFraction()
 		numerator = numerator / GCD;
 		denominator = denominator / GCD;
 	}
-
 }
 
 Integer Decimal::getGCD(Integer a, Integer b) const

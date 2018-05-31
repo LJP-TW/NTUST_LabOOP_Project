@@ -33,16 +33,13 @@ public:
 	const bool operator ==(const Integer& other) const;
 	const bool operator !=(const Integer& other) const;
 
-	// Only allow legal input
-	friend istream& operator >>(istream& input, Integer& integer);
-
 	// Accessor
-	virtual const void setError(char error) { errorFlag = error; };
+	virtual const char getErrorFlag() const { return errorFlag; };
 	bool getSign() const { return sign; };
 	string getNumber() const { return number; };
 
 	// Mutator
-	virtual const char getError() const { return errorFlag; };
+	virtual const void setErrorFlag(char error) { errorFlag = error; };
 	void setSign(bool sign) { this->sign = sign; };
 	void setNumber(string number) { this->number = number; };
 
@@ -53,8 +50,10 @@ public:
 	const Integer factorial() const;
 
 	virtual const string getOutput() const;
+	virtual const void setInput(string formula);
 
 	virtual const bool isError() const { return errorFlag ? true : false; };
+	virtual const string getErrorString() const;
 
 protected:
 	virtual const string getType() const { return "Integer"; };
