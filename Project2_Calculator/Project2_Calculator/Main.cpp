@@ -3,13 +3,14 @@
 #include <string>
 #include <map>
 #include <Windows.h>
+#include <vector>
 
 #include "NumObject.h"
 #include "Integer.h"
 #include "Decimal.h"
 #include "Calculator.h"
 
-//#define API_TESTING
+#define API_TESTING
 
 using namespace std;
 
@@ -25,47 +26,30 @@ int main()
 
 #ifdef API_TESTING
 	/* API Testing */
-	// Constructor
-	Integer i = "(-1 0)";
-	Decimal d = "2.0+5";
+	//Integer x;
+	//Decimal y;
 
-	cout << i << endl;
-	cout << d << endl;
+	//cin >> x; // ¿é¤J 123456789
+	//cin >> y; // ¿é¤J 3.1415926
 
-	while (cin >> i >> d)
+	//cout << x + y << endl;
+	//cout << x - y << endl;
+	//cout << x * y << endl;
+	//cout << x / y << endl;
+
+	Integer x = "123 * 8 + 456";
+	Decimal y = "-1.0 / 3 - 45 / 13.0";
+
+	vector<NumObject*> nums;
+	nums.push_back(&x);
+	nums.push_back(&y);
+	for (const auto& num : nums)
 	{
-		cout << i << endl;
-		cout << d << endl;
-
-		cout << endl;
-
-		cout << i + i << endl;
-		cout << i + d << endl;
-		cout << d + i << endl;
-		cout << d + d << endl;
-
-		cout << endl;
-
-		cout << i - i << endl;
-		cout << i - d << endl;
-		cout << d - i << endl;
-		cout << d - d << endl;
-
-		cout << endl;
-
-		cout << i * i << endl;
-		cout << i * d << endl;
-		cout << d * i << endl;
-		cout << d * d << endl;
-
-		cout << endl;
-
-		cout << i / i << endl;
-		cout << i / d << endl;
-		cout << d / i << endl;
-		cout << d / d << endl;
-	}	
-
+		if (num->getType() == "Integer")
+			cout << *(Integer *)num << endl;
+		else
+			cout << *(Decimal *)num << endl;
+	}
 #else
 	while (getline(cin, strFormula))
 	{
