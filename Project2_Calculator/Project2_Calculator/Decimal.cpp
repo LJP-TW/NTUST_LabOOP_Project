@@ -382,6 +382,13 @@ const Decimal Decimal::power(const Decimal& other) const
 		return newDecimal;
 	}
 
+	// If something like (-1)^0.5
+	if (!temp.sign && needRoot)
+	{
+		newDecimal.setError(ERROR_POWER);
+		return newDecimal;
+	}
+
 	// If newDecimal is powered by nagetive number
 	if (!other.sign)
 	{

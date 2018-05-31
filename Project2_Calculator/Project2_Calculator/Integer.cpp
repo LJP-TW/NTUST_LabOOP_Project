@@ -701,13 +701,19 @@ istream& operator >>(istream& input, Integer& integer)
 const Integer Integer::power(const Integer& other) const
 {
 	Integer newInteger("1", 0);
+	Integer tempThis = *this;
 	Integer temp = other;
 	Integer one("1", 0);
 	Integer zero("0", 0);
 
-	// If case like 2^(-5), the result must small than 0.
-	// Because the value returning is Integer, so it will be 0 (Decimal 0.xxxxxx ==> Integer 0)
+	// If case like 2^(-5)
 	if (!other.getSign())
+	{
+		tempThis = one / tempThis;
+		temp.sign = true;
+	}
+
+	if (temp != zero && tempThis.number == "0")
 	{
 		return zero;
 	}
