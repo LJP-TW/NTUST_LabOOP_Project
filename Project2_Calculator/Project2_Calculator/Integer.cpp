@@ -13,6 +13,7 @@ namespace
 		ERROR_CONSTRUCT = 0b00000001,
 		ERROR_FACTORIAL = 0b00000010,
 		ERROR_DIVISION	= 0b00000100,
+		ERROR_POWER		= 0b00001000,
 	};
 }
 
@@ -711,6 +712,12 @@ const Integer Integer::power(const Integer& other) const
 	{
 		tempThis = one / tempThis;
 		temp.sign = true;
+	}
+
+	if (tempThis.isError())
+	{
+		newInteger.setError(ERROR_POWER);
+		return newInteger;
 	}
 
 	if (temp != zero && tempThis.number == "0")
