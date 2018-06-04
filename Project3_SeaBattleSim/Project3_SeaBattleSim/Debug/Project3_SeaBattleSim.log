@@ -1,0 +1,6 @@
+﻿  MainForm.cpp
+  main.cpp
+  正在產生程式碼...
+  main.obj : Managed 程式碼存在時不支援 /DEBUG:FASTLINK; 正在以 /DEBUG:FULL 重新啟動連結
+  Project3_SeaBattleSim.vcxproj -> D:\Git\NTUST_LabOOP_Project\Project3_SeaBattleSim\Debug\Project3_SeaBattleSim.exe
+  Project3_SeaBattleSim.vcxproj -> D:\Git\NTUST_LabOOP_Project\Project3_SeaBattleSim\Debug\Project3_SeaBattleSim.pdb (Partial PDB)
