@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="原始程式檔\Vessel">
+      <UniqueIdentifier>{adbfed38-b59b-4e7b-b965-338145d904ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="原始程式檔\Weapon">
+      <UniqueIdentifier>{dffcb963-0050-4f67-a092-a34295c3de74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,10 +27,27 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>原始程式檔</Filter>
     </ClCompile>
+    <ClCompile Include="Vessel.cpp">
+      <Filter>原始程式檔\Vessel</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>原始程式檔\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
       <Filter>原始程式檔</Filter>
     </ClInclude>
+    <ClInclude Include="Vessel.h">
+      <Filter>原始程式檔\Vessel</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>原始程式檔\Weapon</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <Filter>資源檔</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
