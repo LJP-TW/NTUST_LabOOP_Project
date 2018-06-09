@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include "Team.h"
+#include "CommonStruct.h"
+#include "DefineMacros.h"
 
 namespace Project3_SeaBattleSim {
 
@@ -15,9 +18,12 @@ namespace Project3_SeaBattleSim {
 	public:
 		// Constructor
 		Vessle(void);
-		Vessle(std::string name, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD, Point location);
+		Vessle(std::string name, Team^ team, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD, Coordinate coordinate);
 
 		// Data Member
+		// Team Pointer
+		Team^ team;
+
 		// Health Point
 		double hp;
 

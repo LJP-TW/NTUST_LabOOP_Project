@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="Team.cpp" />
     <ClCompile Include="Vessel.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
@@ -138,9 +139,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommonStruct.h" />
+    <ClInclude Include="DefineMacros.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Team.h" />
     <ClInclude Include="Vessel.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

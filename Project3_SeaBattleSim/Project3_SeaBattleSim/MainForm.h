@@ -1,6 +1,7 @@
 #pragma once
 #include "Vessel.h"
 #include "Weapon.h"
+#include "Team.h"
 
 namespace Project3_SeaBattleSim {
 
@@ -37,13 +38,12 @@ namespace Project3_SeaBattleSim {
 
 		// Components
 		System::ComponentModel::Container ^components;
-		array<System::Windows::Forms::Label^>^ battleGridsFramesH;
-		array<System::Windows::Forms::Label^>^ battleGridsFramesV;
 		array<System::Windows::Forms::Label^>^ battleGridsH;
 		array<System::Windows::Forms::Label^>^ battleGridsV;
 		System::Windows::Forms::Label^ timeShower;
 		System::Windows::Forms::Button^ pauseButton;
 		System::Windows::Forms::Button^ startButton;
+		System::Windows::Forms::Panel^ battleGridsPanel;
 		System::Windows::Forms::GroupBox^ commandGroupBox;
 		System::Windows::Forms::GroupBox^ logGroupBox;
 		System::Windows::Forms::TextBox^ ATeamCommandTextBox;
@@ -52,8 +52,11 @@ namespace Project3_SeaBattleSim {
 		System::Windows::Forms::Timer^ gameTimer;
 
 		// A/BTeam Dictionary, which like 'map' of native c++
-		Dictionary<String^, Vessle^>^ ATeam;
-		Dictionary<String^, Vessle^>^ BTeam;
+		Dictionary<String^, Vessle^>^ ATeamVessles;
+		Dictionary<String^, Vessle^>^ BTeamVessles;
+		Dictionary<String^, Weapon^>^ Weapons;
+		Team^ ATeam;
+		Team^ BTeam;
 		bool isGameContinued;
 		unsigned long long gameTime;
 

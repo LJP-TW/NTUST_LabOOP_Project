@@ -1,5 +1,6 @@
 #include "Vessel.h"
 
+
 namespace Project3_SeaBattleSim
 {
 	Vessle::Vessle(void)
@@ -7,13 +8,14 @@ namespace Project3_SeaBattleSim
 		throw gcnew System::NotImplementedException();
 	}
 
-	Vessle::Vessle(std::string name, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD, Point location)
+	Vessle::Vessle(std::string name, Team^ team, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD, Coordinate coordinate)
 	{
 		// Initialization
 		this->Name = gcnew String(name.c_str());
 		this->Text = gcnew String(("¡¶" + name).c_str());
-		this->Location = location;
+		this->Location = Point(BATTLEGRID_PADDING + coordinate.x * BATTLEGRID_SIZE, BATTLEGRID_PADDING + coordinate.y * BATTLEGRID_SIZE);
 		this->AutoSize = true;
+		this->team = team;
 		this->hp = hp;
 		this->maxSpeed = maxSpeed;
 		this->maxAttackDistance = maxAttackDistance;
