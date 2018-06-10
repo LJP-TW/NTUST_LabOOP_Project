@@ -1,12 +1,19 @@
+#include <iostream>
 #include <sstream>
 #include <iomanip>
 #include <string>
-#include <iostream>
-#include <map>
+#include <cctype>
 #include <msclr\marshal_cppstd.h>
 #include "MainForm.h"
 #include "CommonStruct.h"
 #include "DefineMacros.h"
+
+#define ToUpper(str) for (char & c : str) c = toupper(c)
+//#define DEBUG
+
+#ifdef DEBUG
+int debugInt = 0;
+#endif
 
 namespace Project3_SeaBattleSim
 {
@@ -53,45 +60,77 @@ namespace Project3_SeaBattleSim
 
 	System::Void MainForm::MainForm_Load(System::Object^ sender, System::EventArgs^ e)
 	{
-		// Create Battle Grids by using the background color of labels
+		// Initial
 		battleGridsH = gcnew array<System::Windows::Forms::Label^>(BATTLEGRID_NUM + 1);
-		battleGridsV = gcnew array<System::Windows::Forms::Label^>(BATTLEGRID_NUM + 1);
-
 		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
 		{
 			battleGridsH[i] = gcnew System::Windows::Forms::Label();
+		}
+		battleGridsV = gcnew array<System::Windows::Forms::Label^>(BATTLEGRID_NUM + 1);
+		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
+		{
+			battleGridsV[i] = gcnew System::Windows::Forms::Label();
+		}
+		battleGridsFramePanel = gcnew System::Windows::Forms::Panel();
+		battleGridsPanel = gcnew System::Windows::Forms::Panel();
+		timeShower = gcnew System::Windows::Forms::Label();
+		pauseButton = gcnew System::Windows::Forms::Button();
+		startButton = gcnew System::Windows::Forms::Button();
+		commandGroupBox = gcnew System::Windows::Forms::GroupBox();
+		logGroupBox = gcnew System::Windows::Forms::GroupBox();
+		ATeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
+		BTeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
+		LogTextBox = gcnew System::Windows::Forms::TextBox();
+		gameTimer = gcnew System::Windows::Forms::Timer(this->components); 
+		ATeamVessels = gcnew Dictionary<String^, Vessel^>();
+		BTeamVessels = gcnew Dictionary<String^, Vessel^>();
+		Weapons = gcnew Dictionary<String^, Weapon^>();
+		ATeam = gcnew Team("A");
+		BTeam = gcnew Team("B");
+
+		// Create Battle Grids by using the background color of labels
+
+		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
+		{
 			battleGridsH[i]->BackColor = System::Drawing::Color::Black;
-			battleGridsH[i]->Location = System::Drawing::Point(BATTLEGRID_PADDING, BATTLEGRID_PADDING + BATTLEGRID_SIZE * i);
+			battleGridsH[i]->Location = System::Drawing::Point(0, BATTLEGRID_SIZE * i);
 			battleGridsH[i]->Size = System::Drawing::Size(BATTLEGRID_SIZE * BATTLEGRID_NUM + 1, 1);
 			battleGridsH[i]->AutoSize = false;
 		}
 		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
 		{
-			battleGridsV[i] = gcnew System::Windows::Forms::Label();
 			battleGridsV[i]->BackColor = System::Drawing::Color::Black;
-			battleGridsV[i]->Location = System::Drawing::Point(BATTLEGRID_PADDING + BATTLEGRID_SIZE * i, BATTLEGRID_PADDING);
+			battleGridsV[i]->Location = System::Drawing::Point(BATTLEGRID_SIZE * i, 0);
 			battleGridsV[i]->Size = System::Drawing::Size(1, BATTLEGRID_SIZE * BATTLEGRID_NUM + 1);
 			battleGridsV[i]->AutoSize = false;
 		}
 
-		// Create Battle Grids Group Box
-		battleGridsPanel = gcnew System::Windows::Forms::Panel();
-		battleGridsPanel->Location = System::Drawing::Point(BATTLEGRID_LOCATION_X, BATTLEGRID_LOCATION_Y);
-		battleGridsPanel->Size = System::Drawing::Size(BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM, BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM);
+		// Create Battle Grids Frame Panel
+		battleGridsFramePanel->Controls->Add(battleGridsPanel);
+		battleGridsFramePanel->Location = System::Drawing::Point(BATTLEGRID_LOCATION_X, BATTLEGRID_LOCATION_Y);
+		battleGridsFramePanel->Size = System::Drawing::Size(BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM, BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM);
+		battleGridsFramePanel->Name = L"battleGridsGroupBox";
+		battleGridsFramePanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+
+		// Create Battle Grids Panel
+		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
+		{
+			battleGridsPanel->Controls->Add(battleGridsH[i]);
+			battleGridsPanel->Controls->Add(battleGridsV[i]);
+		}
+		battleGridsPanel->Location = System::Drawing::Point(BATTLEGRID_PADDING, BATTLEGRID_PADDING);
+		battleGridsPanel->Size = System::Drawing::Size(BATTLEGRID_SIZE * BATTLEGRID_NUM + 1, BATTLEGRID_SIZE * BATTLEGRID_NUM + 1);
 		battleGridsPanel->Name = L"battleGridsGroupBox";
-		battleGridsPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 
 		// Create clock which show the time of game
-		timeShower = gcnew System::Windows::Forms::Label();
 		timeShower->BackColor = System::Drawing::Color::LightBlue;
-		timeShower->Location = System::Drawing::Point(battleGridsPanel->Location.X, battleGridsPanel->Location.Y + battleGridsPanel->Size.Height + 10);
+		timeShower->Location = System::Drawing::Point(battleGridsFramePanel->Location.X, battleGridsFramePanel->Location.Y + battleGridsFramePanel->Size.Height + 10);
 		timeShower->Size = System::Drawing::Size(75, 25);
 		timeShower->AutoSize = false;
 		timeShower->Text = "00:00";
 		timeShower->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 
 		// Create Pause & Start Buttons
-		pauseButton = gcnew System::Windows::Forms::Button();
 		pauseButton->Location = System::Drawing::Point(timeShower->Location.X + timeShower->Size.Width + 10, timeShower->Location.Y);
 		pauseButton->Size = System::Drawing::Size(75, 25);
 		pauseButton->AutoSize = false;
@@ -100,7 +139,6 @@ namespace Project3_SeaBattleSim
 		pauseButton->Click += gcnew System::EventHandler(this, &MainForm::pauseButton_Click);
 		pauseButton->Enabled = false;
 
-		startButton = gcnew System::Windows::Forms::Button();
 		startButton->Location = System::Drawing::Point(pauseButton->Location.X + pauseButton->Size.Width + 10, pauseButton->Location.Y);
 		startButton->Size = System::Drawing::Size(75, 25);
 		startButton->AutoSize = false;
@@ -109,34 +147,32 @@ namespace Project3_SeaBattleSim
 		startButton->Click += gcnew System::EventHandler(this, &MainForm::startButton_Click);
 
 		// Create Command Group Box
-		commandGroupBox = gcnew System::Windows::Forms::GroupBox();
-		commandGroupBox->Location = System::Drawing::Point(battleGridsPanel->Location.X + battleGridsPanel->Size.Width + 30, battleGridsPanel->Location.Y);
-		commandGroupBox->Size = System::Drawing::Size(200, timeShower->Location.Y - battleGridsPanel->Location.Y + timeShower->Size.Height);
+		commandGroupBox->Controls->Add(ATeamCommandTextBox);
+		commandGroupBox->Controls->Add(BTeamCommandTextBox);
+		commandGroupBox->Location = System::Drawing::Point(battleGridsFramePanel->Location.X + battleGridsFramePanel->Size.Width + 30, battleGridsFramePanel->Location.Y);
+		commandGroupBox->Size = System::Drawing::Size(200, timeShower->Location.Y - battleGridsFramePanel->Location.Y + timeShower->Size.Height);
 		commandGroupBox->Name = L"commandGroupBox";
 		commandGroupBox->Text = L"Command";
 
 		// Create Log Group Box
-		logGroupBox = gcnew System::Windows::Forms::GroupBox();
+		logGroupBox->Controls->Add(LogTextBox);
 		logGroupBox->Location = System::Drawing::Point(commandGroupBox->Location.X + commandGroupBox->Size.Width + 10, commandGroupBox->Location.Y);
 		logGroupBox->Size = System::Drawing::Size(commandGroupBox->Size);
 		logGroupBox->Name = L"logGroupBox";
 		logGroupBox->Text = L"Battle Log";
 
 		// Create A/BTeam Command TextBox
-		ATeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
 		ATeamCommandTextBox->Location = System::Drawing::Point(10, 20);
 		ATeamCommandTextBox->Multiline = true;
 		ATeamCommandTextBox->Name = L"ATeamCommandTextBox";
 		ATeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 40) / 2);
 
-		BTeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
 		BTeamCommandTextBox->Location = System::Drawing::Point(10, ATeamCommandTextBox->Location.Y + ATeamCommandTextBox->Size.Height + 10);
 		BTeamCommandTextBox->Multiline = true;
 		BTeamCommandTextBox->Name = L"BTeamCommandTextBox";
 		BTeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 40) / 2);
 
 		// Create Log TextBox
-		LogTextBox = gcnew System::Windows::Forms::TextBox();
 		LogTextBox->Location = System::Drawing::Point(10, 20);
 		LogTextBox->Multiline = true;
 		LogTextBox->Name = L"LogTextBox";
@@ -145,38 +181,18 @@ namespace Project3_SeaBattleSim
 		LogTextBox->BackColor = System::Drawing::Color::White;
 
 		// Initial Game Timer
-		gameTimer = gcnew System::Windows::Forms::Timer(this->components);
 		gameTimer->Interval = 15 / 15;
 		gameTimer->Enabled = false;
 		gameTimer->Tick += gcnew System::EventHandler(this, &MainForm::MainForm_Update);
 
-		// Adding components to GroupBox
-		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
-		{
-			battleGridsPanel->Controls->Add(battleGridsH[i]);
-			battleGridsPanel->Controls->Add(battleGridsV[i]);
-		}
-
-		commandGroupBox->Controls->Add(ATeamCommandTextBox);
-		commandGroupBox->Controls->Add(BTeamCommandTextBox);
-
-		logGroupBox->Controls->Add(LogTextBox);
-		
 		// Adding components to this form
-		this->Controls->Add(battleGridsPanel);
+		this->Controls->Add(battleGridsFramePanel);
 		this->Controls->Add(timeShower);
 		this->Controls->Add(pauseButton);
 		this->Controls->Add(startButton);
 		this->Controls->Add(commandGroupBox);
 		this->Controls->Add(logGroupBox);
 		this->ClientSize = System::Drawing::Size(logGroupBox->Location.X + logGroupBox->Size.Width + 10, timeShower->Location.Y + timeShower->Size.Height + 10);
-
-		
-		ATeamVessles = gcnew Dictionary<String^, Vessle^>();
-		BTeamVessles = gcnew Dictionary<String^, Vessle^>();
-		Weapons = gcnew Dictionary<String^, Weapon^>();
-		ATeam = gcnew Team("A");
-		BTeam = gcnew Team("B");
 
 		isGameContinued = true;
 		gameTime = 0;
@@ -191,6 +207,13 @@ namespace Project3_SeaBattleSim
 		// formGraphics->FillEllipse(testBrush, 20, 20, 50, 50);
 		// delete testBrush;
 		// delete formGraphics;
+
+		// Test Line
+		//Pen^ blackPen = gcnew Pen(Color::Black, 3.0f);
+		//Graphics^ graphics = this->BTeamCommandTextBox->CreateGraphics();
+		//graphics->DrawLine(blackPen, Point(0, 0), Point(5, 5));
+		//delete blackPen;
+		//delete graphics;
 	}
 
 	void MainForm::MainForm_Update(System::Object^ sender, System::EventArgs^ e)
@@ -210,24 +233,120 @@ namespace Project3_SeaBattleSim
 
 		// 處理 ATeam 指令
 		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
-		std::string cmd;
-		while (std::getline(ss, cmd))
+		std::string cmdLine, command;
+		char skip;
+
+		while (std::getline(ss, cmdLine))
 		{
-			cmd;
+			std::stringstream tempSS(cmdLine);
+			tempSS >> command;
+
+			ToUpper(command);
+
+			try
+			{
+				if (command == "SET")
+				{
+					std::string vesselName, type;
+					Coordinate coordinate(0, 0);
+					bool isInType = false;
+
+					tempSS >> vesselName;
+					// 判斷船艦不能重複
+					// Do something (錯誤偵測)
+
+					tempSS >> type;
+					// Type 必須出現在艦種裡
+					for (const std::string& vt : VESSEL_TYPE)
+					{
+						if (type == vt)
+						{
+							isInType = true;
+							break;
+						}
+					}
+					if (isInType == false)
+					{
+						throw CMD_ERROR::TYPE_NOT_EXIST;
+					}
+
+					tempSS >> skip;
+					tempSS >> coordinate.x;
+					tempSS >> skip;
+					tempSS >> coordinate.y;
+					// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
+					// Do something (錯誤偵測)
+
+					if (type == "CV")
+					{
+						// 新增船艦圖層
+						String^ str = gcnew String(vesselName.c_str());
+						CV^ vessel = gcnew CV(coordinate, vesselName, ATeam);
+
+						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+						if (PanelLayer.Count == 0)
+						{
+							ATeamVessels->Add(str, vessel);
+							this->battleGridsPanel->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
+						}
+						else
+						{
+							PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
+						}
+					}
+					else
+					{
+						// Do something (其他船種)
+					}
+
+				}
+				else if (command == "FIRE")
+				{
+				}
+				else if (command == "DEFENSE")
+				{
+				}
+				else if (command == "TAG")
+				{
+				}
+				else if (command == "MOVE")
+				{
+				}
+			}
+			catch (CMD_ERROR e)
+			{
+				switch (e)
+				{
+				case CMD_ERROR::TYPE_NOT_EXIST:
+					// Do something (錯誤紀錄)
+					break;
+				default:
+					// Do something (錯誤紀錄)
+					break;
+				}
+			}
+			catch (...)
+			{
+				// Command Format Error
+				// Do something (錯誤紀錄)
+			}
 		}
 		ATeamCommandTextBox->Text = "";
 		
 
 		// 處理 BTeam 指令
 		ss = std::stringstream(msclr::interop::marshal_as<std::string>(BTeamCommandTextBox->Text));
-		while (std::getline(ss, cmd))
+		while (std::getline(ss, cmdLine))
 		{
-			cmd;
+			cmdLine;
 		}
 		BTeamCommandTextBox->Text = "";
 
-		// 更新所有船隻, 武器
-		
+		// 每艘船跟每顆砲彈都是一個"圖層"
+		// 用這個方法來消除 重疊物件會顯示不出來 的BUG
+
 	}
 
 	void MainForm::pauseButton_Click(System::Object^ sender, System::EventArgs^ e)
@@ -237,17 +356,58 @@ namespace Project3_SeaBattleSim
 		ATeamCommandTextBox->Enabled = true;
 		BTeamCommandTextBox->Enabled = true;
 		gameTimer->Enabled = false;
-
+		
+#ifdef DEBUG
 		// Testing Code :
-		// Add a new vessle to MainForm
-		std::string name = "GG";
+		std::string name = "GG" + std::to_string(debugInt);
 		String^ str = gcnew String(name.c_str());
-		Vessle^ vessle = gcnew Vessle(name, ATeam, 5, 5, 5, 5, 5, 5, Coordinate(2, 2));
-		if (!ATeamVessles->ContainsKey(str))
+		CV^ vessel = gcnew CV(Coordinate(20 - debugInt * 0.5, 0 + debugInt * 0.5), name, ATeam);
+		if (!ATeamVessels->ContainsKey(str))
 		{
-			ATeamVessles->Add(str, vessle);
-			this->battleGridsPanel->Controls->Add(vessle);
+			ATeamVessels->Add(str, vessel);
+			if (debugInt == 0)
+			{
+				this->battleGridsPanel->Controls->Add(vessel);
+			}
+			else
+			{
+				String^ temp = gcnew String(("GG" + std::to_string(debugInt - 1)).c_str());
+				ATeamVessels[temp]->Controls->Add(vessel);
+			}
+			++debugInt;
 		}
+
+		// Add a new Vessel to MainForm
+		//std::string name1 = "GG1";
+		//std::string name2 = "GG2";
+		//std::string name3 = "GG3";
+		//std::string name4 = "GG4";
+		//std::string name5 = "GG5";
+		//String^ str1 = gcnew String(name1.c_str());
+		//String^ str2 = gcnew String(name2.c_str());
+		//String^ str3 = gcnew String(name3.c_str());
+		//String^ str4 = gcnew String(name4.c_str());
+		//String^ str5 = gcnew String(name5.c_str());
+		//Vessel^ Vessel1 = gcnew Vessel(this->battleGridsPanel, Coordinate(0, 0), name1, ATeam, 5, 5, 5, 5, 5, 5);
+		//Vessel^ Vessel2 = gcnew Vessel(this->battleGridsPanel, Coordinate(0.5, 0.5), name2, ATeam, 5, 5, 5, 5, 5, 5);
+		//Vessel^ Vessel3 = gcnew Vessel(this->battleGridsPanel, Coordinate(1, 1), name3, ATeam, 5, 5, 5, 5, 5, 5);
+		//Vessel^ Vessel4 = gcnew Vessel(this->battleGridsPanel, Coordinate(1.5, 1.5), name4, ATeam, 5, 5, 5, 5, 5, 5);
+		//Vessel^ Vessel5 = gcnew Vessel(this->battleGridsPanel, Coordinate(2, 2), name5, ATeam, 5, 5, 5, 5, 5, 5);
+		//if (!ATeamVessels->ContainsKey(str1))
+		//{
+		//	ATeamVessels->Add(str1, Vessel1);
+		//	ATeamVessels->Add(str2, Vessel2);
+		//	ATeamVessels->Add(str3, Vessel3);
+		//	ATeamVessels->Add(str4, Vessel4);
+		//	ATeamVessels->Add(str5, Vessel5);
+		//	this->battleGridsPanel->Controls->Add(Vessel1);
+		//	this->battleGridsPanel->Controls->Add(Vessel2);
+		//	this->battleGridsPanel->Controls->Add(Vessel3);
+		//	this->battleGridsPanel->Controls->Add(Vessel4);
+		//	this->battleGridsPanel->Controls->Add(Vessel5);
+		//}
+#endif
+		
 	}
 
 	void MainForm::startButton_Click(System::Object^ sender, System::EventArgs^ e)
@@ -258,14 +418,32 @@ namespace Project3_SeaBattleSim
 		BTeamCommandTextBox->Enabled = false;
 		gameTimer->Enabled = true;
 
+#ifdef DEBUG
+#endif
 		// Testing Code :
-		// Remove vessle from MainForm
-		std::string name = "GG";
-		String^ str = gcnew String(name.c_str());
-		if (ATeamVessles->ContainsKey(str))
-		{
-			this->battleGridsPanel->Controls->Remove(ATeamVessles[str]);
-			ATeamVessles->Remove(str);
-		}
+		// Remove Vessel from MainForm
+		//std::string name1 = "GG1";
+		//std::string name2 = "GG2";
+		//std::string name3 = "GG3";
+		//std::string name4 = "GG4";
+		//std::string name5 = "GG5";
+		//String^ str1 = gcnew String(name1.c_str());
+		//String^ str2 = gcnew String(name2.c_str());
+		//String^ str3 = gcnew String(name3.c_str());
+		//String^ str4 = gcnew String(name4.c_str());
+		//String^ str5 = gcnew String(name5.c_str());
+		//if (ATeamVessels->ContainsKey(str2))
+		//{
+		//	this->battleGridsPanel->Controls->Remove(ATeamVessels[str1]);
+		//	this->battleGridsPanel->Controls->Remove(ATeamVessels[str2]);
+		//	this->battleGridsPanel->Controls->Remove(ATeamVessels[str3]);
+		//	this->battleGridsPanel->Controls->Remove(ATeamVessels[str4]);
+		//	this->battleGridsPanel->Controls->Remove(ATeamVessels[str5]);
+		//	ATeamVessels->Remove(str1);
+		//	ATeamVessels->Remove(str2);
+		//	ATeamVessels->Remove(str3);
+		//	ATeamVessels->Remove(str4);
+		//	ATeamVessels->Remove(str5);
+		//}
 	}
 }

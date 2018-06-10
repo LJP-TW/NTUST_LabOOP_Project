@@ -43,6 +43,7 @@ namespace Project3_SeaBattleSim {
 		System::Windows::Forms::Label^ timeShower;
 		System::Windows::Forms::Button^ pauseButton;
 		System::Windows::Forms::Button^ startButton;
+		System::Windows::Forms::Panel^ battleGridsFramePanel;
 		System::Windows::Forms::Panel^ battleGridsPanel;
 		System::Windows::Forms::GroupBox^ commandGroupBox;
 		System::Windows::Forms::GroupBox^ logGroupBox;
@@ -52,11 +53,14 @@ namespace Project3_SeaBattleSim {
 		System::Windows::Forms::Timer^ gameTimer;
 
 		// A/BTeam Dictionary, which like 'map' of native c++
-		Dictionary<String^, Vessle^>^ ATeamVessles;
-		Dictionary<String^, Vessle^>^ BTeamVessles;
+		Dictionary<String^, Vessel^>^ ATeamVessels;
+		Dictionary<String^, Vessel^>^ BTeamVessels;
 		Dictionary<String^, Weapon^>^ Weapons;
 		Team^ ATeam;
 		Team^ BTeam;
+
+		// ¹Ï¼h
+		List<Panel^> PanelLayer;
 		bool isGameContinued;
 		unsigned long long gameTime;
 
