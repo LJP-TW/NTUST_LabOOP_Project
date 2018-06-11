@@ -324,7 +324,64 @@ namespace Project3_SeaBattleSim
 				}
 				else if (command == "FIRE")
 				{
-					// Do something
+					std::string vesselName;
+					Coordinate coordinate(0, 0);
+
+					// Get Input
+					tempSS >> vesselName;
+					tempSS >> skip;
+					tempSS >> coordinate.x;
+					tempSS >> skip;
+					tempSS >> coordinate.y;
+
+					try
+					{
+						// 該隊必須存在該船艦
+						String^ str = gcnew String(vesselName.c_str());
+						if (!ATeamVessels->ContainsKey(str))
+						{
+							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+						}
+
+						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
+						// Do something (錯誤偵測)
+
+						// 產生 Weapon 並回傳 Pointer
+						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
+						if (weapon->isError)
+						{
+							delete weapon;
+							throw CMD_FIRE_ERROR::WEAPON_ILLEGAL;
+						}
+
+						// 加入圖層
+						Weapons->Add(str, weapon);
+						if (PanelLayer.Count == 0)
+						{
+							this->battleGridsPanel->Controls->Add(weapon);
+							PanelLayer.Add(weapon);
+						}
+						else
+						{
+							PanelLayer[PanelLayer.Count - 1]->Controls->Add(weapon);
+							PanelLayer.Add(weapon);
+						}
+
+						// Log
+						// Do something (指令紀錄)
+					}
+					catch (CMD_FIRE_ERROR)
+					{
+						// Log
+						// Do something (指令紀錄)
+
+						throw;
+					}
+					catch (...)
+					{
+						// 未知錯誤, 丟出去就對了ㄏㄏ
+						throw;
+					}
 				}
 				else if (command == "DEFENSE")
 				{
@@ -408,6 +465,12 @@ namespace Project3_SeaBattleSim
 
 		// BTeam 船隻更新
 		for each(KeyValuePair<String^, Vessel^> kvp in BTeamVessels)
+		{
+			kvp.Value->Update();
+		}
+
+		// Weapon 更新
+		for each(KeyValuePair<String^, Weapon^> kvp in Weapons)
 		{
 			kvp.Value->Update();
 		}

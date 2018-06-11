@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "MovableObject.h"
 #include "Team.h"
 #include "CommonStruct.h"
 #include "DefineMacros.h"
@@ -8,6 +9,8 @@ struct Corner;
 
 namespace Project3_SeaBattleSim {
 
+	ref class Weapon;
+
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -15,22 +18,12 @@ namespace Project3_SeaBattleSim {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	
-	public ref class Vessel : public System::Windows::Forms::Panel
+	public ref class Vessel : public MovableObject
 	{
 	public:
 		// Constructor
 		Vessel(void);
 		Vessel(Coordinate location, std::string name, Team^ team, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD);
-		
-		/*                           */
-		/* Functions called by Event */
-		/*                           */
-		
-		// Do something that cannot write in constructor 
-		System::Void Vessel_InitialPaint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e);
-
-		// Render the display
-		System::Void Vessel_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e);
 
 		/*                   */
 		/* Virtual Functions */
@@ -43,24 +36,14 @@ namespace Project3_SeaBattleSim {
 		virtual void setAngle(double angle);
 
 		// 每一遊戲秒更新 : 做移動, -CD 之類的事情
-		virtual void Update();
+		virtual void Update() override;
+
+		// 基本砲彈攻擊 : 產生 Weapon 並回傳此 Weapon 的 Pointer
+		virtual Weapon^ Attack(Coordinate target);
 		
 		/*              */
 		/* Data Members */
 		/*              */
-
-		// The actual location of vessel
-		Point^ location;
-
-		// More preciser location
-		Coordinate* doubleLocation;
-
-		// The label that records the properties such as Location, Font, Text of string of vessel
-		// This Label wiil not display out, it's just used to records some information.
-		Label^ text;
-
-		// The corner that actual location of vessel is located
-		Corner* corner;
 
 		// Team Pointer
 		Team^ team;

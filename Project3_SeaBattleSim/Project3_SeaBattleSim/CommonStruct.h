@@ -17,6 +17,12 @@ enum class CMD_SET_ERROR
 	TYPE_NOT_EXIST,
 };
 
+enum class CMD_FIRE_ERROR
+{
+	VESSEL_NOT_EXIST,
+	WEAPON_ILLEGAL,
+};
+
 enum class CMD_MOVE_ERROR
 {
 	VESSEL_NOT_EXIST,

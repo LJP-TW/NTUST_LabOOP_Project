@@ -12,3 +12,12 @@ set anotheroaskdoaskdoaksodkaoskdoaskdoaskdoaksodkoskadoskodkasodkaoskdoaksokdoa
 set gg CV (10.0, 10.0)
 set apple CV (3.3, 5.0)
 move apple 0.5 0
+
+set Ming CV (17.0, 1.5)
+set LJP CV (2.0, 18.0)
+move LJP 0.3 0
+move Ming 1 180
+FIRE LJP (13.0, 1.5)
+
+set LJP CV (2.0, 18.0)
+FIRE LJP (13.0, 1.5)

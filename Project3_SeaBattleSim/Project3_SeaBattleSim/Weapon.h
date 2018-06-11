@@ -1,5 +1,10 @@
 #pragma once
 #include <string>
+#include "MovableObject.h"
+#include "CommonStruct.h"
+#include "DefineMacros.h"
+
+struct Corner;
 
 namespace Project3_SeaBattleSim {
 
@@ -11,17 +16,24 @@ namespace Project3_SeaBattleSim {
 	using namespace System::Drawing;
 
 	// Basic Weapon
-	public ref class Weapon : public System::Windows::Forms::Label
+	public ref class Weapon : public MovableObject
 	{
 	public:
 		// Constructor
 		Weapon();
-		Weapon(std::string name, double damage, double speed, double range, Point location, Point target);
+		Weapon(Coordinate location, std::string name, double damage, double speed, double range, Coordinate target);
 
-		// Other Functions
-		void update();
+		/*                   */
+		/* Virtual Functions */
+		/*                   */
 
-		// Data Member
+		// 每一遊戲秒更新 : 移動
+		virtual void Update() override;
+
+		/*              */
+		/* Data Members */
+		/*              */
+
 		// Weapon Damage
 		double damage;
 
@@ -32,6 +44,9 @@ namespace Project3_SeaBattleSim {
 		double range;
 
 		// Attacking Target
-		Point target;
+		Coordinate* target;
+
+		// Error Flag
+		bool isError;
 	};
 }

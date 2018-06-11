@@ -15,6 +15,18 @@ SET [Vessel_Name] [Type] [2DCoordinate]
 ```
 
 ```
+FIRE
+```
+
+```
+DEFENSE
+```
+
+```
+TAG
+```
+
+```
 MOVE [Vessel_Name] [Speed] [Angle]
     [Vessel_Name] : 船艦名稱
         中間不能有空格, 而且船艦必須存在

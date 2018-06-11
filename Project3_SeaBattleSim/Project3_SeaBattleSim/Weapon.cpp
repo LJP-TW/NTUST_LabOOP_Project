@@ -2,27 +2,23 @@
 
 namespace Project3_SeaBattleSim
 {
-
-	Weapon::Weapon()
+	Weapon::Weapon() : MovableObject()
 	{
-		throw gcnew System::NotImplementedException();
+		this->isError = true;
 	}
 
-	Weapon::Weapon(std::string name, double damage, double speed, double range, Point location, Point target)
+	Weapon::Weapon(Coordinate location, std::string name, double damage, double speed, double range, Coordinate target) : MovableObject(location, name, "●")
 	{
 		// Initialization
-		this->Name = gcnew String(name.c_str());
-		this->Text = gcnew String(("⚫" + name).c_str());
-		this->Location = location;
-		this->AutoSize = true;
 		this->damage = damage;
 		this->speed = speed;
 		this->range = range;
-		this->target = target;
+		this->target = new Coordinate(target.x, target.y);
+		this->isError = false;
 	}
 
-	void Weapon::update()
+	void Weapon::Update()
 	{
-		throw gcnew System::NotImplementedException();
+		// Do something
 	}
 }
