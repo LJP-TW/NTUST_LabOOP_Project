@@ -9,6 +9,5 @@ namespace Project3_SeaBattleSim {
 		// Constructor
 		CV(void);
 		CV(Coordinate location, std::string name, Team^ team);
-
 	};
 }

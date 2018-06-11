@@ -12,9 +12,15 @@ struct Coordinate
 	double y;
 };
 
-enum class CMD_ERROR
+enum class CMD_SET_ERROR
 {
 	TYPE_NOT_EXIST,
+};
+
+enum class CMD_MOVE_ERROR
+{
+	VESSEL_NOT_EXIST,
+	SPEED_ILLEGAL,
 };
 
 // 所有艦種 定義在 Vessel.cpp

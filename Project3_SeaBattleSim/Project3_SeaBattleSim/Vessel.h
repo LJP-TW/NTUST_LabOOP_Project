@@ -21,8 +21,10 @@ namespace Project3_SeaBattleSim {
 		// Constructor
 		Vessel(void);
 		Vessel(Coordinate location, std::string name, Team^ team, double hp, double maxSpeed, double maxAttackDistance, unsigned int attackCD, double maxDefenseDistance, unsigned int defenseCD);
-
-		// Functions called by Event 
+		
+		/*                           */
+		/* Functions called by Event */
+		/*                           */
 		
 		// Do something that cannot write in constructor 
 		System::Void Vessel_InitialPaint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e);
@@ -30,12 +32,28 @@ namespace Project3_SeaBattleSim {
 		// Render the display
 		System::Void Vessel_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e);
 
+		/*                   */
+		/* Virtual Functions */
+		/*                   */
+
+		// 設定速度, 回傳是否設定成功
+		virtual bool setSpeed(double speed);
+
+		// 設定角度
+		virtual void setAngle(double angle);
+
+		// 每一遊戲秒更新 : 做移動, -CD 之類的事情
+		virtual void Update();
+		
 		/*              */
 		/* Data Members */
 		/*              */
 
 		// The actual location of vessel
 		Point^ location;
+
+		// More preciser location
+		Coordinate* doubleLocation;
 
 		// The label that records the properties such as Location, Font, Text of string of vessel
 		// This Label wiil not display out, it's just used to records some information.
@@ -65,7 +83,7 @@ namespace Project3_SeaBattleSim {
 		// Cool Down of Defensing
 		unsigned int defenseCD;
 
-		// Current Speed
+		// Current Speed (Distance per Minute)
 		double nowSpeed;
 
 		// Current Sailing Angle
