@@ -1,3 +1,4 @@
+#include <msclr\marshal_cppstd.h>
 #include "MovableObject.h"
 
 // Used to draw line
@@ -58,6 +59,14 @@ namespace Project3_SeaBattleSim
 		// Event
 		this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MovableObject::MoveableObject_InitialPaint);
 		this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MovableObject::MoveableObject_Paint);
+	}
+
+	MovableObject::~MovableObject()
+	{
+		delete this->location;
+		delete this->doubleLocation;
+		delete this->text;
+		delete this->corner;
 	}
 
 	System::Void MovableObject::MoveableObject_InitialPaint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
@@ -192,4 +201,19 @@ namespace Project3_SeaBattleSim
 		// 由各個衍生類別自行決定如何移動
 	}
 
+	void MovableObject::Rename(std::string newName)
+	{
+		Layer::Rename(newName);
+
+		std::string oldText = msclr::interop::marshal_as<std::string>(this->text->Text);
+		std::string symbol = oldText.substr(0, 1);
+		std::string oldName = oldText.substr(1, oldText.length() - 1);
+
+		if (newName == oldName)
+		{
+			throw MOVABLEOBJECT_ERROR::RENAME_ERROR;
+		}
+
+		this->text->Text = gcnew String((symbol + newName).c_str());
+	}
 }

@@ -12,6 +12,24 @@ struct Coordinate
 	double y;
 };
 
+// есеXи╥е~
+
+enum class LAYER_ERROR
+{
+	RENAME_ERROR,
+};
+
+enum class MOVABLEOBJECT_ERROR
+{
+	RENAME_ERROR,
+};
+
+enum class VESSEL_ERROR
+{
+	SET_SPEED_ERROR,
+	ATTACK_ERROR,
+};
+
 enum class CMD_SET_ERROR
 {
 	TYPE_NOT_EXIST,

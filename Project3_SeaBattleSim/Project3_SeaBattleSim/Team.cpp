@@ -12,3 +12,8 @@ Team::Team(std::string name)
 	this->name = gcnew String(name.c_str());
 	this->weaponID = 1;
 }
+
+Team::~Team()
+{
+	delete this->name;
+}

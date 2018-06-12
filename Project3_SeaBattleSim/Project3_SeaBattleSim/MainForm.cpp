@@ -37,6 +37,16 @@ namespace Project3_SeaBattleSim
 		{
 			delete components;
 		}
+
+		ATeamVessels->Clear();
+		BTeamVessels->Clear();
+		PanelLayer.Clear();
+
+		delete ATeamVessels;
+		delete BTeamVessels;
+		delete Weapons;
+		delete ATeam;
+		delete BTeam;
 	}
 
 	void MainForm::InitializeComponent(void)
@@ -182,7 +192,7 @@ namespace Project3_SeaBattleSim
 		LogTextBox->BackColor = System::Drawing::Color::White;
 
 		// Initial Game Timer
-		gameTimer->Interval = 15 / 15;
+		gameTimer->Interval = 1000 / 15;
 		gameTimer->Enabled = false;
 		gameTimer->Tick += gcnew System::EventHandler(this, &MainForm::MainForm_Update);
 
@@ -232,230 +242,14 @@ namespace Project3_SeaBattleSim
 		out << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec;
 		timeShower->Text = gcnew System::String(out.str().c_str());
 
-		// 處理 ATeam 指令
-		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
-		std::string cmdLine, command;
-		char skip;
-
-		while (std::getline(ss, cmdLine))
-		{
-			std::stringstream tempSS(cmdLine);
-			tempSS >> command;
-
-			ToUpper(command);
-
-			try
-			{
-				if (command == "SET")
-				{
-					std::string vesselName, type;
-					Coordinate coordinate(0, 0);
-					bool isInType = false;
-
-					// Get Input
-					tempSS >> vesselName;
-					tempSS >> type; 
-					tempSS >> skip;
-					tempSS >> coordinate.x;
-					tempSS >> skip;
-					tempSS >> coordinate.y;
-
-					try
-					{
-						// 判斷船艦不能重複
-						// Do something (錯誤偵測)
-
-						// Type 必須出現在艦種裡
-						for (const std::string& vt : VESSEL_TYPE)
-						{
-							if (type == vt)
-							{
-								isInType = true;
-								break;
-							}
-						}
-						if (isInType == false)
-						{
-							throw CMD_SET_ERROR::TYPE_NOT_EXIST;
-						}
-
-						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
-						// Do something (錯誤偵測)
-
-						if (type == "CV")
-						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							CV^ vessel = gcnew CV(coordinate, vesselName, ATeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							ATeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-						}
-						else
-						{
-							// Do something (其他船種)
-						}
-
-						// Log
-						// Do something (指令紀錄)
-					}
-					catch (CMD_SET_ERROR)
-					{
-						// Log
-						// Do something (指令紀錄)
-
-						throw;
-					}
-					catch (...)
-					{
-						// 未知錯誤, 丟出去就對了ㄏㄏ
-						throw;
-					}
-				}
-				else if (command == "FIRE")
-				{
-					std::string vesselName;
-					Coordinate coordinate(0, 0);
-
-					// Get Input
-					tempSS >> vesselName;
-					tempSS >> skip;
-					tempSS >> coordinate.x;
-					tempSS >> skip;
-					tempSS >> coordinate.y;
-
-					try
-					{
-						// 該隊必須存在該船艦
-						String^ str = gcnew String(vesselName.c_str());
-						if (!ATeamVessels->ContainsKey(str))
-						{
-							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
-						}
-
-						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
-						// Do something (錯誤偵測)
-
-						// 產生 Weapon 並回傳 Pointer
-						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
-						if (weapon->isError)
-						{
-							delete weapon;
-							throw CMD_FIRE_ERROR::WEAPON_ILLEGAL;
-						}
-
-						// 加入圖層
-						Weapons->Add(str, weapon);
-						if (PanelLayer.Count == 0)
-						{
-							this->battleGridsPanel->Controls->Add(weapon);
-							PanelLayer.Add(weapon);
-						}
-						else
-						{
-							PanelLayer[PanelLayer.Count - 1]->Controls->Add(weapon);
-							PanelLayer.Add(weapon);
-						}
-
-						// Log
-						// Do something (指令紀錄)
-					}
-					catch (CMD_FIRE_ERROR)
-					{
-						// Log
-						// Do something (指令紀錄)
-
-						throw;
-					}
-					catch (...)
-					{
-						// 未知錯誤, 丟出去就對了ㄏㄏ
-						throw;
-					}
-				}
-				else if (command == "DEFENSE")
-				{
-					// Do something
-				}
-				else if (command == "TAG")
-				{
-					// Do something
-				}
-				else if (command == "MOVE")
-				{
-					std::string vesselName;
-					double speed;
-					double angle;
-
-					tempSS >> vesselName;
-					tempSS >> speed;
-					tempSS >> angle;
-
-					try
-					{
-						// 判斷船艦是否存在
-						String^ str = gcnew String(vesselName.c_str());
-						if (!ATeamVessels->ContainsKey(str))
-						{
-							throw CMD_MOVE_ERROR::VESSEL_NOT_EXIST;
-						}
-
-						// 設定速度, 角度
-						if (!ATeamVessels[str]->setSpeed(speed))
-						{
-							throw CMD_MOVE_ERROR::SPEED_ILLEGAL;
-						}
-						ATeamVessels[str]->setAngle(angle);
-
-						// Log
-						// Do something (指令紀錄)
-					}
-					catch (CMD_MOVE_ERROR)
-					{
-						// Log
-						// Do something (指令紀錄)
-
-						throw;
-					}
-					catch (...)
-					{
-						// 未知錯誤, 丟出去就對了ㄏㄏ
-						throw;
-					}
-				}
-			}
-			catch (...)
-			{
-				// Command Format Error
-				// Do something (錯誤紀錄)
-			}
-		}
-		ATeamCommandTextBox->Text = "";
-		
-
-		// 處理 BTeam 指令
-		ss = std::stringstream(msclr::interop::marshal_as<std::string>(BTeamCommandTextBox->Text));
-		while (std::getline(ss, cmdLine))
-		{
-			// Do something
-		}
-		BTeamCommandTextBox->Text = "";
-
 		// 每艘船跟每顆砲彈都是一個"圖層"
 		// 用這個方法來消除 重疊物件會顯示不出來 的BUG
 
-		// 砲彈更新
-		// Do something
+		// Weapon 更新
+		for each(KeyValuePair<String^, Weapon^> kvp in Weapons)
+		{
+			kvp.Value->Update();
+		}
 
 		// ATeam 船隻更新
 		for each(KeyValuePair<String^, Vessel^>^ kvp in ATeamVessels)
@@ -465,12 +259,6 @@ namespace Project3_SeaBattleSim
 
 		// BTeam 船隻更新
 		for each(KeyValuePair<String^, Vessel^> kvp in BTeamVessels)
-		{
-			kvp.Value->Update();
-		}
-
-		// Weapon 更新
-		for each(KeyValuePair<String^, Weapon^> kvp in Weapons)
 		{
 			kvp.Value->Update();
 		}
@@ -543,6 +331,204 @@ namespace Project3_SeaBattleSim
 		pauseButton->Enabled = true;
 		ATeamCommandTextBox->Enabled = false;
 		BTeamCommandTextBox->Enabled = false;
+
+		// Handling Command
+		// 處理 ATeam 指令
+		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
+		std::string cmdLine, command;
+		char skip;
+
+		while (std::getline(ss, cmdLine))
+		{
+			std::stringstream tempSS(cmdLine);
+			tempSS >> command;
+
+			ToUpper(command);
+
+			try
+			{
+				if (command == "SET")
+				{
+					std::string vesselName, type;
+					Coordinate coordinate(0, 0);
+					bool isInType = false;
+
+					// Get Input
+					tempSS >> vesselName;
+					tempSS >> type;
+					tempSS >> skip;
+					tempSS >> coordinate.x;
+					tempSS >> skip;
+					tempSS >> coordinate.y;
+
+					try
+					{
+						// 判斷船艦不能重複
+						// Do something (錯誤偵測)
+
+						// Type 必須出現在艦種裡
+						for (const std::string& vt : VESSEL_TYPE)
+						{
+							if (type == vt)
+							{
+								isInType = true;
+								break;
+							}
+						}
+						if (isInType == false)
+						{
+							throw CMD_SET_ERROR::TYPE_NOT_EXIST;
+						}
+
+						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
+						// Do something (錯誤偵測)
+
+						if (type == "CV")
+						{
+							// 新增船艦圖層
+							String^ str = gcnew String(vesselName.c_str());
+							CV^ vessel = gcnew CV(coordinate, vesselName, ATeam);
+
+							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+							ATeamVessels->Add(str, vessel);
+							if (PanelLayer.Count == 0)
+							{
+								this->battleGridsPanel->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+							else
+							{
+								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+						}
+						else
+						{
+							// Do something (其他船種)
+						}
+
+						// Log
+						// Do something (指令紀錄)
+					}
+					catch (...)
+					{
+						// Log
+						// Do something (指令紀錄)
+
+						throw;
+					}
+				}
+				else if (command == "FIRE")
+				{
+					std::string vesselName;
+					Coordinate coordinate(0, 0);
+
+					// Get Input
+					tempSS >> vesselName;
+					tempSS >> skip;
+					tempSS >> coordinate.x;
+					tempSS >> skip;
+					tempSS >> coordinate.y;
+
+					try
+					{
+						// 該隊必須存在該船艦
+						String^ str = gcnew String(vesselName.c_str());
+						if (!ATeamVessels->ContainsKey(str))
+						{
+							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+						}
+
+						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
+						// Do something (錯誤偵測)
+
+						// 產生 Weapon 並回傳 Pointer
+						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
+
+						// 加入圖層
+						Weapons->Add(str, weapon);
+						if (PanelLayer.Count == 0)
+						{
+							this->battleGridsPanel->Controls->Add(weapon);
+							PanelLayer.Add(weapon);
+						}
+						else
+						{
+							PanelLayer[PanelLayer.Count - 1]->Controls->Add(weapon);
+							PanelLayer.Add(weapon);
+						}
+
+						// Log
+						// Do something (指令紀錄)
+					}
+					catch (...)
+					{
+						// Log
+						// Do something (指令紀錄)
+						throw;
+					}
+				}
+				else if (command == "DEFENSE")
+				{
+					// Do something
+				}
+				else if (command == "TAG")
+				{
+					// Do something
+				}
+				else if (command == "MOVE")
+				{
+					std::string vesselName;
+					double speed;
+					double angle;
+
+					tempSS >> vesselName;
+					tempSS >> speed;
+					tempSS >> angle;
+
+					try
+					{
+						// 判斷船艦是否存在
+						String^ str = gcnew String(vesselName.c_str());
+						if (!ATeamVessels->ContainsKey(str))
+						{
+							throw CMD_MOVE_ERROR::VESSEL_NOT_EXIST;
+						}
+
+						// 設定速度, 角度
+						ATeamVessels[str]->setSpeed(speed);
+						ATeamVessels[str]->setAngle(angle);
+
+						// Log
+						// Do something (指令紀錄)
+					}
+					catch (...)
+					{
+						// Log
+						// Do something (指令紀錄)
+						throw;
+					}
+				}
+			}
+			catch (...)
+			{
+				// Command Format Error
+				// Do something (錯誤紀錄)
+			}
+		}
+
+		ATeamCommandTextBox->Text = "";
+
+		// 處理 BTeam 指令
+		ss = std::stringstream(msclr::interop::marshal_as<std::string>(BTeamCommandTextBox->Text));
+
+		while (std::getline(ss, cmdLine))
+		{
+			// Do something
+		}
+
+		BTeamCommandTextBox->Text = "";
+
 		gameTimer->Enabled = true;
 
 #ifdef DEBUG

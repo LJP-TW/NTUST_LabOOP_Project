@@ -38,32 +38,27 @@ namespace Project3_SeaBattleSim
 		this->isDefenseCD = true;
 	}
 
-	bool Vessel::setSpeed(double speed)
+	void Vessel::setSpeed(double speed)
 	{
 		if (speed > this->maxSpeed || speed < 0)
 		{
-			return false;
+			throw VESSEL_ERROR::SET_SPEED_ERROR;
 		}
 
 		this->nowSpeed = speed;
-
-		return true;
 	}
 
 	void Vessel::setAngle(double angle)
 	{
 		this->nowAngle = angle;
 
-		// 將 this->nowAngle 換算成 正最小同位角
+		// 將 this->nowAngle 換算成 正最小同位角 ( 非必要, 可以晚點再做 )
 		// Do something
-
 	}
 
 	void Vessel::Update()
 	{
 		// 移動
-		this->nowSpeed;
-		this->nowAngle;
 		double oldDX = this->doubleLocation->x;
 		double oldDY = this->doubleLocation->y;
 		this->doubleLocation->x = this->doubleLocation->x + (this->nowSpeed / 60) * cos(nowAngle) * BATTLEGRID_SIZE;
@@ -110,8 +105,7 @@ namespace Project3_SeaBattleSim
 
 	Weapon^ Vessel::Attack(Coordinate target)
 	{
-		// Vessel 不會被用來創造物件, 若被創造, 則 Attack 會回傳被設定 errorFlag 的 Weapon
-		// The Default Constructor of Weapon will set the errorFlag
-		return gcnew Weapon();
+		// Vessel 不會被用來創造物件
+		throw VESSEL_ERROR::ATTACK_ERROR;
 	}
 }

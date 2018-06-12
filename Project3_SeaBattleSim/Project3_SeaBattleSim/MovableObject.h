@@ -22,6 +22,7 @@ namespace Project3_SeaBattleSim {
 		// Constructor
 		MovableObject(void);
 		MovableObject(Coordinate location, std::string name, std::string text);
+		virtual ~MovableObject() override;
 
 		/*                           */
 		/* Functions called by Event */
@@ -39,6 +40,9 @@ namespace Project3_SeaBattleSim {
 
 		// 每一遊戲秒更新畫面 : 由各個衍生類別決定如何移動
 		virtual void Update() override;
+
+		// 重新命名
+		virtual void Rename(std::string newName) override;
 
 		/*              */
 		/* Data Members */

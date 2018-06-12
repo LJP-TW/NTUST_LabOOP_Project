@@ -20,8 +20,7 @@ namespace Project3_SeaBattleSim
 			target.y < 0 || target.y > 20 ||
 			(target.x - (this->location->X) / BATTLEGRID_SIZE) * (target.x - this->location->X / BATTLEGRID_SIZE) + (target.y - this->location->Y / BATTLEGRID_SIZE) * (target.y - this->location->Y / BATTLEGRID_SIZE) > this->maxAttackDistance * this->maxAttackDistance)
 		{
-			// The Default Constructor of Weapon will set the errorFlag
-			return gcnew Weapon();
+			throw VESSEL_ERROR::ATTACK_ERROR;
 		}
 
 		// 創造 Weapon 並回傳

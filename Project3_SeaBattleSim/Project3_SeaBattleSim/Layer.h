@@ -19,6 +19,7 @@ namespace Project3_SeaBattleSim {
 		// Constructor
 		Layer(void);
 		Layer(std::string name);
+		virtual ~Layer() override;
 
 		/*                   */
 		/* Virtual Functions */
@@ -26,5 +27,8 @@ namespace Project3_SeaBattleSim {
 
 		// 每一遊戲秒更新畫面, Layer 不會被實體化, 所以 Layer::Update() 不做任何事情, 由繼承的子類別分別實作
 		virtual void Update();
+
+		// 重新命名
+		virtual void Rename(std::string newName) override;
 	};
 }

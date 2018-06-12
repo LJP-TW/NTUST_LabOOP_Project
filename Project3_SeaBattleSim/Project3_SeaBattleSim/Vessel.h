@@ -29,8 +29,9 @@ namespace Project3_SeaBattleSim {
 		/* Virtual Functions */
 		/*                   */
 
-		// 設定速度, 回傳是否設定成功
-		virtual bool setSpeed(double speed);
+		// 設定速度
+		// throw (VESSEL_ERROR::SET_SPEED_ERROR)
+		virtual void setSpeed(double speed);
 
 		// 設定角度
 		virtual void setAngle(double angle);

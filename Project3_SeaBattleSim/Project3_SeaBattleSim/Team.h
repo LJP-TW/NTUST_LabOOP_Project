@@ -7,6 +7,7 @@ public:
 	// Constructor
 	Team();
 	Team(std::string name);
+	~Team();
 
 	// Data members
 	// ¶¤¥î¦WºÙ

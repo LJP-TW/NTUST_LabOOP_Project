@@ -15,7 +15,24 @@ namespace Project3_SeaBattleSim
 		this->BackColor = Color::Transparent;
 	}
 
+	Layer::~Layer()
+	{
+	}
+
 	void Layer::Update()
 	{	
+	}
+
+	void Layer::Rename(std::string newName)
+	{
+		String^ newNameStr = gcnew String(newName.c_str());
+		
+		if (this->Name->CompareTo(newNameStr))
+		{
+			delete newNameStr;
+			throw LAYER_ERROR::RENAME_ERROR;
+		}
+
+		this->Name = newNameStr;
 	}
 }
