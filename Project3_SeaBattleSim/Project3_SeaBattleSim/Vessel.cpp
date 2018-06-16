@@ -108,4 +108,16 @@ namespace Project3_SeaBattleSim
 		// Vessel 不會被用來創造物件
 		throw VESSEL_ERROR::ATTACK_ERROR;
 	}
+	void Vessel::getDamage(double damage)
+	{
+		this->hp = this->hp - damage;
+	}
+	bool Vessel::isDead()
+	{
+		if (this->hp<=0)
+		{
+			return true;
+		}
+		return false;
+	}
 }
