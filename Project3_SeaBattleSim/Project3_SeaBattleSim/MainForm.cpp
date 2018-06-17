@@ -4,12 +4,16 @@
 #include <string>
 #include <cstdio>
 #include <cctype>
+#include <cmath>
 #include <msclr\marshal_cppstd.h>
 #include "MainForm.h"
 #include "CommonStruct.h"
 #include "DefineMacros.h"
 
 #define ToUpper(str) for (char & c : str) c = toupper(c)
+#define PI 3.1415926
+#define SRange 0
+#define BRange 20
 //#define DEBUG
 
 #ifdef DEBUG
@@ -246,9 +250,39 @@ namespace Project3_SeaBattleSim
 		// 用這個方法來消除 重疊物件會顯示不出來 的BUG
 
 		// Weapon 更新
-		for each(KeyValuePair<String^, Weapon^> kvp in Weapons)
+		for each(KeyValuePair<String^, Weapon^>^ kvp in Weapons)
 		{
-			kvp.Value->Update();
+			/*同點上 船受到傷害 若生命歸零 則移除船*/
+	/*		if (kvp->Value->isArrival())
+			{
+				for each(KeyValuePair<String^, Vessel^>^ kvn in ATeamVessels)
+				{
+					//Same Location Ship and Weapon
+					if (isInAttackRange(kvp, kvn))
+					{
+						kvn->Value->hp -= kvp->Value->damage;
+						//Remove From Dictionary
+						if (kvn->Value->hp == 0)
+						{
+							ATeamVessels->Remove(kvn->Key);
+						}
+					}
+				}
+				for each(KeyValuePair<String^, Vessel^>^ kvn in BTeamVessels)
+				{
+					//Same Location Ship and Weapon
+					if (isInAttackRange(kvp, kvn))
+					{
+						kvn->Value->hp -= kvp->Value->damage;
+						//Remove From Dictionary
+						if (kvn->Value->hp == 0)
+						{
+							ATeamVessels->Remove(kvn->Key);
+						}
+					}
+				}
+			}*/
+			kvp->Value->Update();
 		}
 
 		// ATeam 船隻更新
@@ -258,9 +292,9 @@ namespace Project3_SeaBattleSim
 		}
 
 		// BTeam 船隻更新
-		for each(KeyValuePair<String^, Vessel^> kvp in BTeamVessels)
+		for each(KeyValuePair<String^, Vessel^>^ kvp in BTeamVessels)
 		{
-			kvp.Value->Update();
+			kvp->Value->Update();
 		}
 	}
 
@@ -345,6 +379,14 @@ namespace Project3_SeaBattleSim
 
 			ToUpper(command);
 
+			/*Log use min and sec*/
+			unsigned long long min;
+			unsigned long long sec;
+
+			min = gameTime / 60;
+			sec = gameTime % 60;
+
+
 			try
 			{
 				if (command == "SET")
@@ -352,6 +394,9 @@ namespace Project3_SeaBattleSim
 					std::string vesselName, type;
 					Coordinate coordinate(0, 0);
 					bool isInType = false;
+					/*Repeat Vessel Name*/
+					bool isRepeat = false;
+					
 
 					// Get Input
 					tempSS >> vesselName;
@@ -364,8 +409,13 @@ namespace Project3_SeaBattleSim
 					try
 					{
 						// 判斷船艦不能重複
-						// Do something (錯誤偵測)
-
+						// Do something (錯誤偵測)			
+						String^ str = gcnew String(vesselName.c_str());																			
+						if (ATeamVessels->ContainsKey(str))
+						{
+							throw CMD_SET_ERROR::VESSEL_NAME_ERROR;
+						}
+						
 						// Type 必須出現在艦種裡
 						for (const std::string& vt : VESSEL_TYPE)
 						{
@@ -382,7 +432,12 @@ namespace Project3_SeaBattleSim
 
 						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
 						// Do something (錯誤偵測)
+						if (coordinate.x < SRange || coordinate.x > BRange || coordinate.y < SRange || coordinate.y > BRange)
+						{
+							throw CMD_SET_ERROR::COORDINATE_ERROR;
+						}
 
+						/*艦種未完成*/
 						if (type == "CV")
 						{
 							// 新增船艦圖層
@@ -402,18 +457,82 @@ namespace Project3_SeaBattleSim
 								PanelLayer.Add(vessel);
 							}
 						}
-						else
+/*						else if(type == "BB")
 						{
-							// Do something (其他船種)
-						}
+							// 新增船艦圖層
+							String^ str = gcnew String(vesselName.c_str());
+							BB^ vessel = gcnew BB(coordinate, vesselName, ATeam);
 
+							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+							ATeamVessels->Add(str, vessel);
+							if (PanelLayer.Count == 0)
+							{
+								this->battleGridsPanel->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+							else
+							{
+								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+						}
+						else if (type == "CG")
+						{
+							// 新增船艦圖層
+							String^ str = gcnew String(vesselName.c_str());
+							CG^ vessel = gcnew CG(coordinate, vesselName, ATeam);
+
+							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+							ATeamVessels->Add(str, vessel);
+							if (PanelLayer.Count == 0)
+							{
+								this->battleGridsPanel->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+							else
+							{
+								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+						}
+						else if (type == "DD")
+						{
+							// 新增船艦圖層
+							String^ str = gcnew String(vesselName.c_str());
+							DD^ vessel = gcnew DD(coordinate, vesselName, ATeam);
+
+							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+							ATeamVessels->Add(str, vessel);
+							if (PanelLayer.Count == 0)
+							{
+								this->battleGridsPanel->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+							else
+							{
+								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+								PanelLayer.Add(vessel);
+							}
+						}
+*/						
 						// Log
 						// Do something (指令紀錄)
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
+							<< ')' << " ->Success" << std::endl;
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
+
 					}
 					catch (...)
 					{
 						// Log
 						// Do something (指令紀錄)
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
+							<< ')' << " ->Fail" << std::endl;
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
 
 						throw;
 					}
@@ -441,6 +560,10 @@ namespace Project3_SeaBattleSim
 
 						// 座標的範圍在(0.0 ~ 20.0, 0.0 ~ 20.0)
 						// Do something (錯誤偵測)
+						if (coordinate.x < SRange || coordinate.x > BRange || coordinate.y < SRange || coordinate.y > BRange)
+						{
+							throw CMD_FIRE_ERROR::COORDINATE_ERROR;
+						}
 
 						// 產生 Weapon 並回傳 Pointer
 						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
@@ -460,21 +583,127 @@ namespace Project3_SeaBattleSim
 
 						// Log
 						// Do something (指令紀錄)
+						std::string weaponName = msclr::interop::marshal_as<std::string>(weapon->Name);
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')' 
+							<< " ->" << weaponName << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
 					}
 					catch (...)
 					{
 						// Log
 						// Do something (指令紀錄)
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')'
+							<< " -> Fail" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						throw;
 					}
 				}
 				else if (command == "DEFENSE")
 				{
 					// Do something
+					std::string vesselName;
+					std::string weaponName;
+
+					// Get Input
+					tempSS >> vesselName;
+					tempSS >> weaponName;
+					try
+					{
+						// 該隊必須存在該船艦
+						String^ strVessel = gcnew String(vesselName.c_str());
+						if (!ATeamVessels->ContainsKey(strVessel))
+						{
+							throw CMD_DEFENSE_ERROR::VESSEL_NOT_EXIST;
+						}
+
+						//武器必須存在場上
+						if (!Weapons->ContainsKey(strVessel))
+						{
+							throw CMD_DEFENSE_ERROR::WEAPON_ILLEGAL;
+						}
+
+						//若無法攻擊到砲彈視為未命中 Weapons發射時 視使用VesselName當key
+						if (isInDefenseRange(Weapons[strVessel],ATeamVessels[strVessel]))
+						{
+							throw CMD_DEFENSE_ERROR::NOT_IN_RANGE;
+						}
+
+						//刪除砲彈
+						Weapons->Remove(strVessel);
+
+						//Log						
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< vesselName << " DEFENSE " << weaponName << " -> Hit" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
+					}
+					catch (...)
+					{
+						//Log
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< vesselName << " DEFENSE " << weaponName << " -> Fail" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
+						throw;
+					}
 				}
 				else if (command == "TAG")
 				{
 					// Do something
+					std::string vesselName;
+					std::string New_Name;
+
+					// Get Input
+					tempSS >> vesselName;
+					tempSS >> New_Name;
+
+					try
+					{
+						// 該隊必須存在該船艦
+						String^ strVessel = gcnew String(vesselName.c_str());
+						if (!ATeamVessels->ContainsKey(strVessel))
+						{
+							throw CMD_TAG_ERROR::VESSEL_NOT_EXIST;
+						}
+
+						//新名字不能跟場上同隊船艦名字相同
+						String^ strNew = gcnew String(New_Name.c_str());
+						if (ATeamVessels->ContainsKey(strNew))
+						{
+							throw CMD_TAG_ERROR::NEW_NAME_ILLEGAL;
+						}
+					
+						//更換名字
+						Vessel^ vessel = ATeamVessels[strVessel];
+						// 加入新名稱 , 刪除舊名稱
+						ATeamVessels->Add(strNew, vessel);
+						ATeamVessels->Remove(strVessel);
+
+						//Log
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA RENAME " << vesselName << " to " << New_Name << " -> Success" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
+					}
+					catch (...)
+					{
+						//Log
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA RENAME " << vesselName << " to " << New_Name << " -> Fail" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
+						throw;
+					}
 				}
 				else if (command == "MOVE")
 				{
@@ -501,11 +730,21 @@ namespace Project3_SeaBattleSim
 
 						// Log
 						// Do something (指令紀錄)
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA " << vesselName << " MOVE to " << angle << " as " << speed << " -> Success" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
 					}
 					catch (...)
 					{
 						// Log
 						// Do something (指令紀錄)
+						std::ostringstream out;
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+							<< " TeamA " << vesselName << " MOVE to " << angle << " as " << speed << " -> Fail" << std::endl;
+
+						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						throw;
 					}
 				}
@@ -513,7 +752,7 @@ namespace Project3_SeaBattleSim
 			catch (...)
 			{
 				// Command Format Error
-				// Do something (錯誤紀錄)
+				// Do something (錯誤紀錄)				
 			}
 		}
 
@@ -559,4 +798,24 @@ namespace Project3_SeaBattleSim
 		//	ATeamVessels->Remove(str5);
 		//}
 	}
+	bool MainForm::isInAttackRange(KeyValuePair<String^, Weapon^>^ kvw, KeyValuePair<String^, Vessel^>^ kvv)
+	{
+		/*isInAttackRange*/
+		if (pow(pow((kvv->Value->doubleLocation->x - kvw->Value->target->x),2) + pow((kvv->Value->doubleLocation->y - kvw->Value->target->y),2),0.5) <= kvw->Value->range)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool MainForm::isInDefenseRange(Weapon^ kvw,Vessel^ kvv)
+	{
+		/*isInDefenseRange*/
+		if (pow(pow((kvw->doubleLocation->x - kvv->doubleLocation->x), 2) + pow((kvw->doubleLocation->y - kvv->doubleLocation->y), 2), 0.5) <= kvv->maxDefenseDistance)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 }
