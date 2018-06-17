@@ -291,7 +291,7 @@ namespace Project3_SeaBattleSim
 						{
 							for (int i = 0; i < PanelLayer.Count; i++)
 							{
-								if (PanelLayer[i] == ATeamVessels[kvv->Key])
+								if (PanelLayer[i] == BTeamVessels[kvv->Key])
 								{
 									PanelLayer[i - 1]->Controls->Remove(PanelLayer[i]);
 									if ((i + 1) < PanelLayer.Count)
@@ -301,7 +301,7 @@ namespace Project3_SeaBattleSim
 									PanelLayer.Remove(PanelLayer[i]);
 								}
 							}
-							ATeamVessels->Remove(kvv->Key);
+							BTeamVessels->Remove(kvv->Key);
 						}
 					}
 				}
