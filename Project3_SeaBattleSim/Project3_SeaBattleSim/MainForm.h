@@ -38,8 +38,8 @@ namespace Project3_SeaBattleSim {
 
 		// Components
 		System::ComponentModel::Container ^components;
-		array<System::Windows::Forms::Label^>^ battleGridsH;
-		array<System::Windows::Forms::Label^>^ battleGridsV;
+		array<System::Windows::Forms::Label^> ^battleGridsH;
+		array<System::Windows::Forms::Label^> ^battleGridsV;
 		System::Windows::Forms::Label^ timeShower;
 		System::Windows::Forms::Button^ pauseButton;
 		System::Windows::Forms::Button^ startButton;
@@ -81,5 +81,11 @@ namespace Project3_SeaBattleSim {
 		void pauseButton_Click(System::Object^ sender, System::EventArgs^ e);
 
 		void startButton_Click(System::Object^ sender, System::EventArgs^ e);
+
+		/*§PÂ_¯¥¼u§ðÀ»½d³ò¤º¬O§_¦³²î°¦*/
+		bool isInAttackRange(KeyValuePair<String^, Weapon^>^ kvw, KeyValuePair<String^, Vessel^>^ kvv);
+
+		/*§PÂ_²îÄ¥¨¾¦u½d³ò¤º¬O§_¦³¯¥¼u*/
+		bool isInDefenseRange(Weapon^ kvw, Vessel^ kvv);
 	};
 }
