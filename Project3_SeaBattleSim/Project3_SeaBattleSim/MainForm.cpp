@@ -950,7 +950,7 @@ namespace Project3_SeaBattleSim
 						{
 							// 新增船艦圖層
 							String^ str = gcnew String(vesselName.c_str());
-							CV^ vessel = gcnew CV(coordinate, vesselName, ATeam);
+							CV^ vessel = gcnew CV(coordinate, vesselName, BTeam);
 
 							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 							BTeamVessels->Add(str, vessel);
@@ -969,7 +969,7 @@ namespace Project3_SeaBattleSim
 						{
 							// 新增船艦圖層
 							String^ str = gcnew String(vesselName.c_str());
-							BB^ vessel = gcnew BB(coordinate, vesselName, ATeam);
+							BB^ vessel = gcnew BB(coordinate, vesselName, BTeam);
 
 							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 							BTeamVessels->Add(str, vessel);
@@ -988,7 +988,7 @@ namespace Project3_SeaBattleSim
 						{
 							// 新增船艦圖層
 							String^ str = gcnew String(vesselName.c_str());
-							CG^ vessel = gcnew CG(coordinate, vesselName, ATeam);
+							CG^ vessel = gcnew CG(coordinate, vesselName, BTeam);
 
 							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 							BTeamVessels->Add(str, vessel);
@@ -1007,7 +1007,7 @@ namespace Project3_SeaBattleSim
 						{
 							// 新增船艦圖層
 							String^ str = gcnew String(vesselName.c_str());
-							DD^ vessel = gcnew DD(coordinate, vesselName, ATeam);
+							DD^ vessel = gcnew DD(coordinate, vesselName, BTeam);
 
 							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 							BTeamVessels->Add(str, vessel);
