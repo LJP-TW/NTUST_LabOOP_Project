@@ -125,7 +125,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BB.cpp" />
+    <ClCompile Include="CG.cpp" />
     <ClCompile Include="CV.cpp" />
+    <ClCompile Include="DD.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainForm.cpp" />
