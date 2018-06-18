@@ -470,18 +470,18 @@ namespace Project3_SeaBattleSim
 		ATeamCommandTextBox->Enabled = false;
 		BTeamCommandTextBox->Enabled = false;
 
-		// Handling Command
-		// 處理 ATeam 指令
-		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
-		std::string cmdLine, command;
-		char skip;
-
 		/*Log use min and sec*/
 		unsigned long long min;
 		unsigned long long sec;
 
 		min = gameTime / 60;
 		sec = gameTime % 60;
+
+		// Handling Command
+		// 處理 ATeam 指令
+		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
+		std::string cmdLine, command;
+		char skip;
 
 		while (std::getline(ss, cmdLine))
 		{
@@ -535,83 +535,41 @@ namespace Project3_SeaBattleSim
 							throw CMD_SET_ERROR::COORDINATE_ERROR;
 						}
 
+						// 新增船艦圖層
+						Vessel^ vessel;
 						if (type == "CV")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							CV^ vessel = gcnew CV(coordinate, vesselName, ATeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							ATeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew CV(coordinate, vesselName, ATeam);
 						}
-						else if(type == "BB")
+						else if (type == "BB")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							BB^ vessel = gcnew BB(coordinate, vesselName, ATeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							ATeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew BB(coordinate, vesselName, ATeam);
 						}
 						else if (type == "CG")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							CG^ vessel = gcnew CG(coordinate, vesselName, ATeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							ATeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew CG(coordinate, vesselName, ATeam);
 						}
 						else if (type == "DD")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							DD^ vessel = gcnew DD(coordinate, vesselName, ATeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							ATeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew DD(coordinate, vesselName, ATeam);
 						}
-					
+
+						// 設定船艦文字顏色
+						vessel->text->ForeColor = Color::FromArgb(0, 128, 0);
+
+						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+						ATeamVessels->Add(str, vessel);
+						if (PanelLayer.Count == 0)
+						{
+							this->battleGridsPanel->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
+						}
+						else
+						{
+							PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
+						}
+						
 						// Log
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
@@ -662,6 +620,9 @@ namespace Project3_SeaBattleSim
 
 						// 產生 Weapon 並回傳 Pointer
 						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
+
+						// 設定 Weapon 文字顏色
+						weapon->text->ForeColor = Color::FromArgb(0, 128, 0);
 
 						// 加入圖層
 						Weapons->Add(weapon->Name, weapon);
@@ -946,81 +907,39 @@ namespace Project3_SeaBattleSim
 							throw CMD_SET_ERROR::COORDINATE_ERROR;
 						}
 
+						// 新增船艦圖層
+						Vessel^ vessel;
 						if (type == "CV")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							CV^ vessel = gcnew CV(coordinate, vesselName, BTeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							BTeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew CV(coordinate, vesselName, ATeam);
 						}
 						else if (type == "BB")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							BB^ vessel = gcnew BB(coordinate, vesselName, BTeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							BTeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew BB(coordinate, vesselName, ATeam);
 						}
 						else if (type == "CG")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							CG^ vessel = gcnew CG(coordinate, vesselName, BTeam);
-
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							BTeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+							vessel = gcnew CG(coordinate, vesselName, ATeam);
 						}
 						else if (type == "DD")
 						{
-							// 新增船艦圖層
-							String^ str = gcnew String(vesselName.c_str());
-							DD^ vessel = gcnew DD(coordinate, vesselName, BTeam);
+							vessel = gcnew DD(coordinate, vesselName, ATeam);
+						}
 
-							// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-							BTeamVessels->Add(str, vessel);
-							if (PanelLayer.Count == 0)
-							{
-								this->battleGridsPanel->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
-							else
-							{
-								PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
-								PanelLayer.Add(vessel);
-							}
+						// 設定船艦文字顏色
+						vessel->text->ForeColor = Color::FromArgb(0, 0, 128);
+
+						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
+						BTeamVessels->Add(str, vessel);
+						if (PanelLayer.Count == 0)
+						{
+							this->battleGridsPanel->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
+						}
+						else
+						{
+							PanelLayer[PanelLayer.Count - 1]->Controls->Add(vessel);
+							PanelLayer.Add(vessel);
 						}
 
 						// Log
@@ -1073,6 +992,9 @@ namespace Project3_SeaBattleSim
 
 						// 產生 Weapon 並回傳 Pointer
 						Weapon^ weapon = BTeamVessels[str]->Attack(coordinate);
+
+						// 設定 Weapon 文字顏色
+						weapon->text->ForeColor = Color::FromArgb(0, 0, 128);
 
 						// 加入圖層
 						Weapons->Add(weapon->Name, weapon);

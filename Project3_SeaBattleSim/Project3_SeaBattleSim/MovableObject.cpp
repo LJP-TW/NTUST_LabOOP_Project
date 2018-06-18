@@ -82,7 +82,7 @@ namespace Project3_SeaBattleSim
 	System::Void MovableObject::MoveableObject_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
 	{
 		Pen^ blackPen = gcnew Pen(Color::FromArgb(110, 110, 110), 2.0f);
-		SolidBrush^ blackBrush = gcnew SolidBrush(Color::Black);
+		SolidBrush^ brush = gcnew SolidBrush(this->text->ForeColor);
 		Graphics^ graphics = e->Graphics;
 
 		// Draw the information and keep the information be in the battleGrid
@@ -191,7 +191,7 @@ namespace Project3_SeaBattleSim
 		}
 
 		// Draw Text
-		graphics->DrawString(this->text->Text, this->text->Font, blackBrush, this->text->Location);
+		graphics->DrawString(this->text->Text, this->text->Font, brush, this->text->Location);
 
 		delete blackPen;
 	}
