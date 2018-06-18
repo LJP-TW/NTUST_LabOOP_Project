@@ -28,6 +28,7 @@ enum class VESSEL_ERROR
 {
 	SET_SPEED_ERROR,
 	ATTACK_ERROR,
+	DEFENSE_ERROR,
 };
 
 enum class CMD_SET_ERROR

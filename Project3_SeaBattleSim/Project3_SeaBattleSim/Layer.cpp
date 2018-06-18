@@ -27,7 +27,7 @@ namespace Project3_SeaBattleSim
 	{
 		String^ newNameStr = gcnew String(newName.c_str());
 		
-		if (this->Name->CompareTo(newNameStr))
+		if (this->Name->CompareTo(newNameStr) == 0)
 		{
 			delete newNameStr;
 			throw LAYER_ERROR::RENAME_ERROR;

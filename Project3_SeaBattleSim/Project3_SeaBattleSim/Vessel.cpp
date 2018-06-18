@@ -2,7 +2,8 @@
 #include "Vessel.h"
 #include "Weapon.h"
 
-#define DEGREE_TO_RADIAN(degree) (degree * 3.14159265359 / 180.0)
+#define M_PI 3.14159265358979323846
+#define DEGREE_TO_RADIAN(degree) (degree * M_PI / 180.0)
 #define sin(x) sin(DEGREE_TO_RADIAN(x))
 #define cos(x) cos(DEGREE_TO_RADIAN(x))
 
@@ -98,7 +99,7 @@ namespace Project3_SeaBattleSim
 			this->nowDefenseCD -= 1;
 			if (this->nowDefenseCD <= 0)
 			{
-				nowDefenseCD = true;
+				isDefenseCD = true;
 			}
 		}
 	}
@@ -108,10 +109,25 @@ namespace Project3_SeaBattleSim
 		// Vessel 不會被用來創造物件
 		throw VESSEL_ERROR::ATTACK_ERROR;
 	}
+
+	void Vessel::Defense()
+	{
+		// 若還在CD
+		if (!isDefenseCD)
+		{
+			throw VESSEL_ERROR::DEFENSE_ERROR;
+		}
+
+		// 進入CD時間
+		nowDefenseCD = defenseCD;
+		isDefenseCD = false;
+	}
+
 	void Vessel::getDamage(double damage)
 	{
-		this->hp = this->hp - damage;
+		this->hp -= damage;
 	}
+
 	bool Vessel::isDead()
 	{
 		if (this->hp<=0)

@@ -10,7 +10,7 @@ SET [Vessel_Name] [Type] [2DCoordinate]
     
     [2DCoordinate] : 座標
         座標表示方式需以以下格式 :
-            ([double], [double])
+            ([double],[double])
                 [double] : 雙精度浮點數
 ```
 

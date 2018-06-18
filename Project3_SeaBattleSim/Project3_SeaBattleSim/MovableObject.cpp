@@ -206,8 +206,8 @@ namespace Project3_SeaBattleSim
 		Layer::Rename(newName);
 
 		std::string oldText = msclr::interop::marshal_as<std::string>(this->text->Text);
-		std::string symbol = oldText.substr(0, 1);
-		std::string oldName = oldText.substr(1, oldText.length() - 1);
+		std::string symbol = oldText.substr(0, 2);
+		std::string oldName = oldText.substr(2, oldText.length() - 2);
 
 		if (newName == oldName)
 		{

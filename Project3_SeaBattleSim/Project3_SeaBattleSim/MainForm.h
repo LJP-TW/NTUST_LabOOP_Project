@@ -59,6 +59,12 @@ namespace Project3_SeaBattleSim {
 		Team^ ATeam;
 		Team^ BTeam;
 
+		List<String^>^ DeadATeamVessels;
+		List<String^>^ DeadBTeamVessels;
+		List<String^>^ HitATeamVessels;
+		List<String^>^ HitBTeamVessels;
+		List<String^>^ ArrivalWeapons;
+
 		// ¹Ï¼h
 		List<Panel^> PanelLayer;
 		bool isGameContinued;
@@ -73,8 +79,6 @@ namespace Project3_SeaBattleSim {
 #pragma endregion
 
 		System::Void MainForm_Load(System::Object^ sender, System::EventArgs^ e);
-
-		System::Void MainForm_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
 
 		void MainForm_Update(System::Object^ sender, System::EventArgs^ e);
 

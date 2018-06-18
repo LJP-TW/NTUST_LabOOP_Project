@@ -42,6 +42,9 @@ namespace Project3_SeaBattleSim {
 		// 基本砲彈攻擊 : 產生 Weapon 並回傳此 Weapon 的 Pointer
 		virtual Weapon^ Attack(Coordinate target);
 
+		// 防禦
+		virtual void Defense();
+
 		// 船艦受到傷害 ： 減少HP
 		virtual void getDamage(double damage);
 
