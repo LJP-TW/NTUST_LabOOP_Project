@@ -2,6 +2,7 @@
 #include "Vessel.h"
 #include "Weapon.h"
 #include "Team.h"
+#include "GlobalVariable.h"
 
 namespace Project3_SeaBattleSim {
 
@@ -54,10 +55,6 @@ namespace Project3_SeaBattleSim {
 		System::Windows::Forms::TextBox^ LogTextBox;
 		System::Windows::Forms::Timer^ gameTimer;
 
-		// A/BTeam Dictionary, which like 'map' of native c++
-		Dictionary<String^, Vessel^>^ ATeamVessels;
-		Dictionary<String^, Vessel^>^ BTeamVessels;
-		Dictionary<String^, Weapon^>^ Weapons;
 		Team^ ATeam;
 		Team^ BTeam;
 

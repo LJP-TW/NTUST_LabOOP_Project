@@ -92,6 +92,9 @@
     <ClInclude Include="MovableObject.h">
       <Filter>原始程式檔</Filter>
     </ClInclude>
+    <ClInclude Include="GlobalVariable.h">
+      <Filter>原始程式檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

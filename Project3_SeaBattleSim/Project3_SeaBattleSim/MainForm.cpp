@@ -34,13 +34,13 @@ namespace Project3_SeaBattleSim
 			delete components;
 		}
 
-		ATeamVessels->Clear();
-		BTeamVessels->Clear();
+		GlobalVariable::ATeamVessels->Clear();
+		GlobalVariable::BTeamVessels->Clear();
 		PanelLayer.Clear();
 
-		delete ATeamVessels;
-		delete BTeamVessels;
-		delete Weapons;
+		delete GlobalVariable::ATeamVessels;
+		delete GlobalVariable::BTeamVessels;
+		delete GlobalVariable::Weapons;
 		delete ATeam;
 		delete BTeam;
 	}
@@ -92,9 +92,6 @@ namespace Project3_SeaBattleSim
 		BTeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
 		LogTextBox = gcnew System::Windows::Forms::TextBox();
 		gameTimer = gcnew System::Windows::Forms::Timer(this->components);
-		ATeamVessels = gcnew Dictionary<String^, Vessel^>();
-		BTeamVessels = gcnew Dictionary<String^, Vessel^>();
-		Weapons = gcnew Dictionary<String^, Weapon^>();
 		ATeam = gcnew Team("A");
 		BTeam = gcnew Team("B");
 		DeadATeamVessels = gcnew List<String^>();
@@ -102,6 +99,10 @@ namespace Project3_SeaBattleSim
 		ArrivalWeapons = gcnew List<String^>();
 		HitATeamVessels = gcnew List<String^>();
 		HitBTeamVessels = gcnew List<String^>();
+
+		GlobalVariable::ATeamVessels = gcnew Dictionary<String^, Vessel^>();
+		GlobalVariable::BTeamVessels = gcnew Dictionary<String^, Vessel^>();
+		GlobalVariable::Weapons = gcnew Dictionary<String^, Weapon^>();
 
 		// Create Battle Grids by using the background color of labels
 
@@ -232,14 +233,14 @@ namespace Project3_SeaBattleSim
 		// 用這個方法來消除 重疊物件會顯示不出來 的BUG
 
 		// Weapon 更新
-		for each(KeyValuePair<String^, Weapon^>^ kvpw in Weapons)
+		for each(KeyValuePair<String^, Weapon^>^ kvpw in GlobalVariable::Weapons)
 		{
 			/*同點上 船受到傷害 若生命歸零 則移除船*/
 			if (kvpw->Value->isArrival())
 			{
 				ArrivalWeapons->Add(kvpw->Key);
 
-				for each(KeyValuePair<String^, Vessel^>^ kvpv in ATeamVessels)
+				for each(KeyValuePair<String^, Vessel^>^ kvpv in GlobalVariable::ATeamVessels)
 				{
 					//Same Location Ship and Weapon
 					if (isInAttackRange(kvpw, kvpv))
@@ -283,7 +284,7 @@ namespace Project3_SeaBattleSim
 					}
 				}
 
-				for each(KeyValuePair<String^, Vessel^>^ kvpv in BTeamVessels)
+				for each(KeyValuePair<String^, Vessel^>^ kvpv in GlobalVariable::BTeamVessels)
 				{
 					//Same Location Ship and Weapon
 					if (isInAttackRange(kvpw, kvpv))
@@ -384,8 +385,8 @@ namespace Project3_SeaBattleSim
 					LogTextBox->Text += gcnew System::String(out.str().c_str());
 					LogTextBox->Text += Environment::NewLine;
 
-					delete ATeamVessels[name];
-					ATeamVessels->Remove(name);
+					delete GlobalVariable::ATeamVessels[name];
+					GlobalVariable::ATeamVessels->Remove(name);
 				}
 
 				for each(String^ name in DeadBTeamVessels)
@@ -397,8 +398,8 @@ namespace Project3_SeaBattleSim
 					LogTextBox->Text += gcnew System::String(out.str().c_str());
 					LogTextBox->Text += Environment::NewLine;
 
-					delete BTeamVessels[name];
-					BTeamVessels->Remove(name);
+					delete GlobalVariable::BTeamVessels[name];
+					GlobalVariable::BTeamVessels->Remove(name);
 				}
 
 				DeadATeamVessels->Clear();
@@ -440,19 +441,19 @@ namespace Project3_SeaBattleSim
 		}
 		for each (String^ name in ArrivalWeapons)
 		{
-			delete Weapons[name];
-			Weapons->Remove(name);
+			delete GlobalVariable::Weapons[name];
+			GlobalVariable::Weapons->Remove(name);
 		}
 		ArrivalWeapons->Clear();
 
 		// ATeam 船隻更新
-		for each(KeyValuePair<String^, Vessel^>^ kvp in ATeamVessels)
+		for each(KeyValuePair<String^, Vessel^>^ kvp in GlobalVariable::ATeamVessels)
 		{
 			kvp->Value->Update();
 		}
 
 		// BTeam 船隻更新
-		for each(KeyValuePair<String^, Vessel^>^ kvp in BTeamVessels)
+		for each(KeyValuePair<String^, Vessel^>^ kvp in GlobalVariable::BTeamVessels)
 		{
 			kvp->Value->Update();
 		}
@@ -514,7 +515,7 @@ namespace Project3_SeaBattleSim
 					{
 						// 判斷船艦不能重複
 						String^ str = gcnew String(vesselName.c_str());																			
-						if (ATeamVessels->ContainsKey(str))
+						if (GlobalVariable::ATeamVessels->ContainsKey(str))
 						{
 							throw CMD_SET_ERROR::VESSEL_NAME_ERROR;
 						}
@@ -562,7 +563,7 @@ namespace Project3_SeaBattleSim
 						vessel->text->ForeColor = Color::FromArgb(0, 128, 0);
 
 						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-						ATeamVessels->Add(str, vessel);
+						GlobalVariable::ATeamVessels->Add(str, vessel);
 						if (PanelLayer.Count == 0)
 						{
 							this->battleGridsPanel->Controls->Add(vessel);
@@ -611,7 +612,7 @@ namespace Project3_SeaBattleSim
 					{
 						// 該隊必須存在該船艦
 						String^ str = gcnew String(vesselName.c_str());
-						if (!ATeamVessels->ContainsKey(str))
+						if (!GlobalVariable::ATeamVessels->ContainsKey(str))
 						{
 							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
 						}
@@ -623,13 +624,13 @@ namespace Project3_SeaBattleSim
 						}
 
 						// 產生 Weapon 並回傳 Pointer
-						Weapon^ weapon = ATeamVessels[str]->Attack(coordinate);
+						Weapon^ weapon = GlobalVariable::ATeamVessels[str]->Attack(coordinate);
 
 						// 設定 Weapon 文字顏色
 						weapon->text->ForeColor = Color::FromArgb(0, 128, 0);
 
 						// 加入圖層
-						Weapons->Add(weapon->Name, weapon);
+						GlobalVariable::Weapons->Add(weapon->Name, weapon);
 						if (PanelLayer.Count == 0)
 						{
 							this->battleGridsPanel->Controls->Add(weapon);
@@ -677,22 +678,22 @@ namespace Project3_SeaBattleSim
 					{
 						// 該隊必須存在該船艦
 						String^ strVessel = gcnew String(vesselName.c_str());
-						if (!ATeamVessels->ContainsKey(strVessel))
+						if (!GlobalVariable::ATeamVessels->ContainsKey(strVessel))
 						{
 							throw CMD_DEFENSE_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						//武器必須存在場上
 						String^ strWeapon = gcnew String(weaponName.c_str());
-						if (!Weapons->ContainsKey(strWeapon))
+						if (!GlobalVariable::Weapons->ContainsKey(strWeapon))
 						{
 							throw CMD_DEFENSE_ERROR::WEAPON_ILLEGAL;
 						}
 
-						ATeamVessels[strVessel]->Defense();
+						GlobalVariable::ATeamVessels[strVessel]->Defense();
 
 						//若無法攻擊到砲彈視為未命中
-						if (!isInDefenseRange(Weapons[strWeapon],ATeamVessels[strVessel]))
+						if (!isInDefenseRange(GlobalVariable::Weapons[strWeapon], GlobalVariable::ATeamVessels[strVessel]))
 						{
 							throw CMD_DEFENSE_ERROR::NOT_IN_RANGE;
 						}
@@ -700,7 +701,7 @@ namespace Project3_SeaBattleSim
 						//刪除砲彈											
 						for (int i = 0 ; i < PanelLayer.Count ; i++)
 						{
-							if (PanelLayer[i] == Weapons[strWeapon])
+							if (PanelLayer[i] == GlobalVariable::Weapons[strWeapon])
 							{
 								if (i == 0)
 								{
@@ -725,8 +726,8 @@ namespace Project3_SeaBattleSim
 								PanelLayer.Remove(PanelLayer[i]);
 							}
 						}
-						delete Weapons[strWeapon];
-						Weapons->Remove(strWeapon);
+						delete GlobalVariable::Weapons[strWeapon];
+						GlobalVariable::Weapons->Remove(strWeapon);
 
 						//Log
 						std::ostringstream out;
@@ -763,25 +764,25 @@ namespace Project3_SeaBattleSim
 						// 該隊必須存在該船艦
 						String^ strVessel = gcnew String(vesselName.c_str());
 						
-						if (!ATeamVessels->ContainsKey(strVessel))
+						if (!GlobalVariable::ATeamVessels->ContainsKey(strVessel))
 						{
 							throw CMD_TAG_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						//新名字不能跟場上同隊船艦名字相同
 						String^ strNew = gcnew String(New_Name.c_str());
-						if (ATeamVessels->ContainsKey(strNew))
+						if (GlobalVariable::ATeamVessels->ContainsKey(strNew))
 						{
 							throw CMD_TAG_ERROR::NEW_NAME_ILLEGAL;
 						}
 					
 						//更換名字
-						ATeamVessels[strVessel]->Rename(New_Name);
-						Vessel^ vessel = ATeamVessels[strVessel];
+						GlobalVariable::ATeamVessels[strVessel]->Rename(New_Name);
+						Vessel^ vessel = GlobalVariable::ATeamVessels[strVessel];
 						// 加入新名稱 , 刪除舊名稱
-						ATeamVessels->Add(strNew, vessel);
-						ATeamVessels->Remove(strVessel);
-						ATeamVessels[strNew]->Refresh();
+						GlobalVariable::ATeamVessels->Add(strNew, vessel);
+						GlobalVariable::ATeamVessels->Remove(strVessel);
+						GlobalVariable::ATeamVessels[strNew]->Refresh();
 
 						//Log
 						std::ostringstream out;
@@ -817,14 +818,14 @@ namespace Project3_SeaBattleSim
 					{
 						// 判斷船艦是否存在
 						String^ str = gcnew String(vesselName.c_str());
-						if (!ATeamVessels->ContainsKey(str))
+						if (!GlobalVariable::ATeamVessels->ContainsKey(str))
 						{
 							throw CMD_MOVE_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						// 設定速度, 角度
-						ATeamVessels[str]->setSpeed(speed);
-						ATeamVessels[str]->setAngle(angle);
+						GlobalVariable::ATeamVessels[str]->setSpeed(speed);
+						GlobalVariable::ATeamVessels[str]->setAngle(angle);
 
 						// Log
 						std::ostringstream out;
@@ -886,7 +887,7 @@ namespace Project3_SeaBattleSim
 					{
 						// 判斷船艦不能重複
 						String^ str = gcnew String(vesselName.c_str());
-						if (BTeamVessels->ContainsKey(str))
+						if (GlobalVariable::BTeamVessels->ContainsKey(str))
 						{
 							throw CMD_SET_ERROR::VESSEL_NAME_ERROR;
 						}
@@ -934,7 +935,7 @@ namespace Project3_SeaBattleSim
 						vessel->text->ForeColor = Color::FromArgb(0, 0, 128);
 
 						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
-						BTeamVessels->Add(str, vessel);
+						GlobalVariable::BTeamVessels->Add(str, vessel);
 						if (PanelLayer.Count == 0)
 						{
 							this->battleGridsPanel->Controls->Add(vessel);
@@ -983,7 +984,7 @@ namespace Project3_SeaBattleSim
 					{
 						// 該隊必須存在該船艦
 						String^ str = gcnew String(vesselName.c_str());
-						if (!BTeamVessels->ContainsKey(str))
+						if (!GlobalVariable::BTeamVessels->ContainsKey(str))
 						{
 							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
 						}
@@ -995,13 +996,13 @@ namespace Project3_SeaBattleSim
 						}
 
 						// 產生 Weapon 並回傳 Pointer
-						Weapon^ weapon = BTeamVessels[str]->Attack(coordinate);
+						Weapon^ weapon = GlobalVariable::BTeamVessels[str]->Attack(coordinate);
 
 						// 設定 Weapon 文字顏色
 						weapon->text->ForeColor = Color::FromArgb(0, 0, 128);
 
 						// 加入圖層
-						Weapons->Add(weapon->Name, weapon);
+						GlobalVariable::Weapons->Add(weapon->Name, weapon);
 						if (PanelLayer.Count == 0)
 						{
 							this->battleGridsPanel->Controls->Add(weapon);
@@ -1049,22 +1050,22 @@ namespace Project3_SeaBattleSim
 					{
 						// 該隊必須存在該船艦
 						String^ strVessel = gcnew String(vesselName.c_str());
-						if (!BTeamVessels->ContainsKey(strVessel))
+						if (!GlobalVariable::BTeamVessels->ContainsKey(strVessel))
 						{
 							throw CMD_DEFENSE_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						//武器必須存在場上
 						String^ strWeapon = gcnew String(weaponName.c_str());
-						if (!Weapons->ContainsKey(strWeapon))
+						if (!GlobalVariable::Weapons->ContainsKey(strWeapon))
 						{
 							throw CMD_DEFENSE_ERROR::WEAPON_ILLEGAL;
 						}
 
-						BTeamVessels[strVessel]->Defense();
+						GlobalVariable::BTeamVessels[strVessel]->Defense();
 
 						//若無法攻擊到砲彈視為未命中
-						if (!isInDefenseRange(Weapons[strWeapon], BTeamVessels[strVessel]))
+						if (!isInDefenseRange(GlobalVariable::Weapons[strWeapon], GlobalVariable::BTeamVessels[strVessel]))
 						{
 							throw CMD_DEFENSE_ERROR::NOT_IN_RANGE;
 						}
@@ -1072,7 +1073,7 @@ namespace Project3_SeaBattleSim
 						//刪除砲彈											
 						for (int i = 0; i < PanelLayer.Count; i++)
 						{
-							if (PanelLayer[i] == Weapons[strWeapon])
+							if (PanelLayer[i] == GlobalVariable::Weapons[strWeapon])
 							{
 								if (i == 0)
 								{
@@ -1097,8 +1098,8 @@ namespace Project3_SeaBattleSim
 								PanelLayer.Remove(PanelLayer[i]);
 							}
 						}
-						delete Weapons[strWeapon];
-						Weapons->Remove(strWeapon);
+						delete GlobalVariable::Weapons[strWeapon];
+						GlobalVariable::Weapons->Remove(strWeapon);
 
 						//Log
 						std::ostringstream out;
@@ -1135,25 +1136,25 @@ namespace Project3_SeaBattleSim
 						// 該隊必須存在該船艦
 						String^ strVessel = gcnew String(vesselName.c_str());
 
-						if (!BTeamVessels->ContainsKey(strVessel))
+						if (!GlobalVariable::BTeamVessels->ContainsKey(strVessel))
 						{
 							throw CMD_TAG_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						//新名字不能跟場上同隊船艦名字相同
 						String^ strNew = gcnew String(New_Name.c_str());
-						if (BTeamVessels->ContainsKey(strNew))
+						if (GlobalVariable::BTeamVessels->ContainsKey(strNew))
 						{
 							throw CMD_TAG_ERROR::NEW_NAME_ILLEGAL;
 						}
 
 						//更換名字
-						BTeamVessels[strVessel]->Rename(New_Name);
-						Vessel^ vessel = BTeamVessels[strVessel];
+						GlobalVariable::BTeamVessels[strVessel]->Rename(New_Name);
+						Vessel^ vessel = GlobalVariable::BTeamVessels[strVessel];
 						// 加入新名稱 , 刪除舊名稱
-						BTeamVessels->Add(strNew, vessel);
-						BTeamVessels->Remove(strVessel);
-						BTeamVessels[strNew]->Refresh();
+						GlobalVariable::BTeamVessels->Add(strNew, vessel);
+						GlobalVariable::BTeamVessels->Remove(strVessel);
+						GlobalVariable::BTeamVessels[strNew]->Refresh();
 
 						//Log
 						std::ostringstream out;
@@ -1189,14 +1190,14 @@ namespace Project3_SeaBattleSim
 					{
 						// 判斷船艦是否存在
 						String^ str = gcnew String(vesselName.c_str());
-						if (!BTeamVessels->ContainsKey(str))
+						if (!GlobalVariable::BTeamVessels->ContainsKey(str))
 						{
 							throw CMD_MOVE_ERROR::VESSEL_NOT_EXIST;
 						}
 
 						// 設定速度, 角度
-						BTeamVessels[str]->setSpeed(speed);
-						BTeamVessels[str]->setAngle(angle);
+						GlobalVariable::BTeamVessels[str]->setSpeed(speed);
+						GlobalVariable::BTeamVessels[str]->setAngle(angle);
 
 						// Log
 						std::ostringstream out;
