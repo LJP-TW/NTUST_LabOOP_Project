@@ -30,6 +30,8 @@ namespace Project3_SeaBattleSim {
 		/// 清除任何使用中的資源。
 		/// </summary>
 		~MainForm();
+	private: System::ComponentModel::IContainer^  components;
+	protected:
 
 	private:
 		/// <summary>
@@ -37,7 +39,7 @@ namespace Project3_SeaBattleSim {
 		/// </summary>
 
 		// Components
-		System::ComponentModel::Container ^components;
+
 		array<System::Windows::Forms::Label^> ^battleGridsH;
 		array<System::Windows::Forms::Label^> ^battleGridsV;
 		System::Windows::Forms::Label^ timeShower;
@@ -68,7 +70,8 @@ namespace Project3_SeaBattleSim {
 		// 圖層
 		List<Panel^> PanelLayer;
 		bool isGameContinued;
-		unsigned long long gameTime;
+
+			 unsigned long long gameTime;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>

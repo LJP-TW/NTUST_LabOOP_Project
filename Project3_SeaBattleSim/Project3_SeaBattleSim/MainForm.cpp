@@ -47,26 +47,30 @@ namespace Project3_SeaBattleSim
 
 	void MainForm::InitializeComponent(void)
 	{
-		this->components = (gcnew System::ComponentModel::Container());
+		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 		this->SuspendLayout();
 		// 
 		// MainForm
 		// 
-		this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
+		this->AutoScaleDimensions = System::Drawing::SizeF(8, 15);
 		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-		this->ClientSize = System::Drawing::Size(340, 370);
+		this->ClientSize = System::Drawing::Size(453, 462);
 		this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+		this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
+		this->Margin = System::Windows::Forms::Padding(4);
 		this->MaximizeBox = false;
 		this->MinimizeBox = false;
 		this->Name = L"MainForm";
 		this->Text = L"®ü¾Ô¼ÒÀÀ¾¹";
 		this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
 		this->ResumeLayout(false);
+
 	}
 
 	System::Void MainForm::MainForm_Load(System::Object^ sender, System::EventArgs^ e)
 	{
 		// Initial
+		this->components = (gcnew System::ComponentModel::Container());
 		battleGridsH = gcnew array<System::Windows::Forms::Label^>(BATTLEGRID_NUM + 1);
 		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
 		{
@@ -87,7 +91,7 @@ namespace Project3_SeaBattleSim
 		ATeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
 		BTeamCommandTextBox = gcnew System::Windows::Forms::TextBox();
 		LogTextBox = gcnew System::Windows::Forms::TextBox();
-		gameTimer = gcnew System::Windows::Forms::Timer(this->components); 
+		gameTimer = gcnew System::Windows::Forms::Timer(this->components);
 		ATeamVessels = gcnew Dictionary<String^, Vessel^>();
 		BTeamVessels = gcnew Dictionary<String^, Vessel^>();
 		Weapons = gcnew Dictionary<String^, Weapon^>();
@@ -168,7 +172,7 @@ namespace Project3_SeaBattleSim
 		// Create Log Group Box
 		logGroupBox->Controls->Add(LogTextBox);
 		logGroupBox->Location = System::Drawing::Point(commandGroupBox->Location.X + commandGroupBox->Size.Width + 10, commandGroupBox->Location.Y);
-		logGroupBox->Size = System::Drawing::Size(commandGroupBox->Size);
+		logGroupBox->Size = System::Drawing::Size(450, commandGroupBox->Size.Height);
 		logGroupBox->Name = L"logGroupBox";
 		logGroupBox->Text = L"Battle Log";
 
