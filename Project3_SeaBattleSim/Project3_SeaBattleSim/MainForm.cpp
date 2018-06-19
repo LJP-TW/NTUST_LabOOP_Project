@@ -911,19 +911,19 @@ namespace Project3_SeaBattleSim
 						Vessel^ vessel;
 						if (type == "CV")
 						{
-							vessel = gcnew CV(coordinate, vesselName, ATeam);
+							vessel = gcnew CV(coordinate, vesselName, BTeam);
 						}
 						else if (type == "BB")
 						{
-							vessel = gcnew BB(coordinate, vesselName, ATeam);
+							vessel = gcnew BB(coordinate, vesselName, BTeam);
 						}
 						else if (type == "CG")
 						{
-							vessel = gcnew CG(coordinate, vesselName, ATeam);
+							vessel = gcnew CG(coordinate, vesselName, BTeam);
 						}
 						else if (type == "DD")
 						{
-							vessel = gcnew DD(coordinate, vesselName, ATeam);
+							vessel = gcnew DD(coordinate, vesselName, BTeam);
 						}
 
 						// 設定船艦文字顏色
