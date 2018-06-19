@@ -486,7 +486,7 @@ namespace Project3_SeaBattleSim
 		// 處理 ATeam 指令
 		std::stringstream ss(msclr::interop::marshal_as<std::string>(ATeamCommandTextBox->Text));
 		std::string cmdLine, command;
-		char skip;
+		char skip1, skip2;
 
 		while (std::getline(ss, cmdLine))
 		{
@@ -506,9 +506,9 @@ namespace Project3_SeaBattleSim
 					// Get Input
 					tempSS >> vesselName;
 					tempSS >> type;
-					tempSS >> skip;
+					tempSS >> skip1;
 					tempSS >> coordinate.x;
-					tempSS >> skip;
+					tempSS >> skip2;
 					tempSS >> coordinate.y;
 
 					try
@@ -539,6 +539,12 @@ namespace Project3_SeaBattleSim
 						{
 							throw CMD_SET_ERROR::COORDINATE_ERROR;
 						}
+
+						//skip1 = '(' ; skip2 = ','
+						if (skip1 != '(' || skip2 != ',')
+						{
+							throw CMD_FORMAT_ERROR::FORMAT_ERROR;
+						}			
 
 						// 新增船艦圖層
 						Vessel^ vessel;
@@ -593,7 +599,6 @@ namespace Project3_SeaBattleSim
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
 
-						throw;
 					}
 				}
 				else if (command == "FIRE")
@@ -603,9 +608,9 @@ namespace Project3_SeaBattleSim
 
 					// Get Input
 					tempSS >> vesselName;
-					tempSS >> skip;
+					tempSS >> skip1;
 					tempSS >> coordinate.x;
-					tempSS >> skip;
+					tempSS >> skip2;
 					tempSS >> coordinate.y;
 
 					try
@@ -621,6 +626,12 @@ namespace Project3_SeaBattleSim
 						if (coordinate.x < 0 || coordinate.x > BATTLEGRID_NUM || coordinate.y < 0 || coordinate.y > BATTLEGRID_NUM)
 						{
 							throw CMD_FIRE_ERROR::COORDINATE_ERROR;
+						}
+
+						//skip1 = '(' ; skip2 = ','
+						if (skip1 != '(' || skip2 != ',')
+						{
+							throw CMD_FORMAT_ERROR::FORMAT_ERROR;
 						}
 
 						// 產生 Weapon 並回傳 Pointer
@@ -662,7 +673,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "DEFENSE")
@@ -746,7 +756,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "TAG")
@@ -801,7 +810,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "MOVE")
@@ -844,83 +852,92 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
-				else if (command == "MISSILE")
+				//else if (command == "MISSILE")
+				//{
+				//	std::string vesselName;
+				//	std::string targetName;
+
+				//	// Get Input
+				//	tempSS >> vesselName;
+				//	tempSS >> targetName;
+
+				//	try
+				//	{
+				//		// 該隊必須存在vesselName
+				//		String^ strVessel = gcnew String(vesselName.c_str());
+				//		if (!GlobalVariable::ATeamVessels->ContainsKey(strVessel))
+				//		{
+				//			throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+				//		}
+
+				//		// targetName必須存在於敵隊中
+				//		String^ strTarget = gcnew String(targetName.c_str());
+				//		if (!GlobalVariable::BTeamVessels->ContainsKey(strTarget))
+				//		{
+				//			throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+				//		}
+
+
+				//		
+				//		// 產生 missile 並回傳 Pointer
+				//		/*Not Complete*/
+				//		Missile^ missile = GlobalVariable::ATeamVessels[strVessel]->missileAttack(GlobalVariable::BTeamVessels[strTarget]);
+
+				//		// 設定 Weapon 文字顏色
+				//		missile->text->ForeColor = Color::FromArgb(0, 128, 0);
+
+				//		// 加入圖層
+				//		/*Not Complete*/
+				//		GlobalVariable::Weapons->Add(missile->Name, missile);
+				//		if (PanelLayer.Count == 0)
+				//		{
+				//			this->battleGridsPanel->Controls->Add(missile);
+				//			PanelLayer.Add(missile);
+				//		}
+				//		else
+				//		{
+				//			PanelLayer[PanelLayer.Count - 1]->Controls->Add(missile);
+				//			PanelLayer.Add(missile);
+				//		}
+
+				//		// Log
+				//		std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
+				//		std::ostringstream out;
+				//		out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+				//			<< " TeamA " << vesselName << " Fire to " << targetName
+				//			<< " ->" << missileName;
+
+				//		LogTextBox->Text += gcnew System::String(out.str().c_str());
+				//		LogTextBox->Text += Environment::NewLine;
+				//	}
+				//	catch (...)
+				//	{
+				//		// Log
+				//		std::ostringstream out;
+				//		out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+				//			<< " TeamA " << vesselName << " Fire to " << targetName
+				//			<< " -> Fail";
+
+				//		LogTextBox->Text += gcnew System::String(out.str().c_str());
+				//		LogTextBox->Text += Environment::NewLine;
+				//	}
+				//}
+				else
 				{
-					std::string vesselName;
-					std::string targetName;
-
-					// Get Input
-					tempSS >> vesselName;
-					tempSS >> targetName;
-
-					try
-					{
-						// 該隊必須存在vesselName
-						String^ strVessel = gcnew String(vesselName.c_str());
-						if (!GlobalVariable::ATeamVessels->ContainsKey(strVessel))
-						{
-							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
-						}
-
-						// targetName必須存在於兩隊中
-						String^ strTarget = gcnew String(targetName.c_str());
-						if (!GlobalVariable::ATeamVessels->ContainsKey(strTarget) && !!GlobalVariable::BTeamVessels->ContainsKey(strTarget))
-						{
-							throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
-						}
-
-						// 產生 missile 並回傳 Pointer
-						/*Not Complete*/
-						Missile^ missile = GlobalVariable::ATeamVessels[strVessel]->Attack(coordinate);
-
-						// 設定 Weapon 文字顏色
-						missile->text->ForeColor = Color::FromArgb(0, 128, 0);
-
-						// 加入圖層
-						/*Not Complete*/
-						GlobalVariable::Weapons->Add(missile->Name, missile);
-						if (PanelLayer.Count == 0)
-						{
-							this->battleGridsPanel->Controls->Add(missile);
-							PanelLayer.Add(missile);
-						}
-						else
-						{
-							PanelLayer[PanelLayer.Count - 1]->Controls->Add(missile);
-							PanelLayer.Add(missile);
-						}
-
-						// Log
-						std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
-						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
-							<< " ->" << missileName;
-
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
-					}
-					catch (...)
-					{
-						// Log
-						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
-							<< " -> Fail";
-
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
-						throw;
-					}
+					throw CMD_FORMAT_ERROR::FORMAT_ERROR;
 				}
 			}
 			catch (...)
 			{
 				// Command Format Error
-				// Do something (錯誤紀錄)				
+				std::ostringstream out;
+				out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] ";
+
+				LogTextBox->Text += gcnew System::String(out.str().c_str());
+				LogTextBox->Text += "Command Format Error";
+				LogTextBox->Text += Environment::NewLine;
 			}
 		}
 
@@ -947,9 +964,9 @@ namespace Project3_SeaBattleSim
 					// Get Input
 					tempSS >> vesselName;
 					tempSS >> type;
-					tempSS >> skip;
+					tempSS >> skip1;
 					tempSS >> coordinate.x;
-					tempSS >> skip;
+					tempSS >> skip2;
 					tempSS >> coordinate.y;
 
 					try
@@ -979,6 +996,12 @@ namespace Project3_SeaBattleSim
 						if (coordinate.x < 0 || coordinate.x > BATTLEGRID_NUM || coordinate.y < 0 || coordinate.y > BATTLEGRID_NUM)
 						{
 							throw CMD_SET_ERROR::COORDINATE_ERROR;
+						}
+
+						//skip1 = '(' ; skip2 = ','
+						if (skip1 != '(' || skip2 != ',')
+						{
+							throw CMD_FORMAT_ERROR::FORMAT_ERROR;
 						}
 
 						// 新增船艦圖層
@@ -1033,8 +1056,6 @@ namespace Project3_SeaBattleSim
 							<< ')' << " ->Fail";
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-
-						throw;
 					}
 				}
 				else if (command == "FIRE")
@@ -1044,9 +1065,9 @@ namespace Project3_SeaBattleSim
 
 					// Get Input
 					tempSS >> vesselName;
-					tempSS >> skip;
+					tempSS >> skip1;
 					tempSS >> coordinate.x;
-					tempSS >> skip;
+					tempSS >> skip2;
 					tempSS >> coordinate.y;
 
 					try
@@ -1062,6 +1083,12 @@ namespace Project3_SeaBattleSim
 						if (coordinate.x < 0 || coordinate.x > BATTLEGRID_NUM || coordinate.y < 0 || coordinate.y > BATTLEGRID_NUM)
 						{
 							throw CMD_FIRE_ERROR::COORDINATE_ERROR;
+						}
+
+						//skip1 = '(' ; skip2 = ','
+						if (skip1 != '(' || skip2 != ',')
+						{
+							throw CMD_FORMAT_ERROR::FORMAT_ERROR;
 						}
 
 						// 產生 Weapon 並回傳 Pointer
@@ -1103,7 +1130,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "DEFENSE")
@@ -1187,7 +1213,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "TAG")
@@ -1242,7 +1267,6 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
 				}
 				else if (command == "MOVE")
@@ -1285,14 +1309,92 @@ namespace Project3_SeaBattleSim
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
 						LogTextBox->Text += Environment::NewLine;
-						throw;
 					}
+				}
+				//else if (command == "MISSILE")
+				//{
+				//	std::string vesselName;
+				//	std::string targetName;
+
+				//	// Get Input
+				//	tempSS >> vesselName;
+				//	tempSS >> targetName;
+
+				//	try
+				//	{
+				//		// 該隊必須存在vesselName
+				//		String^ strVessel = gcnew String(vesselName.c_str());
+				//		if (!GlobalVariable::ATeamVessels->ContainsKey(strVessel))
+				//		{
+				//			throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+				//		}
+
+				//		// targetName必須存在於敵隊中
+				//		String^ strTarget = gcnew String(targetName.c_str());
+				//		if (!GlobalVariable::BTeamVessels->ContainsKey(strTarget))
+				//		{
+				//			throw CMD_FIRE_ERROR::VESSEL_NOT_EXIST;
+				//		}
+
+
+
+				//		// 產生 missile 並回傳 Pointer
+				//		/*Not Complete*/
+				//		Missile^ missile = GlobalVariable::ATeamVessels[strVessel]->missileAttack(GlobalVariable::BTeamVessels[strTarget]);
+
+				//		// 設定 Weapon 文字顏色
+				//		missile->text->ForeColor = Color::FromArgb(0, 128, 0);
+
+				//		// 加入圖層
+				//		/*Not Complete*/
+				//		GlobalVariable::Weapons->Add(missile->Name, missile);
+				//		if (PanelLayer.Count == 0)
+				//		{
+				//			this->battleGridsPanel->Controls->Add(missile);
+				//			PanelLayer.Add(missile);
+				//		}
+				//		else
+				//		{
+				//			PanelLayer[PanelLayer.Count - 1]->Controls->Add(missile);
+				//			PanelLayer.Add(missile);
+				//		}
+
+				//		// Log
+				//		std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
+				//		std::ostringstream out;
+				//		out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+				//			<< " TeamA " << vesselName << " Fire to " << targetName
+				//			<< " ->" << missileName;
+
+				//		LogTextBox->Text += gcnew System::String(out.str().c_str());
+				//		LogTextBox->Text += Environment::NewLine;
+				//	}
+				//	catch (...)
+				//	{
+				//		// Log
+				//		std::ostringstream out;
+				//		out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+				//			<< " TeamA " << vesselName << " Fire to " << targetName
+				//			<< " -> Fail";
+
+				//		LogTextBox->Text += gcnew System::String(out.str().c_str());
+				//		LogTextBox->Text += Environment::NewLine;
+				//	}
+				//}
+				else
+				{
+					throw CMD_FORMAT_ERROR::FORMAT_ERROR;
 				}
 			}
 			catch (...)
 			{
 				// Command Format Error
-				// Do something (錯誤紀錄)				
+				std::ostringstream out;
+				out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] ";
+
+				LogTextBox->Text += gcnew System::String(out.str().c_str());
+				LogTextBox->Text += "Command Format Error";
+				LogTextBox->Text += Environment::NewLine;
 			}
 		}
 

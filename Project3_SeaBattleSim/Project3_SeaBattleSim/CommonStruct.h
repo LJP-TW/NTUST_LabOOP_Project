@@ -31,6 +31,12 @@ enum class VESSEL_ERROR
 	DEFENSE_ERROR,
 };
 
+/*新增command格式錯誤*/
+enum class CMD_FORMAT_ERROR
+{
+	FORMAT_ERROR,
+};
+
 enum class CMD_SET_ERROR
 {
 	TYPE_NOT_EXIST,
