@@ -367,6 +367,18 @@ namespace Project3_SeaBattleSim
 					}
 				}
 
+				/*Add TextLog*/
+				if (!(kvpw->Value->hasCloseLogged) && kvpw->Value->isClose())
+				{
+					kvpw->Value->hasCloseLogged = true;
+					std::ostringstream out;
+					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+						<< " WARRNING " << msclr::interop::marshal_as<std::string>(kvpw->Key) << " is Approaching Target !!!";
+
+					LogTextBox->Text += gcnew System::String(out.str().c_str());
+					LogTextBox->Text += Environment::NewLine;
+				}
+
 				// Log
 				if (HitATeamVessels->Count + HitBTeamVessels->Count == 0)
 				{
@@ -653,6 +665,7 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
 							<< ')' << " ->Success";
+
 						String^ msg = gcnew System::String(out.str().c_str());
 						LogTextBox->AppendText(msg);
 						LogTextBox->AppendText(Environment::NewLine);
