@@ -12,7 +12,10 @@ extern std::string VESSEL_TYPE[VESSEL_TYPE_NUM] =
 	"CV",
 	"BB",
 	"CG",
-	"DD"
+	"DD",
+	"FL",
+	"LJP"
+
 };
 
 namespace Project3_SeaBattleSim

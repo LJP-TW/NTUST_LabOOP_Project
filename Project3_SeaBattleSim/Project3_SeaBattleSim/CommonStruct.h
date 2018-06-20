@@ -69,5 +69,5 @@ enum class CMD_TAG_ERROR
 };
 
 // 所有艦種 定義在 Vessel.cpp
-#define VESSEL_TYPE_NUM 4
+#define VESSEL_TYPE_NUM 6
 extern std::string VESSEL_TYPE[VESSEL_TYPE_NUM];
