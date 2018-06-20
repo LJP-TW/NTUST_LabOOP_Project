@@ -11,7 +11,7 @@ namespace Project3_SeaBattleSim
 
 	LJP::LJP(Coordinate location, std::string name, Team ^ team) : Vessel(location, name, team, 10, 5, 30, 15, 20, 15)
 	{
-		this->missileCD = 25;
+		this->missileCD = 60;
 		this->nowMissileCD = 0;
 		this->isMissileCD = true;
 	}
@@ -62,7 +62,7 @@ namespace Project3_SeaBattleSim
 
 		++this->team->weaponID;
 
-		return gcnew Missile(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 3, 3, 0.1, vesselTarget, Coordinate(vesselTarget->doubleLocation->x, vesselTarget->doubleLocation->y));
+		return gcnew Missile(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 3, 12, 0.1, vesselTarget, Coordinate(vesselTarget->doubleLocation->x, vesselTarget->doubleLocation->y));
 	}
 	void LJP::Update()
 	{
