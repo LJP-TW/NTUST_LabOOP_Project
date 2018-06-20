@@ -341,8 +341,11 @@ namespace Project3_SeaBattleSim
 					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 						<< msclr::interop::marshal_as<std::string>(kvpw->Key) << " arrived (" << (kvpw->Value->target->x / BATTLEGRID_SIZE) << ',' << (kvpw->Value->target->y / BATTLEGRID_SIZE) << ')'
 						<< " -> miss";
-					LogTextBox->Text += gcnew System::String(out.str().c_str());
-					LogTextBox->Text += Environment::NewLine;
+
+					String^ msg = gcnew System::String(out.str().c_str());
+					LogTextBox->AppendText(msg);
+					LogTextBox->AppendText(Environment::NewLine);
+					delete msg;
 				}
 				else
 				{
@@ -376,8 +379,12 @@ namespace Project3_SeaBattleSim
 						}
 					}
 					out << '}';
-					LogTextBox->Text += gcnew System::String(out.str().c_str());
-					LogTextBox->Text += Environment::NewLine;
+
+					String^ msg = gcnew System::String(out.str().c_str());
+					LogTextBox->AppendText(msg);
+					LogTextBox->AppendText(Environment::NewLine);
+					delete msg;
+
 					HitATeamVessels->Clear();
 					HitBTeamVessels->Clear();
 				}
@@ -388,8 +395,11 @@ namespace Project3_SeaBattleSim
 					std::ostringstream out;
 					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 						<< " TeamA " << msclr::interop::marshal_as<std::string>(name) << " destroyed";
-					LogTextBox->Text += gcnew System::String(out.str().c_str());
-					LogTextBox->Text += Environment::NewLine;
+
+					String^ msg = gcnew System::String(out.str().c_str());
+					LogTextBox->AppendText(msg);
+					LogTextBox->AppendText(Environment::NewLine);
+					delete msg;
 
 					delete GlobalVariable::ATeamVessels[name];
 					GlobalVariable::ATeamVessels->Remove(name);
@@ -401,8 +411,11 @@ namespace Project3_SeaBattleSim
 					std::ostringstream out;
 					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 						<< " TeamB " << msclr::interop::marshal_as<std::string>(name) << " destroyed";
-					LogTextBox->Text += gcnew System::String(out.str().c_str());
-					LogTextBox->Text += Environment::NewLine;
+
+					String^ msg = gcnew System::String(out.str().c_str());
+					LogTextBox->AppendText(msg);
+					LogTextBox->AppendText(Environment::NewLine);
+					delete msg;
 
 					delete GlobalVariable::BTeamVessels[name];
 					GlobalVariable::BTeamVessels->Remove(name);
@@ -607,8 +620,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
 							<< ')' << " ->Success";
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -617,9 +632,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
 							<< ')' << " ->Fail";
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
-
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "FIRE")
@@ -681,8 +697,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')' 
 							<< " ->" << weaponName;
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -692,8 +710,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')'
 							<< " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "DEFENSE")
@@ -765,8 +785,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Hit";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -775,8 +797,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "TAG")
@@ -819,8 +843,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA RENAME " << vesselName << " to " << New_Name << " -> Success";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -829,8 +855,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA RENAME " << vesselName << " to " << New_Name << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "MOVE")
@@ -861,8 +889,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA " << vesselName << " MOVE to " << angle << " as " << speed << " -> Success";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -871,8 +901,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamA " << vesselName << " MOVE to " << angle << " as " << speed << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "MISSILE")
@@ -926,8 +958,11 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " ->" << missileName;
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
+						
 					}
 					catch (...)
 					{
@@ -937,8 +972,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else
@@ -952,9 +989,11 @@ namespace Project3_SeaBattleSim
 				std::ostringstream out;
 				out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] ";
 
-				LogTextBox->Text += gcnew System::String(out.str().c_str());
-				LogTextBox->Text += "Command Format Error";
-				LogTextBox->Text += Environment::NewLine;
+				String^ msg = gcnew System::String(out.str().c_str());
+				LogTextBox->AppendText(msg);
+				LogTextBox->AppendText("Command Format Error");
+				LogTextBox->AppendText(Environment::NewLine);
+				delete msg;
 			}
 		}
 
@@ -1069,8 +1108,11 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
 							<< ')' << " ->Success";
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1079,8 +1121,11 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB SET " << vesselName << " with " << type << " at " << '(' << coordinate.x << ',' << coordinate.y
 							<< ')' << " ->Fail";
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "FIRE")
@@ -1142,8 +1187,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamB " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')'
 							<< " ->" << weaponName;
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1153,8 +1200,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamB " << vesselName << " Fire to " << '(' << coordinate.x << ',' << coordinate.y << ')'
 							<< " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "DEFENSE")
@@ -1226,8 +1275,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Hit";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1236,8 +1287,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "TAG")
@@ -1280,8 +1333,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB RENAME " << vesselName << " to " << New_Name << " -> Success";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1290,8 +1345,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB RENAME " << vesselName << " to " << New_Name << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "MOVE")
@@ -1322,8 +1379,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB " << vesselName << " MOVE to " << angle << " as " << speed << " -> Success";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1332,8 +1391,10 @@ namespace Project3_SeaBattleSim
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
 							<< " TeamB " << vesselName << " MOVE to " << angle << " as " << speed << " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else if (command == "MISSILE")
@@ -1387,8 +1448,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " ->" << missileName;
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 					catch (...)
 					{
@@ -1398,8 +1461,10 @@ namespace Project3_SeaBattleSim
 							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " -> Fail";
 
-						LogTextBox->Text += gcnew System::String(out.str().c_str());
-						LogTextBox->Text += Environment::NewLine;
+						String^ msg = gcnew System::String(out.str().c_str());
+						LogTextBox->AppendText(msg);
+						LogTextBox->AppendText(Environment::NewLine);
+						delete msg;
 					}
 				}
 				else
@@ -1413,9 +1478,11 @@ namespace Project3_SeaBattleSim
 				std::ostringstream out;
 				out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] ";
 
-				LogTextBox->Text += gcnew System::String(out.str().c_str());
-				LogTextBox->Text += "Command Format Error";
-				LogTextBox->Text += Environment::NewLine;
+				String^ msg = gcnew System::String(out.str().c_str());
+				LogTextBox->AppendText(msg);
+				LogTextBox->AppendText("Command Format Error");
+				LogTextBox->AppendText(Environment::NewLine);
+				delete msg;
 			}
 		}
 
