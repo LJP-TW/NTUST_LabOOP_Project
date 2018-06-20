@@ -74,40 +74,7 @@ namespace Project3_SeaBattleSim
 
 	void LJP::Update()
 	{
-		// 移動
-		double oldDX = this->doubleLocation->x;
-		double oldDY = this->doubleLocation->y;
-		this->doubleLocation->x = this->doubleLocation->x + (this->nowSpeed / 60) * cos(nowAngle) * BATTLEGRID_SIZE;
-		this->doubleLocation->y = this->doubleLocation->y - (this->nowSpeed / 60) * sin(nowAngle) * BATTLEGRID_SIZE;
-
-		// 如果爆出範圍, 則不動
-		if (this->doubleLocation->x < 0 || this->doubleLocation->x > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1 ||
-			this->doubleLocation->y < 0 || this->doubleLocation->y > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1)
-		{
-			this->doubleLocation->x = oldDX;
-			this->doubleLocation->y = oldDY;
-		}
-
-		int oldX = this->location->X;
-		int oldY = this->location->Y;
-		this->location->X = this->doubleLocation->x;
-		this->location->Y = this->doubleLocation->y;
-
-		// 如果有移動, 則需重新繪畫
-		if (oldX != this->location->X || oldY != this->location->Y)
-		{
-			this->Refresh();
-		}
-
-		// 減CD
-		if (!this->isAttackCD)
-		{
-			this->nowAttackCD -= 1;
-			if (this->nowAttackCD <= 0)
-			{
-				isAttackCD = true;
-			}
-		}
+		Vessel::Update();
 
 		if (!this->isMissileCD)
 		{
@@ -115,15 +82,6 @@ namespace Project3_SeaBattleSim
 			if (this->nowMissileCD <= 0)
 			{
 				isMissileCD = true;
-			}
-		}
-
-		if (!this->isDefenseCD)
-		{
-			this->nowDefenseCD -= 1;
-			if (this->nowDefenseCD <= 0)
-			{
-				isDefenseCD = true;
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 #include "Vessel.h"
 #include "Weapon.h"
 
+#define PRECISION 0.000001
 #define M_PI 3.14159265358979323846
 #define DEGREE_TO_RADIAN(degree) (degree * M_PI / 180.0)
 #define sin(x) sin(DEGREE_TO_RADIAN(x))
@@ -63,17 +64,32 @@ namespace Project3_SeaBattleSim
 	void Vessel::Update()
 	{
 		// 移動
-		double oldDX = this->doubleLocation->x;
-		double oldDY = this->doubleLocation->y;
-		this->doubleLocation->x = this->doubleLocation->x + (this->nowSpeed / 60) * cos(nowAngle) * BATTLEGRID_SIZE;
-		this->doubleLocation->y = this->doubleLocation->y - (this->nowSpeed / 60) * sin(nowAngle) * BATTLEGRID_SIZE;
-
-		// 如果爆出範圍, 則不動
-		if (this->doubleLocation->x < 0 || this->doubleLocation->x > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1 ||
-			this->doubleLocation->y < 0 || this->doubleLocation->y > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1)
+		if (cos(nowAngle) > PRECISION || cos(nowAngle) < -PRECISION)
 		{
-			this->doubleLocation->x = oldDX;
-			this->doubleLocation->y = oldDY;
+			this->doubleLocation->x = this->doubleLocation->x + (this->nowSpeed / 60) * cos(nowAngle) * BATTLEGRID_SIZE;
+		}
+		if (sin(nowAngle) > PRECISION || sin(nowAngle) < -PRECISION)
+		{
+			this->doubleLocation->y = this->doubleLocation->y - (this->nowSpeed / 60) * sin(nowAngle) * BATTLEGRID_SIZE;
+		}
+
+		// 如果爆出範圍, 則停在邊界範圍
+
+		if (this->doubleLocation->x < 0)
+		{
+			this->doubleLocation->x = 0;
+		}
+		else if (this->doubleLocation->x > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1)
+		{
+			this->doubleLocation->x = BATTLEGRID_NUM * BATTLEGRID_SIZE + 1;
+		}
+		if (this->doubleLocation->y < 0)
+		{
+			this->doubleLocation->y = 0;
+		}
+		else if (this->doubleLocation->y > BATTLEGRID_NUM * BATTLEGRID_SIZE + 1)
+		{
+			this->doubleLocation->y = BATTLEGRID_NUM * BATTLEGRID_SIZE + 1;
 		}
 
 		int oldX = this->location->X;
