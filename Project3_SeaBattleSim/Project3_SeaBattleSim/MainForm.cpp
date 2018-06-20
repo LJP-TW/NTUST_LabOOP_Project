@@ -338,7 +338,7 @@ namespace Project3_SeaBattleSim
 				if (HitATeamVessels->Count + HitBTeamVessels->Count == 0)
 				{
 					std::ostringstream out;
-					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 						<< msclr::interop::marshal_as<std::string>(kvpw->Key) << " arrived (" << (kvpw->Value->target->x / BATTLEGRID_SIZE) << ',' << (kvpw->Value->target->y / BATTLEGRID_SIZE) << ')'
 						<< " -> miss";
 					LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -348,31 +348,31 @@ namespace Project3_SeaBattleSim
 				{
 					bool firstVessel = true;
 					std::ostringstream out;
-					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 						<< msclr::interop::marshal_as<std::string>(kvpw->Key) << " arrived (" << (kvpw->Value->target->x / BATTLEGRID_SIZE) << ',' << (kvpw->Value->target->y / BATTLEGRID_SIZE) << ')'
-						<< " -> hit {";
+						<< " -> hit { ";
 					for (int i = 0; i < HitATeamVessels->Count; ++i)
 					{
 						if (firstVessel)
 						{
-							out << "TeamA" << msclr::interop::marshal_as<std::string>(HitATeamVessels[i]);
+							out << "TeamA " << msclr::interop::marshal_as<std::string>(HitATeamVessels[i]);
 							firstVessel = false;
 						}
 						else
 						{
-							out << ", TeamA" << msclr::interop::marshal_as<std::string>(HitATeamVessels[i]);
+							out << ", TeamA " << msclr::interop::marshal_as<std::string>(HitATeamVessels[i]);
 						}
 					}
 					for (int i = 0; i < HitBTeamVessels->Count; ++i)
 					{
 						if (firstVessel)
 						{
-							out << "TeamB" << msclr::interop::marshal_as<std::string>(HitBTeamVessels[i]);
+							out << "TeamB " << msclr::interop::marshal_as<std::string>(HitBTeamVessels[i]);
 							firstVessel = false;
 						}
 						else
 						{
-							out << ", TeamB" << msclr::interop::marshal_as<std::string>(HitBTeamVessels[i]);
+							out << ", TeamB " << msclr::interop::marshal_as<std::string>(HitBTeamVessels[i]);
 						}
 					}
 					out << '}';
@@ -762,7 +762,7 @@ namespace Project3_SeaBattleSim
 
 						//Log
 						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Hit";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -772,7 +772,7 @@ namespace Project3_SeaBattleSim
 					{
 						//Log
 						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Fail";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -923,7 +923,7 @@ namespace Project3_SeaBattleSim
 						std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
+							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " ->" << missileName;
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -934,7 +934,7 @@ namespace Project3_SeaBattleSim
 						// Log
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
+							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " -> Fail";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -1223,7 +1223,7 @@ namespace Project3_SeaBattleSim
 
 						//Log
 						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Hit";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -1233,7 +1233,7 @@ namespace Project3_SeaBattleSim
 					{
 						//Log
 						std::ostringstream out;
-						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << "] "
 							<< vesselName << " DEFENSE " << weaponName << " -> Fail";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -1384,7 +1384,7 @@ namespace Project3_SeaBattleSim
 						std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
+							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " ->" << missileName;
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
@@ -1395,7 +1395,7 @@ namespace Project3_SeaBattleSim
 						// Log
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Fire to " << targetName
+							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
 							<< " -> Fail";
 
 						LogTextBox->Text += gcnew System::String(out.str().c_str());
