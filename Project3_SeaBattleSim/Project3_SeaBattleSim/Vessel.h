@@ -10,6 +10,7 @@ struct Corner;
 namespace Project3_SeaBattleSim {
 
 	ref class Weapon;
+	ref class Missile;
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -41,6 +42,10 @@ namespace Project3_SeaBattleSim {
 
 		// 基本砲彈攻擊 : 產生 Weapon 並回傳此 Weapon 的 Pointer
 		virtual Weapon^ Attack(Coordinate target);
+
+		// 進階導彈攻擊 : 產生 Weapon 並回傳此 Weapon 的 Pointer
+		// throw (VESSEL_ERROR::ATTACK_ERROR)
+		virtual Missile^ missileAttack(Vessel^ vesselTarget);
 
 		// 防禦
 		virtual void Defense();
@@ -97,3 +102,5 @@ namespace Project3_SeaBattleSim {
 #include "BB.h"
 #include "CG.h"
 #include "DD.h"
+#include "FL.h"
+#include "LJP.h"

@@ -129,9 +129,12 @@
     <ClCompile Include="CG.cpp" />
     <ClCompile Include="CV.cpp" />
     <ClCompile Include="DD.cpp" />
+    <ClCompile Include="FL.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="LJP.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="MovableObject.cpp" />
     <ClCompile Include="Team.cpp" />
     <ClCompile Include="Vessel.cpp" />
@@ -151,11 +154,14 @@
     <ClInclude Include="CV.h" />
     <ClInclude Include="DD.h" />
     <ClInclude Include="DefineMacros.h" />
+    <ClInclude Include="FL.h" />
     <ClInclude Include="GlobalVariable.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="LJP.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="MovableObject.h" />
     <ClInclude Include="Team.h" />
     <ClInclude Include="Vessel.h" />

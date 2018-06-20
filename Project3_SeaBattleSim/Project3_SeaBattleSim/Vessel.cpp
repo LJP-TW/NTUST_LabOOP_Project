@@ -113,6 +113,12 @@ namespace Project3_SeaBattleSim
 		throw VESSEL_ERROR::ATTACK_ERROR;
 	}
 
+	Missile ^ Vessel::missileAttack(Vessel ^ vesselTarget)
+	{
+		// Vessel 不會被用來創造物件
+		throw VESSEL_ERROR::ATTACK_ERROR;
+	}
+
 	void Vessel::Defense()
 	{
 		// 若還在CD

@@ -56,3 +56,5 @@ namespace Project3_SeaBattleSim {
 		bool isError;
 	};
 }
+
+#include "Missile.h"

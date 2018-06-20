@@ -15,8 +15,8 @@ namespace Project3_SeaBattleSim
 	void Missile::Update()
 	{
 		// 更新目標船艦位置以及角度
-		this->target->x = targetVessel->doubleLocation->x* BATTLEGRID_SIZE;
-		this->target->y = targetVessel->doubleLocation->y* BATTLEGRID_SIZE;
+		this->target->x = targetVessel->doubleLocation->x;
+		this->target->y = targetVessel->doubleLocation->y;
 		double radians = Math::Atan2(this->doubleLocation->y - this->target->y, this->target->x - this->doubleLocation->x);
 		this->angle = radians * (180 / Math::PI);
 

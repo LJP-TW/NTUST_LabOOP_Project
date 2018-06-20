@@ -21,7 +21,7 @@ namespace Project3_SeaBattleSim {
 
 		// 進階導彈攻擊 : 產生 Weapon 並回傳此 Weapon 的 Pointer
 		// throw (VESSEL_ERROR::ATTACK_ERROR)
-		virtual Missile^ missileAttack(Vessel ^ vesselTarget);
+		virtual Missile^ missileAttack(Vessel ^ vesselTarget) override;
 
 		// 每一遊戲秒更新 : 做移動, -CD 之類的事情
 		virtual void Update() override;
