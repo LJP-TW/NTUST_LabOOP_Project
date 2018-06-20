@@ -46,15 +46,6 @@ namespace Project3_SeaBattleSim
 	}
 	Missile ^ LJP::missileAttack(Vessel ^ vesselTarget)
 	{
-		// 判斷要攻擊的座標是否在攻擊範圍
-		if (vesselTarget->doubleLocation->x < 0 || vesselTarget->doubleLocation->x > BATTLEGRID_NUM ||
-			vesselTarget->doubleLocation->y < 0 || vesselTarget->doubleLocation->y > BATTLEGRID_NUM ||
-			(vesselTarget->doubleLocation->x - this->location->X / BATTLEGRID_SIZE) * (vesselTarget->doubleLocation->x - this->location->X / BATTLEGRID_SIZE) + 
-			(vesselTarget->doubleLocation->y - this->location->Y / BATTLEGRID_SIZE) * (vesselTarget->doubleLocation->y - this->location->Y / BATTLEGRID_SIZE) > this->maxAttackDistance * this->maxAttackDistance)
-		{
-			throw VESSEL_ERROR::ATTACK_ERROR;
-		}
-
 		// 若還在CD
 		if (!isMissileCD)
 		{
