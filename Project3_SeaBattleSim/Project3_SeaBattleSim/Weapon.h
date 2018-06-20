@@ -33,6 +33,9 @@ namespace Project3_SeaBattleSim {
 		// 判斷武器是否抵達
 		virtual bool isArrival();
 
+		// 判斷武器是否已接近目標
+		virtual bool isClose();
+
 		/*              */
 		/* Data Members */
 		/*              */
@@ -52,8 +55,8 @@ namespace Project3_SeaBattleSim {
 		// Attacking Target
 		Coordinate* target;
 
-		// Error Flag
-		bool isError;
+		// 是否記錄過靠近目標
+		bool hasCloseLogged;
 	};
 }
 

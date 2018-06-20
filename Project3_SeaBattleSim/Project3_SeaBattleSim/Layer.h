@@ -19,7 +19,7 @@ namespace Project3_SeaBattleSim {
 		// Constructor
 		Layer(void);
 		Layer(std::string name);
-		virtual ~Layer() override;
+		virtual ~Layer();
 
 		/*                   */
 		/* Virtual Functions */
@@ -29,6 +29,6 @@ namespace Project3_SeaBattleSim {
 		virtual void Update();
 
 		// 重新命名
-		virtual void Rename(std::string newName) override;
+		virtual void Rename(std::string newName);
 	};
 }

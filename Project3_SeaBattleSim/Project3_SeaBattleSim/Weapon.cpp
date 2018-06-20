@@ -9,10 +9,9 @@ namespace Project3_SeaBattleSim
 {
 	Weapon::Weapon() : MovableObject()
 	{
-		this->isError = true;
 	}
 
-	Weapon::Weapon(Coordinate location, std::string name, double damage, double speed, double range, Coordinate target) : MovableObject(location, name, "●")
+	Weapon::Weapon(Coordinate location, std::string name, double damage, double speed, double range, Coordinate target) : MovableObject(location, name, "★")
 	{
 		// Initialization
 		this->damage = damage;
@@ -21,7 +20,6 @@ namespace Project3_SeaBattleSim
 		this->target = new Coordinate(target.x * BATTLEGRID_SIZE, target.y * BATTLEGRID_SIZE);
 		double radians = Math::Atan2(location.y - target.y, target.x - location.x);
 		this->angle = radians *(180 / Math::PI);
-		this->isError = false;
 	}
 
 	void Weapon::Update()
@@ -65,6 +63,16 @@ namespace Project3_SeaBattleSim
 	bool Weapon::isArrival()
 	{
 		if (this->target->x == this->doubleLocation->x && this->target->y == this->doubleLocation->y)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool Weapon::isClose()
+	{
+		double squareDistance = (this->doubleLocation->x - this->target->x) * (this->doubleLocation->x - this->target->x) + (this->doubleLocation->y - this->target->y) * (this->doubleLocation->y - this->target->y);
+		if (squareDistance < 3 * BATTLEGRID_SIZE)
 		{
 			return true;
 		}

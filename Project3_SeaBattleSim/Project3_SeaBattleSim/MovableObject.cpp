@@ -2,9 +2,9 @@
 #include "MovableObject.h"
 
 // Used to draw line
-#define VECTOR1_X 4
-#define VECTOR1_Y 7
-#define VECTOR2_X 6
+#define VECTOR1_X (BATTLEGRID_SIZE / 3)
+#define VECTOR1_Y (BATTLEGRID_SIZE * 2 / 3)
+#define VECTOR2_X (BATTLEGRID_SIZE)
 #define VECTOR2_Y 0
 
 enum XSide
@@ -47,6 +47,8 @@ namespace Project3_SeaBattleSim
 
 		// 顯示的文字的一些相關屬性
 		this->text->Text = gcnew String((symbol + name).c_str());
+		this->text->Font = (gcnew System::Drawing::Font(L"Verdana", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			static_cast<System::Byte>(0)));
 		this->text->Location = Point(location.x * BATTLEGRID_SIZE, location.y * BATTLEGRID_SIZE);
 
 		// Other Data Members

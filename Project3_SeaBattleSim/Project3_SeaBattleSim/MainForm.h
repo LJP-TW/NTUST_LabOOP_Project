@@ -32,8 +32,6 @@ namespace Project3_SeaBattleSim {
 		/// 清除任何使用中的資源。
 		/// </summary>
 		~MainForm();
-	private: System::ComponentModel::IContainer^  components;
-	protected:
 
 	private:
 		/// <summary>
@@ -41,7 +39,8 @@ namespace Project3_SeaBattleSim {
 		/// </summary>
 
 		// Components
-
+		System::ComponentModel::IContainer^ components;
+		System::ComponentModel::ComponentResourceManager^ resources;
 		array<System::Windows::Forms::Label^> ^battleGridsH;
 		array<System::Windows::Forms::Label^> ^battleGridsV;
 		System::Windows::Forms::Label^ timeShower;
@@ -80,6 +79,8 @@ namespace Project3_SeaBattleSim {
 #pragma endregion
 
 		System::Void MainForm_Load(System::Object^ sender, System::EventArgs^ e);
+
+		void MainForm_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e);
 
 		void MainForm_Update(System::Object^ sender, System::EventArgs^ e);
 

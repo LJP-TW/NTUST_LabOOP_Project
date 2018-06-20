@@ -125,4 +125,36 @@
       <Filter>資源檔</Filter>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="img\World-of-Warships-Blitz-recenzja-1180x555.jpg">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\background-button-png-hi.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\908-3.jpg">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\videoblocks-ocean-water-from-above-vast-ocean-isolated-slowly-revealing-more_b5nbnp6um_thumbnail-full01.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\battlegrids-background.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\Icon.ico">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\MainForm_BackGround.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\BattleGrids_BackGround.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\Button_BackGround.png">
+      <Filter>資源檔</Filter>
+    </Image>
+    <Image Include="img\MainForm_BackGround.jpg">
+      <Filter>資源檔</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

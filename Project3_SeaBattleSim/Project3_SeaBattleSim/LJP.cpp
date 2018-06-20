@@ -3,6 +3,11 @@
 #include "LJP.h"
 #include "Weapon.h"
 
+#define M_PI 3.14159265358979323846
+#define DEGREE_TO_RADIAN(degree) (degree * M_PI / 180.0)
+#define sin(x) sin(DEGREE_TO_RADIAN(x))
+#define cos(x) cos(DEGREE_TO_RADIAN(x))
+
 namespace Project3_SeaBattleSim
 {
 	LJP::LJP(void) :Vessel()
@@ -44,6 +49,7 @@ namespace Project3_SeaBattleSim
 
 		return gcnew Weapon(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 5, 5, 1.5, Coordinate(target.x, target.y));
 	}
+
 	Missile ^ LJP::missileAttack(Vessel ^ vesselTarget)
 	{
 		// 若還在CD
@@ -65,6 +71,7 @@ namespace Project3_SeaBattleSim
 		// 導彈攻擊範圍需要大於所有艦種的最高秒速
 		return gcnew Missile(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 3, 12, 0.2, vesselTarget, Coordinate(vesselTarget->doubleLocation->x, vesselTarget->doubleLocation->y));
 	}
+
 	void LJP::Update()
 	{
 		// 移動

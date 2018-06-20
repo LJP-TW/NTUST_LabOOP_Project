@@ -47,7 +47,6 @@ namespace Project3_SeaBattleSim
 
 	void MainForm::InitializeComponent(void)
 	{
-		System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 		this->SuspendLayout();
 		// 
 		// MainForm
@@ -56,7 +55,6 @@ namespace Project3_SeaBattleSim
 		this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 		this->ClientSize = System::Drawing::Size(453, 462);
 		this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
-		this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 		this->Margin = System::Windows::Forms::Padding(4);
 		this->MaximizeBox = false;
 		this->MinimizeBox = false;
@@ -71,6 +69,7 @@ namespace Project3_SeaBattleSim
 	{
 		// Initial
 		this->components = (gcnew System::ComponentModel::Container());
+		this->resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 		battleGridsH = gcnew array<System::Windows::Forms::Label^>(BATTLEGRID_NUM + 1);
 		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
 		{
@@ -128,6 +127,8 @@ namespace Project3_SeaBattleSim
 		battleGridsFramePanel->Size = System::Drawing::Size(BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM, BATTLEGRID_PADDING * 2 + 3 + BATTLEGRID_SIZE * BATTLEGRID_NUM);
 		battleGridsFramePanel->Name = L"battleGridsGroupBox";
 		battleGridsFramePanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
+		battleGridsFramePanel->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"BattleGrids_BackGround")));
+
 
 		// Create Battle Grids Panel
 		for (int i = 0; i <= BATTLEGRID_NUM; ++i)
@@ -138,6 +139,7 @@ namespace Project3_SeaBattleSim
 		battleGridsPanel->Location = System::Drawing::Point(BATTLEGRID_PADDING, BATTLEGRID_PADDING);
 		battleGridsPanel->Size = System::Drawing::Size(BATTLEGRID_SIZE * BATTLEGRID_NUM + 1, BATTLEGRID_SIZE * BATTLEGRID_NUM + 1);
 		battleGridsPanel->Name = L"battleGridsGroupBox";
+		battleGridsPanel->BackColor = Color::Transparent;
 
 		// Create clock which show the time of game
 		timeShower->BackColor = System::Drawing::Color::LightBlue;
@@ -146,6 +148,8 @@ namespace Project3_SeaBattleSim
 		timeShower->AutoSize = false;
 		timeShower->Text = "00:00";
 		timeShower->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
+		timeShower->Font = (gcnew System::Drawing::Font(L"Monotype Corsiva", 14, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+			System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 
 		// Create Pause & Start Buttons
 		pauseButton->Location = System::Drawing::Point(timeShower->Location.X + timeShower->Size.Width + 10, timeShower->Location.Y);
@@ -155,6 +159,9 @@ namespace Project3_SeaBattleSim
 		pauseButton->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 		pauseButton->Click += gcnew System::EventHandler(this, &MainForm::pauseButton_Click);
 		pauseButton->Enabled = false;
+		pauseButton->Font = (gcnew System::Drawing::Font(L"Monotype Corsiva", 12, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+			System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+		pauseButton->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"Button_BackGround")));
 
 		startButton->Location = System::Drawing::Point(pauseButton->Location.X + pauseButton->Size.Width + 10, pauseButton->Location.Y);
 		startButton->Size = System::Drawing::Size(75, 25);
@@ -162,6 +169,9 @@ namespace Project3_SeaBattleSim
 		startButton->Text = "Start";
 		startButton->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 		startButton->Click += gcnew System::EventHandler(this, &MainForm::startButton_Click);
+		startButton->Font = (gcnew System::Drawing::Font(L"Monotype Corsiva", 12, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+			System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+		startButton->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"Button_BackGround")));
 
 		// Create Command Group Box
 		commandGroupBox->Controls->Add(ATeamCommandTextBox);
@@ -170,6 +180,9 @@ namespace Project3_SeaBattleSim
 		commandGroupBox->Size = System::Drawing::Size(200, timeShower->Location.Y - battleGridsFramePanel->Location.Y + timeShower->Size.Height);
 		commandGroupBox->Name = L"commandGroupBox";
 		commandGroupBox->Text = L"Command";
+		commandGroupBox->Font = (gcnew System::Drawing::Font(L"Monotype Corsiva", 14, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+			System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+		commandGroupBox->BackColor = Color::Transparent;
 
 		// Create Log Group Box
 		logGroupBox->Controls->Add(LogTextBox);
@@ -177,25 +190,34 @@ namespace Project3_SeaBattleSim
 		logGroupBox->Size = System::Drawing::Size(450, commandGroupBox->Size.Height);
 		logGroupBox->Name = L"logGroupBox";
 		logGroupBox->Text = L"Battle Log";
+		logGroupBox->Font = (gcnew System::Drawing::Font(L"Monotype Corsiva", 14, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Italic)),
+			System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+		logGroupBox->BackColor = Color::Transparent;
 
 		// Create A/BTeam Command TextBox
-		ATeamCommandTextBox->Location = System::Drawing::Point(10, 20);
+		ATeamCommandTextBox->Location = System::Drawing::Point(10, 30);
 		ATeamCommandTextBox->Multiline = true;
 		ATeamCommandTextBox->Name = L"ATeamCommandTextBox";
-		ATeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 40) / 2);
+		ATeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 50) / 2);
+		ATeamCommandTextBox->Font = (gcnew System::Drawing::Font(L"Verdana", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			static_cast<System::Byte>(0)));
 
 		BTeamCommandTextBox->Location = System::Drawing::Point(10, ATeamCommandTextBox->Location.Y + ATeamCommandTextBox->Size.Height + 10);
 		BTeamCommandTextBox->Multiline = true;
 		BTeamCommandTextBox->Name = L"BTeamCommandTextBox";
-		BTeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 40) / 2);
+		BTeamCommandTextBox->Size = System::Drawing::Size(commandGroupBox->Size.Width - 20, (commandGroupBox->Size.Height - 50) / 2);
+		BTeamCommandTextBox->Font = (gcnew System::Drawing::Font(L"Verdana", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			static_cast<System::Byte>(0)));
 
 		// Create Log TextBox
-		LogTextBox->Location = System::Drawing::Point(10, 20);
+		LogTextBox->Location = System::Drawing::Point(10, 30);
 		LogTextBox->Multiline = true;
 		LogTextBox->Name = L"LogTextBox";
-		LogTextBox->Size = System::Drawing::Size(logGroupBox->Size.Width - 20, logGroupBox->Size.Height - 30);
+		LogTextBox->Size = System::Drawing::Size(logGroupBox->Size.Width - 20, logGroupBox->Size.Height - 40);
 		LogTextBox->Enabled = false;
 		LogTextBox->BackColor = System::Drawing::Color::White;
+		LogTextBox->Font = (gcnew System::Drawing::Font(L"Verdana", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			static_cast<System::Byte>(0)));
 
 		// Initial Game Timer
 		gameTimer->Interval = 1000 / 15;
@@ -209,7 +231,11 @@ namespace Project3_SeaBattleSim
 		this->Controls->Add(startButton);
 		this->Controls->Add(commandGroupBox);
 		this->Controls->Add(logGroupBox);
-		this->ClientSize = System::Drawing::Size(logGroupBox->Location.X + logGroupBox->Size.Width + 10, timeShower->Location.Y + timeShower->Size.Height + 10);
+		this->ClientSize = System::Drawing::Size(logGroupBox->Location.X + logGroupBox->Size.Width + 24, timeShower->Location.Y + timeShower->Size.Height + 24);
+		this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"Icon")));
+
+		// Draw BackGroundImage
+		this->Paint += gcnew PaintEventHandler(this, &MainForm::MainForm_Paint);
 
 		// 底層 Layer
 		PanelLayer.Add(alertArea);
@@ -217,6 +243,13 @@ namespace Project3_SeaBattleSim
 
 		isGameContinued = true;
 		gameTime = 0;
+	}
+
+	void MainForm::MainForm_Paint(System::Object ^ sender, System::Windows::Forms::PaintEventArgs ^ e)
+	{
+		Image^ img = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"MainForm_BackGround")));
+		e->Graphics->DrawImage(img, 0, 0);
+		delete img;
 	}
 
 	void MainForm::MainForm_Update(System::Object^ sender, System::EventArgs^ e)
@@ -600,7 +633,7 @@ namespace Project3_SeaBattleSim
 						}
 
 						// 設定船艦文字顏色
-						vessel->text->ForeColor = Color::FromArgb(0, 128, 0);
+						vessel->text->ForeColor = Color::FromArgb(0, 255, 0);
 
 						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 						GlobalVariable::ATeamVessels->Add(str, vessel);
@@ -675,7 +708,7 @@ namespace Project3_SeaBattleSim
 						Weapon^ weapon = GlobalVariable::ATeamVessels[str]->Attack(coordinate);
 
 						// 設定 Weapon 文字顏色
-						weapon->text->ForeColor = Color::FromArgb(0, 128, 0);
+						weapon->text->ForeColor = Color::FromArgb(0, 255, 0);
 
 						// 加入圖層
 						GlobalVariable::Weapons->Add(weapon->Name, weapon);
@@ -936,7 +969,7 @@ namespace Project3_SeaBattleSim
 						Missile^ missile = GlobalVariable::ATeamVessels[strVessel]->missileAttack(GlobalVariable::BTeamVessels[strTarget]);
 
 						// 設定 Weapon 文字顏色
-						missile->text->ForeColor = Color::FromArgb(0, 128, 0);
+						missile->text->ForeColor = Color::FromArgb(0, 255, 0);
 
 						// 加入圖層
 						GlobalVariable::Weapons->Add(missile->Name, missile);
@@ -1088,7 +1121,7 @@ namespace Project3_SeaBattleSim
 						}
 
 						// 設定船艦文字顏色
-						vessel->text->ForeColor = Color::FromArgb(0, 0, 128);
+						vessel->text->ForeColor = Color::FromArgb(0, 0, 255);
 
 						// 加入船艦圖層, 若此圖層為第一層, 則上一個容器為 this battleGridsPanel
 						GlobalVariable::BTeamVessels->Add(str, vessel);
@@ -1165,7 +1198,7 @@ namespace Project3_SeaBattleSim
 						Weapon^ weapon = GlobalVariable::BTeamVessels[str]->Attack(coordinate);
 
 						// 設定 Weapon 文字顏色
-						weapon->text->ForeColor = Color::FromArgb(0, 0, 128);
+						weapon->text->ForeColor = Color::FromArgb(0, 0, 255);
 
 						// 加入圖層
 						GlobalVariable::Weapons->Add(weapon->Name, weapon);
@@ -1426,7 +1459,7 @@ namespace Project3_SeaBattleSim
 						Missile^ missile = GlobalVariable::BTeamVessels[strVessel]->missileAttack(GlobalVariable::ATeamVessels[strTarget]);
 
 						// 設定 Weapon 文字顏色
-						missile->text->ForeColor = Color::FromArgb(0, 128, 0);
+						missile->text->ForeColor = Color::FromArgb(0, 0, 255);
 
 						// 加入圖層
 						GlobalVariable::Weapons->Add(missile->Name, missile);
@@ -1445,7 +1478,7 @@ namespace Project3_SeaBattleSim
 						std::string missileName = msclr::interop::marshal_as<std::string>(missile->Name);
 						std::ostringstream out;
 						out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-							<< " TeamA " << vesselName << " Missile_Fire to " << targetName
+							<< " TeamB " << vesselName << " Missile_Fire to " << targetName
 							<< " ->" << missileName;
 
 						String^ msg = gcnew System::String(out.str().c_str());
