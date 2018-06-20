@@ -63,6 +63,9 @@
     <ClCompile Include="Missile.cpp">
       <Filter>原始程式檔\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="AlertArea.cpp">
+      <Filter>原始程式檔</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="Missile.h">
       <Filter>原始程式檔\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="AlertArea.h">
+      <Filter>原始程式檔</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 #include "Vessel.h"
 #include "Weapon.h"
 #include "Team.h"
+#include "AlertArea.h"
 #include "GlobalVariable.h"
 
 namespace Project3_SeaBattleSim {
@@ -66,9 +67,9 @@ namespace Project3_SeaBattleSim {
 
 		// ¹Ï¼h
 		List<Panel^> PanelLayer;
+		AlertArea^ alertArea;
 		bool isGameContinued;
-
-			 unsigned long long gameTime;
+		unsigned long long gameTime;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>

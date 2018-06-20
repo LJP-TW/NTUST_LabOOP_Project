@@ -99,6 +99,7 @@ namespace Project3_SeaBattleSim
 		ArrivalWeapons = gcnew List<String^>();
 		HitATeamVessels = gcnew List<String^>();
 		HitBTeamVessels = gcnew List<String^>();
+		alertArea = gcnew AlertArea();
 
 		GlobalVariable::ATeamVessels = gcnew Dictionary<String^, Vessel^>();
 		GlobalVariable::BTeamVessels = gcnew Dictionary<String^, Vessel^>();
@@ -210,18 +211,23 @@ namespace Project3_SeaBattleSim
 		this->Controls->Add(logGroupBox);
 		this->ClientSize = System::Drawing::Size(logGroupBox->Location.X + logGroupBox->Size.Width + 10, timeShower->Location.Y + timeShower->Size.Height + 10);
 
+		// ©³¼h Layer
+		PanelLayer.Add(alertArea);
+		this->battleGridsPanel->Controls->Add(alertArea);
+
 		isGameContinued = true;
 		gameTime = 0;
 	}
 
 	void MainForm::MainForm_Update(System::Object^ sender, System::EventArgs^ e)
 	{
+		unsigned long long min;
+		unsigned long long sec;
+		bool alertAreaNeedRefresh = false;
+
 		++gameTime;
 
 		// Update timeShower
-		unsigned long long min;
-		unsigned long long sec;
-
 		min = gameTime / 60;
 		sec = gameTime % 60;
 
@@ -433,6 +439,8 @@ namespace Project3_SeaBattleSim
 						break;
 					}
 				}
+
+				alertAreaNeedRefresh = true;
 			}
 			else
 			{
@@ -445,6 +453,11 @@ namespace Project3_SeaBattleSim
 			GlobalVariable::Weapons->Remove(name);
 		}
 		ArrivalWeapons->Clear();
+
+		if (alertAreaNeedRefresh)
+		{
+			alertArea->Refresh();
+		}
 
 		// ATeam ²î°¦§ó·s
 		for each(KeyValuePair<String^, Vessel^>^ kvp in GlobalVariable::ATeamVessels)

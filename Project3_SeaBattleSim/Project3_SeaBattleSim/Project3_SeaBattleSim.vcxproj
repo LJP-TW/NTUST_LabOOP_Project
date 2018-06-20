@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlertArea.cpp" />
     <ClCompile Include="BB.cpp" />
     <ClCompile Include="CG.cpp" />
     <ClCompile Include="CV.cpp" />
@@ -148,6 +149,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlertArea.h" />
     <ClInclude Include="BB.h" />
     <ClInclude Include="CG.h" />
     <ClInclude Include="CommonStruct.h" />
