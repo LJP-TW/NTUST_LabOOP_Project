@@ -62,7 +62,8 @@ namespace Project3_SeaBattleSim
 
 		++this->team->weaponID;
 
-		return gcnew Missile(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 3, 12, 0.1, vesselTarget, Coordinate(vesselTarget->doubleLocation->x, vesselTarget->doubleLocation->y));
+		// 導彈攻擊範圍需要大於所有艦種的最高秒速
+		return gcnew Missile(Coordinate(this->location->X / BATTLEGRID_SIZE, this->location->Y / BATTLEGRID_SIZE), weaponName, 3, 12, 0.2, vesselTarget, Coordinate(vesselTarget->doubleLocation->x, vesselTarget->doubleLocation->y));
 	}
 	void LJP::Update()
 	{

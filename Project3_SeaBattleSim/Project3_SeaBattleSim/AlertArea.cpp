@@ -28,8 +28,8 @@ namespace Project3_SeaBattleSim
 			// FillEllipse(Brust^, int * 4)
 			// FillEllipse(Brust^, float * 4)
 			// 強轉成 float 走第二種多載
-			float w = kvpw->Value->range * BATTLEGRID_SIZE;
-			float h = kvpw->Value->range * BATTLEGRID_SIZE;
+			float w = kvpw->Value->range * BATTLEGRID_SIZE * 2;
+			float h = kvpw->Value->range * BATTLEGRID_SIZE * 2;
 			float x = kvpw->Value->target->x - w / 2;
 			float y = kvpw->Value->target->y - h / 2;
 			graph->FillEllipse(brush, x, y, w, h);
