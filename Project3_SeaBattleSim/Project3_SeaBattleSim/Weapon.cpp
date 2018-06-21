@@ -88,7 +88,7 @@ namespace Project3_SeaBattleSim
 	bool Weapon::isClose()
 	{
 		double squareDistance = (this->doubleLocation->x - this->target->x) * (this->doubleLocation->x - this->target->x) + (this->doubleLocation->y - this->target->y) * (this->doubleLocation->y - this->target->y);
-		if (squareDistance < 3 * BATTLEGRID_SIZE)
+		if (squareDistance < (3 * BATTLEGRID_SIZE) * (3 * BATTLEGRID_SIZE))
 		{
 			return true;
 		}

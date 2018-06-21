@@ -274,6 +274,18 @@ namespace Project3_SeaBattleSim
 		// Weapon 更新
 		for each(KeyValuePair<String^, Weapon^>^ kvpw in GlobalVariable::Weapons)
 		{
+			/* 靠近範圍 文字警告 */
+			if (!(kvpw->Value->hasCloseLogged) && kvpw->Value->isClose())
+			{
+				kvpw->Value->hasCloseLogged = true;
+				std::ostringstream out;
+				out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
+					<< " WARRNING " << msclr::interop::marshal_as<std::string>(kvpw->Key) << " is Approaching Target !!!";
+
+				LogTextBox->Text += gcnew System::String(out.str().c_str());
+				LogTextBox->Text += Environment::NewLine;
+			}
+
 			/*同點上 船受到傷害 若生命歸零 則移除船*/
 			if (kvpw->Value->isArrival())
 			{
@@ -365,18 +377,6 @@ namespace Project3_SeaBattleSim
 							}
 						}
 					}
-				}
-
-				/*Add TextLog*/
-				if (!(kvpw->Value->hasCloseLogged) && kvpw->Value->isClose())
-				{
-					kvpw->Value->hasCloseLogged = true;
-					std::ostringstream out;
-					out << '[' << std::setw(2) << std::setfill('0') << min << ':' << std::setw(2) << std::setfill('0') << sec << ']'
-						<< " WARRNING " << msclr::interop::marshal_as<std::string>(kvpw->Key) << " is Approaching Target !!!";
-
-					LogTextBox->Text += gcnew System::String(out.str().c_str());
-					LogTextBox->Text += Environment::NewLine;
 				}
 
 				// Log
