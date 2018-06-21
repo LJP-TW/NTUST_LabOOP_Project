@@ -45,7 +45,7 @@ namespace Project3_SeaBattleSim
 
 	void Vessel::setSpeed(double speed)
 	{
-		if (speed > this->maxSpeed || speed < 0)
+		if (speed > this->maxSpeed || speed < -this->maxSpeed)
 		{
 			throw VESSEL_ERROR::SET_SPEED_ERROR;
 		}
